@@ -10,7 +10,7 @@ Any AI agent starting a new session in this workspace must read and adhere to th
 **Sakode Academy** is a fullstack IT course learning portal designed for managing course registrations, trial classes, learning materials, and mentoring schedules.
 
 * **Target Launch Date**: July 10, 2026 (`2026-07-10T00:00:00`)
-* **Current Status**: 18% (Interactive welcome landing page, dynamic themes, a custom namespace-based UI component engine under `@/UI` outside Next.js routing, and a production-ready 17-component Design System & UI Showcase page under `/ui-examples` are fully completed)
+* **Current Status**: 18% (Interactive welcome landing page, dynamic themes, a custom namespace-based UI component engine under `@/UI` outside Next.js routing, and a production-ready 18-component Design System & UI Showcase page under `/ui` are fully completed)
 * **Subscribers File**: Emails registered via the newsletter are saved locally to `data/subscribers.json`
 
 ---

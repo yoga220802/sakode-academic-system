@@ -3,7 +3,7 @@ import { motion, HTMLMotionProps } from "framer-motion";
 import { Icons } from "../shared/Icons";
 import { PaletteColorKey, getBgClass, getBgOpacity15Class, getBgOpacity20Class, getBgOpacity25Class, getBgOpacity5Class, getBorderClass, getGradientClass, getGradientBgLightClass, getTextClass, getBorderRadiusClass } from "../shared/color-utils";
 
-export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", children, ...props }) => (
+export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
     className={`bg-white dark:bg-zinc-900 border-3 border-zinc-900 dark:border-white p-6 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] dark:shadow-[6px_6px_0px_0px_rgba(250,250,250,1)] text-zinc-900 dark:text-zinc-50 ${className}`}
     {...props}

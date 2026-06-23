@@ -1,0 +1,366 @@
+import { PaletteColorKey } from "@/UI/shared/color-utils";
+
+export interface ComponentDoc {
+  name: string;
+  description: string;
+  props: {
+    name: string;
+    type: string;
+    defaultValue: string;
+    description: string;
+  }[];
+  codeTemplate: (params: any) => string;
+}
+
+export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  Button: {
+    name: "Button",
+    description: "Komponen tombol interaktif dengan animasi mikro (whileTap/hover) berbasis Framer Motion, serta status loading spinner terintegrasi.",
+    props: [
+      { name: "variant", type: "'primary' | 'secondary'", defaultValue: "'primary'", description: "Menentukan gaya visual utama atau alternatif (outline/soft)." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen latar belakang untuk varian primary." },
+      { name: "isLoading", type: "boolean", defaultValue: "false", description: "Menampilkan ikon pemutar spinner dan menonaktifkan klik tombol." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan interaksi tombol." },
+    ],
+    codeTemplate: ({ style, accentColor, variant, isLoading, disabled, label }: any) => {
+      const parts = [];
+      if (variant !== "primary") parts.push(`variant="${variant}"`);
+      if (accentColor !== "pink" && variant === "primary") parts.push(`accentColor="${accentColor}"`);
+      if (isLoading) parts.push("isLoading");
+      if (disabled) parts.push("disabled");
+      
+      const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Button${propsStr}>
+  ${label || "Daftar Sekarang"}
+</${style}.Button>`;
+    }
+  },
+  Card: {
+    name: "Card",
+    description: "Kontainer panel pembungkus informasi utama yang menyesuaikan drop shadow, border-radius, border, dan glassmorphism efek berdasarkan gaya terpilih.",
+    props: [
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "undefined", description: "Menentukan warna aksen border/bayangan (opsional pada beberapa gaya)." },
+      { name: "className", type: "string", defaultValue: "''", description: "Kelas CSS Tailwind tambahan untuk kustomisasi ukuran/layout." },
+    ],
+    codeTemplate: ({ style, accentColor, content }: any) => {
+      const accentProp = accentColor ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Card${accentProp}>
+  <${style}.Heading>Kartu Informasi</${style}.Heading>
+  <p className="text-sm text-zinc-500">${content || "Isi konten kartu di sini."}</p>
+</${style}.Card>`;
+    }
+  },
+  Input: {
+    name: "Input",
+    description: "Input teks standar untuk pengisian formulir dengan visual focus rings dan state error yang terintegrasi.",
+    props: [
+      { name: "hasError", type: "boolean", defaultValue: "false", description: "Menandai input dalam keadaan tidak valid (memunculkan border merah)." },
+      { name: "placeholder", type: "string", defaultValue: "undefined", description: "Teks bantuan di dalam kolom input." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan input teks." },
+    ],
+    codeTemplate: ({ style, hasError, placeholder, disabled, value }: any) => {
+      const parts = [];
+      if (placeholder) parts.push(`placeholder="${placeholder}"`);
+      if (hasError) parts.push("hasError");
+      if (disabled) parts.push("disabled");
+      if (value) parts.push(`value="${value}"`);
+
+      const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Input${propsStr} />`;
+    }
+  },
+  Select: {
+    name: "Select",
+    description: "Elemen dropdown untuk memilih satu opsi dari daftar pilihan.",
+    props: [
+      { name: "hasError", type: "boolean", defaultValue: "false", description: "Menandai pilihan dalam keadaan error." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan dropdown menu." },
+    ],
+    codeTemplate: ({ style, hasError, disabled }: any) => {
+      const parts = [];
+      if (hasError) parts.push("hasError");
+      if (disabled) parts.push("disabled");
+
+      const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Select${propsStr}>
+  <option value="">Pilih Program</option>
+  <option value="nextjs">Next.js Bootcamp</option>
+  <option value="nodejs">Node.js Backend</option>
+</${style}.Select>`;
+    }
+  },
+  Toggle: {
+    name: "Toggle",
+    description: "Switch toggle on/off yang mendukung aksesibilitas (WAI-ARIA) dan visualisasi status yang lancar.",
+    props: [
+      { name: "checked", type: "boolean", defaultValue: "false", description: "Menentukan apakah status aktif (true) atau tidak (false)." },
+      { name: "onChange", type: "() => void", defaultValue: "undefined", description: "Aksi callback yang dipicu ketika status toggle diubah." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen latar saat toggle berstatus aktif." },
+    ],
+    codeTemplate: ({ style, checked, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Toggle 
+  checked={${checked}} 
+  onChange={() => handleToggle()}${accentProp}
+  aria-label="Contoh Switch"
+/>`;
+    }
+  },
+  Accordion: {
+    name: "Accordion",
+    description: "Daftar runtutan panel lipat (collapse) yang cocok digunakan untuk silabus kelas atau daftar FAQ.",
+    props: [
+      { name: "items", type: "{ id: number; q: string; a: string }[]", defaultValue: "[]", description: "Array berisi objek pertanyaan (q) dan jawaban (a)." },
+      { name: "activeId", type: "number | null", defaultValue: "null", description: "ID accordion item yang sedang terbuka." },
+      { name: "onToggle", type: "(id: number) => void", defaultValue: "undefined", description: "Callback dipicu ketika menekan tombol header item." },
+    ],
+    codeTemplate: ({ style, activeId }: any) => {
+      return `import { ${style} } from "@/UI";
+
+const faqItems = [
+  { id: 1, q: "Apa itu Next.js?", a: "Framework React untuk Production." },
+  { id: 2, q: "Apa itu Tailwind?", a: "Utility-first CSS framework." }
+];
+
+// Contoh Penggunaan
+<${style}.Accordion 
+  items={faqItems}
+  activeId={${activeId === undefined ? null : activeId}}
+  onToggle={(id) => handleToggleId(id)}
+/>`;
+    }
+  },
+  Timeline: {
+    name: "Timeline",
+    description: "Langkah-langkah berurutan atau penanda milstone (steps timeline) pendaftaran.",
+    props: [
+      { name: "steps", type: "{ step: string; title: string; desc: string }[]", defaultValue: "[]", description: "Daftar objek langkah pendaftaran." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna lingkaran nomor langkah aktif." },
+    ],
+    codeTemplate: ({ style, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const pendaftaranSteps = [
+  { step: "01", title: "Registrasi", desc: "Buat akun baru." },
+  { step: "02", title: "Pilih Kelas", desc: "Pilih jalur belajar." }
+];
+
+// Contoh Penggunaan
+<${style}.Timeline steps={pendaftaranSteps}${accentProp} />`;
+    }
+  },
+  Badge: {
+    name: "Badge",
+    description: "Tag status berukuran mini untuk menunjukkan level tingkat kesulitan atau status pembayaran.",
+    props: [
+      { name: "variant", type: "'accent' | 'success' | 'warning' | 'default'", defaultValue: "'default'", description: "Varian status visual badge." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna dasar jika variant diset ke 'accent'." },
+    ],
+    codeTemplate: ({ style, variant, accentColor, label }: any) => {
+      const parts = [];
+      if (variant !== "default") parts.push(`variant="${variant}"`);
+      if (accentColor !== "pink" && variant === "accent") parts.push(`accentColor="${accentColor}"`);
+
+      const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Badge${propsStr}>
+  ${label || "Pemula (Basic)"}
+</${style}.Badge>`;
+    }
+  },
+  AvatarGroup: {
+    name: "AvatarGroup",
+    description: "Menampilkan daftar murid aktif sekelas dalam tumpukan lingkaran avatar bertumpuk.",
+    props: [
+      { name: "initials", type: "string[]", defaultValue: "[]", description: "Daftar inisial siswa (maksimal 4 disarankan)." },
+      { name: "extraCount", type: "number", defaultValue: "0", description: "Angka tambahan sisa siswa terdaftar (+X)." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen lingkaran counter tambahan." },
+    ],
+    codeTemplate: ({ style, extraCount, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? `, accentColor: "${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.AvatarGroup 
+  initials={["AN", "RY", "CL"]} 
+  extraCount={${extraCount || 10}}
+  accentColor="${accentColor}"
+/>`;
+    }
+  },
+  Alert: {
+    name: "Alert",
+    description: "Panel pesan peringatan penting atau notifikasi pengumuman dari sistem akademis.",
+    props: [
+      { name: "title", type: "string", defaultValue: "undefined", description: "Judul tebal pengumuman." },
+      { name: "type", type: "'info' | 'warning'", defaultValue: "'info'", description: "Menentukan warna latar belakang dan ikon peringatan." },
+    ],
+    codeTemplate: ({ style, type, title, content }: any) => {
+      const typeProp = type !== "info" ? ` type="${type}"` : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.Alert title="${title || "Pemberitahuan Sistem"}"${typeProp}>
+  ${content || "Mentoring akan segera dimulai."}
+</${style}.Alert>`;
+    }
+  },
+  Table: {
+    name: "Table",
+    description: "Tabel log jadwal mentoring atau invoice pembayaran akademik yang rapi dan adaptif.",
+    props: [
+      { name: "schedules", type: "{ course: string; date: string; mentor: string; status: string }[]", defaultValue: "[]", description: "Data baris log jadwal." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna highlight baris aktif." },
+    ],
+    codeTemplate: ({ style, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const dataSchedules = [
+  { course: "Next.js", date: "24 Juni", mentor: "Rian Y.", status: "Aktif" }
+];
+
+// Contoh Penggunaan
+<${style}.Table schedules={dataSchedules}${accentProp} />`;
+    }
+  },
+  Carousel: {
+    name: "Carousel",
+    description: "Komponen review alumni/slider testimoni dengan tombol geser halaman testimoni aktif.",
+    props: [
+      { name: "testimonials", type: "{ name: string; role: string; review: string }[]", defaultValue: "[]", description: "Array berisi data testimoni." },
+      { name: "activeIndex", type: "number", defaultValue: "0", description: "Index data testimoni aktif saat ini." },
+      { name: "onPrev", type: "() => void", defaultValue: "undefined", description: "Callback tombol navigasi sebelumnya." },
+      { name: "onNext", type: "() => void", defaultValue: "undefined", description: "Callback tombol navigasi berikutnya." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna visual pelengkap carousel." },
+    ],
+    codeTemplate: ({ style, activeIndex, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const reviews = [
+  { name: "Andi", role: "Siswa", review: "Sangat menyenangkan!" }
+];
+
+// Contoh Penggunaan
+<${style}.Carousel 
+  testimonials={reviews} 
+  activeIndex={${activeIndex}} 
+  onPrev={() => handlePrev()} 
+  onNext={() => handleNext()}${accentProp}
+/>`;
+    }
+  },
+  Chart: {
+    name: "Chart",
+    description: "Statistik visual batang asimetris dari tugas mingguan menggunakan markup murni CSS-First Tailwind.",
+    props: [
+      { name: "bars", type: "{ label: string; val: string }[]", defaultValue: "[]", description: "Array berisi label dan kelas persentase tinggi ('h-[X%]')." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna grafik batang." },
+    ],
+    codeTemplate: ({ style, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const barStats = [
+  { label: "M1", val: "h-[30%]" },
+  { label: "M2", val: "h-[70%]" }
+];
+
+// Contoh Penggunaan
+<${style}.Chart bars={barStats}${accentProp} />`;
+    }
+  },
+  Breadcrumbs: {
+    name: "Breadcrumbs",
+    description: "Petunjuk alur navigasi subhalaman kelas aktif.",
+    props: [
+      { name: "items", type: "{ label: string; active?: boolean }[]", defaultValue: "[]", description: "Daftar link navigasi halaman." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna tulisan menu aktif." },
+    ],
+    codeTemplate: ({ style, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const pathItems = [
+  { label: "Kelas" },
+  { label: "Next.js", active: true }
+];
+
+// Contoh Penggunaan
+<${style}.Breadcrumbs items={pathItems}${accentProp} />`;
+    }
+  },
+  Dropdown: {
+    name: "Dropdown",
+    description: "Menu opsi tindakan profil melayang dengan penutup animasi transisi terintegrasi.",
+    props: [
+      { name: "isOpen", type: "boolean", defaultValue: "false", description: "Menampilkan/menyembunyikan daftar menu opsi." },
+      { name: "onToggle", type: "() => void", defaultValue: "undefined", description: "Memicu buka tutup menu dropdown." },
+      { name: "triggerText", type: "string", defaultValue: "undefined", description: "Teks tombol pemicu dropdown." },
+      { name: "items", type: "{ label: string; onClick: () => void }[]", defaultValue: "[]", description: "Daftar aksi pilihan menu dropdown." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna tombol dropdown." },
+    ],
+    codeTemplate: ({ style, isOpen, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+const options = [
+  { label: "Dashboard", onClick: () => openDashboard() }
+];
+
+// Contoh Penggunaan
+<${style}.Dropdown
+  isOpen={${isOpen}}
+  onToggle={() => handleToggleDropdown()}
+  triggerText="Opsi Profil"
+  items={options}${accentProp}
+/>`;
+    }
+  },
+  UploadZone: {
+    name: "UploadZone",
+    description: "Kotak area seret file (drag and drop) untuk pengumpulan tugas belajar murid.",
+    props: [
+      { name: "isDragging", type: "boolean", defaultValue: "false", description: "State drag aktif ketika file melayang di atas area." },
+      { name: "onDragOver", type: "(e: DragEvent) => void", defaultValue: "undefined", description: "Handler event drag over." },
+      { name: "onDragLeave", type: "() => void", defaultValue: "undefined", description: "Handler event drag leave." },
+      { name: "onDrop", type: "(e: DragEvent) => void", defaultValue: "undefined", description: "Handler event drop file." },
+      { name: "uploadedFiles", type: "string[]", defaultValue: "[]", description: "Daftar nama-nama file yang berhasil diunggah." },
+      { name: "onRemoveFile", type: "(index: number) => void", defaultValue: "undefined", description: "Handler membatalkan upload file tertentu." },
+      { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna border area ketika file di-drag." },
+    ],
+    codeTemplate: ({ style, isDragging, accentColor }: any) => {
+      const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
+      return `import { ${style} } from "@/UI";
+
+// Contoh Penggunaan
+<${style}.UploadZone
+  isDragging={${isDragging}}
+  onDragOver={(e) => handleDragOver(e)}
+  onDragLeave={() => handleDragLeave()}
+  onDrop={(e) => handleDrop(e)}
+  uploadedFiles={["tugas_frontend.zip"]}
+  onRemoveFile={(idx) => handleRemove(idx)}${accentProp}
+/>`;
+    }
+  }
+};

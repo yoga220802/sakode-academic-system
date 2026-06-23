@@ -13,7 +13,7 @@ To prevent Next.js App Router from treating UI style components as routes, the d
 ```
 sakode-academy/ (Root)
 ├── app/
-│   └── ui-examples/            <-- Showcase routing page (/ui-examples)
+│   └── ui/                     <-- Showcase routing page (/ui)
 │       └── _components/
 │           ├── ComponentShowcase.tsx <-- Renders style-adaptive interactive elements
 │           └── ModalPreview.tsx     <-- Style-adaptive modal overlay
@@ -89,7 +89,7 @@ export default function MyWidget() {
 }
 ```
 
-### Dynamic Resolution Example (e.g. in /ui-examples):
+### Dynamic Resolution Example (e.g. in /ui):
 ```tsx
 import { UI as UIStyles } from "@/UI";
 
@@ -158,7 +158,7 @@ Make sure you repeat this step for `neobrutalism`, `glassmorphism`, `liquid-glas
 ### Step 3: Update the Dynamic Types
 To avoid TypeScript errors when pages resolve components dynamically, you must update the TypeScript interface types.
 
-Open [app/ui-examples/_components/ComponentShowcase.tsx](../app/ui-examples/_components/ComponentShowcase.tsx) and [app/ui-examples/_components/ModalPreview.tsx](../app/ui-examples/_components/ModalPreview.tsx) (and any other dynamic showcase scripts):
+Open [app/ui/_components/ComponentShowcase.tsx](../app/ui/_components/ComponentShowcase.tsx) and [app/ui/_components/ModalPreview.tsx](../app/ui/_components/ModalPreview.tsx) (and any other dynamic showcase scripts):
 
 Add the new component signature to the `UIStyleComponentSet` (or the local UI cast type definition):
 ```typescript
@@ -172,7 +172,7 @@ type UIStyleComponentSet = {
 
 ### Step 4: Add the Component to the Showcase Route
 To test and demonstrate the new component:
-1. Open [ComponentShowcase.tsx](../app/ui-examples/_components/ComponentShowcase.tsx).
+1. Open [ComponentShowcase.tsx](../app/ui/_components/ComponentShowcase.tsx).
 2. Create a rendering function for the new component, e.g.:
    ```tsx
    const renderTooltipSection = () => (

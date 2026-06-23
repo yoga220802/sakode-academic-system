@@ -2,7 +2,7 @@
 
 Selamat datang di repositori **Sistem Akademik Sakode Academy**. Proyek ini adalah portal pembelajaran kursus IT terintegrasi yang dirancang untuk mempermudah pendaftaran murid baru, kelas trial, penyediaan modul pembelajaran, serta penjadwalan mentoring sesi 1-on-1 secara cerdas dan efisien.
 
-Saat ini proyek sedang berada dalam fase pra-peluncuran dengan persentase pengembangan **18%** berupa halaman landing page interaktif dengan penghitung waktu mundur (*countdown*) menuju tanggal **10 Juli 2026**, pustaka komponen visual kustom lokal (`@/UI`), dan contoh visual gaya UI (`/ui-examples`).
+Saat ini proyek sedang berada dalam fase pra-peluncuran dengan persentase pengembangan **18%** berupa halaman landing page interaktif dengan penghitung waktu mundur (*countdown*) menuju tanggal **10 Juli 2026**, pustaka komponen visual kustom lokal (`@/UI`), dan contoh visual gaya UI (`/ui`).
 
 ---
 

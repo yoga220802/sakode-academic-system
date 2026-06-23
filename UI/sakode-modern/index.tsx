@@ -13,7 +13,7 @@ import {
   getBgOpacity5Class
 } from "../shared/color-utils";
 
-export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", children, ...props }) => (
+export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
     className={`bg-white/90 dark:bg-zinc-950/50 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/80 rounded-3xl p-6 shadow-lg dark:shadow-2xl relative z-10 text-zinc-800 dark:text-zinc-100 ${className}`}
     {...props}

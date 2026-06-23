@@ -16,7 +16,7 @@ import {
 } from "../shared/color-utils";
 
 // 1. Card Component
-export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", children, ...props }) => (
+export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
     className={`bg-slate-50/90 dark:bg-zinc-800/40 rounded-3xl p-6 shadow-[inset_-6px_-6px_12px_rgba(0,0,0,0.06),_inset_6px_6px_12px_rgba(255,255,255,0.9),_8px_8px_20px_rgba(0,0,0,0.1)] dark:shadow-[inset_-6px_-6px_12px_rgba(0,0,0,0.3),_inset_6px_6px_12px_rgba(255,255,255,0.08),_8px_8px_20px_rgba(0,0,0,0.4)] border border-slate-100 dark:border-zinc-800/10 text-slate-800 dark:text-zinc-100 ${className}`}
     {...props}
