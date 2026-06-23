@@ -2,7 +2,7 @@
 
 Selamat datang di repositori **Sistem Akademik Sakode Academy**. Proyek ini adalah portal pembelajaran kursus IT terintegrasi yang dirancang untuk mempermudah pendaftaran murid baru, kelas trial, penyediaan modul pembelajaran, serta penjadwalan mentoring sesi 1-on-1 secara cerdas dan efisien.
 
-Saat ini proyek sedang berada dalam fase pra-peluncuran dengan persentase pengembangan **2%** berupa halaman landing page interaktif dengan penghitung waktu mundur (*countdown*) menuju tanggal **10 Juli 2026**.
+Saat ini proyek sedang berada dalam fase pra-peluncuran dengan persentase pengembangan **18%** berupa halaman landing page interaktif dengan penghitung waktu mundur (*countdown*) menuju tanggal **10 Juli 2026**, pustaka komponen visual kustom lokal (`@/UI`), dan contoh visual gaya UI (`/ui-examples`).
 
 ---
 
@@ -21,7 +21,7 @@ Proyek ini mengadopsi tumpukan teknologi modern fullstack (*Single Repository*):
 * **Framework**: Next.js 16.2.9 (App Router & compiler Turbopack)
 * **Library**: React 19.2.4
 * **Penataan Gaya (CSS)**: Tailwind CSS v4 (Sistem CSS-first dengan variabel terintegrasi)
-* **Library Komponen**: HeroUI v3 (Sistem komponen compound berbasis React Aria)
+* **Library Komponen**: HeroUI v3 (Compound components React Aria) & Custom Namespace-Based Local UI Engine (`@/UI`)
 * **Animasi**: Framer Motion
 * **Tema**: `next-themes` (Mendukung Dark/Light Mode dinamis melalui kelas pada tag `<html>`)
 * **Penyimpanan Awal**: Database lokal berbasis berkas JSON (`data/subscribers.json`) untuk menangkap antrean pendaftar email (*early-adopters*).
@@ -31,6 +31,8 @@ Proyek ini mengadopsi tumpukan teknologi modern fullstack (*Single Repository*):
 ## 📂 Panduan Arsitektur & Struktur Folder
 Proyek ini menerapkan **Feature-Based Colocation Architecture** (Arsitektur Berbasis Fitur) secara terpusat langsung di dalam direktori `app/`. Berkas pendukung seperti komponen UI, aksi server, logika bisnis, dan hooks diletakkan sedekat mungkin dengan halaman rute terkait menggunakan konvensi **Private Folders Next.js** (folder yang diawali garis bawah `_`).
 
+Untuk komponen dengan gaya visual khusus (seperti Claymorphism, Neobrutalism, dll.), kodenya dipusahkan ke dalam folder root **`UI/`** yang aman dari deteksi route Next.js dan diimpor menggunakan path alias `@/UI`.
+
 ### Struktur Folder Utama:
 ```
 app/
@@ -38,12 +40,17 @@ app/
 │   └── subscribe.ts   # Aksi Server untuk mendaftarkan newsletter
 ├── _components/       # Komponen UI global / Shared Components (FE)
 │   └── WelcomePage.tsx # Implementasi halaman utama "Coming Soon"
-├── _database/         # Koneksi DB dan Schema ORM (BE)
-├── _services/         # Logika Bisnis & Query DB (BE Service Layer)
 ├── page.tsx           # Halaman utama di root (mengimpor WelcomePage)
 ├── layout.tsx         # Tata letak global (pengaturan suppressHydrationWarning)
 ├── providers.tsx      # Provider next-themes & HeroUI untuk Light/Dark Mode
 └── globals.css        # Penyesuaian variabel warna, tema, dan transisi CSS
+
+UI/                    # Custom Visual Component Library (FE/Design System)
+├── index.ts           # Pintu masuk utama ekspor (@/UI)
+├── shared/            # Berkas pembantu warna dan ikon
+├── claymorphism/      # Namespace gaya Claymorphism
+├── neobrutalism/      # Namespace gaya Neobrutalism
+└── ... gaya lainnya (glassmorphism, bento-grid, dll.)
 ```
 
 Setiap modul fitur baru (misalnya `/register` untuk pendaftaran siswa) harus mengikuti pola ini:
@@ -56,7 +63,7 @@ app/register/
 ```
 
 > [!NOTE]
-> Panduan arsitektur dan instruksi teknis pengembangan yang sangat mendalam bagi AI Agent atau pengembang baru dapat dibaca secara lengkap di **[AI docs/CONTEXT.md](file:///C:/Users/yogaa/Document%20Local/SAKODE/WEB%20DEVELOP/sakode-academy/AI%20docs/CONTEXT.md)**.
+> Panduan arsitektur dan instruksi teknis pengembangan yang sangat mendalam bagi AI Agent atau pengembang baru dapat dibaca secara lengkap di **[AI docs/CONTEXT.md](AI%20docs/CONTEXT.md)**.
 
 ---
 
