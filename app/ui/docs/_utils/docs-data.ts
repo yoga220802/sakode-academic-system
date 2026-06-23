@@ -1,5 +1,28 @@
 import { PaletteColorKey } from "@/UI/shared/color-utils";
 
+export interface TemplateParams {
+  style?: string;
+  accentColor?: string;
+  variant?: string;
+  isLoading?: boolean;
+  disabled?: boolean;
+  label?: string;
+  content?: string;
+  placeholder?: string;
+  value?: string;
+  hasError?: boolean;
+  checked?: boolean;
+  activeId?: number | null;
+  activeIndex?: number;
+  extraCount?: number;
+  type?: string;
+  title?: string;
+  toastType?: string;
+  toastMessage?: string;
+  isOpen?: boolean;
+  isDragging?: boolean;
+}
+
 export interface ComponentDoc {
   name: string;
   description: string;
@@ -9,7 +32,7 @@ export interface ComponentDoc {
     defaultValue: string;
     description: string;
   }[];
-  codeTemplate: (params: any) => string;
+  codeTemplate: (params: TemplateParams) => string;
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
@@ -22,10 +45,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "isLoading", type: "boolean", defaultValue: "false", description: "Menampilkan ikon pemutar spinner dan menonaktifkan klik tombol." },
       { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan interaksi tombol." },
     ],
-    codeTemplate: ({ style, accentColor, variant, isLoading, disabled, label }: any) => {
+    codeTemplate: ({ style, accentColor, variant, isLoading, disabled, label }: TemplateParams) => {
       const parts = [];
       if (variant !== "primary") parts.push(`variant="${variant}"`);
-      if (accentColor !== "pink" && variant === "primary") parts.push(`accentColor="${accentColor}"`);
+      if (accentColor !== "pink" && variant === "accent") parts.push(`accentColor="${accentColor}"`);
       if (isLoading) parts.push("isLoading");
       if (disabled) parts.push("disabled");
       
@@ -45,7 +68,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "undefined", description: "Menentukan warna aksen border/bayangan (opsional pada beberapa gaya)." },
       { name: "className", type: "string", defaultValue: "''", description: "Kelas CSS Tailwind tambahan untuk kustomisasi ukuran/layout." },
     ],
-    codeTemplate: ({ style, accentColor, content }: any) => {
+    codeTemplate: ({ style, accentColor, content }: TemplateParams) => {
       const accentProp = accentColor ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -64,7 +87,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "placeholder", type: "string", defaultValue: "undefined", description: "Teks bantuan di dalam kolom input." },
       { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan input teks." },
     ],
-    codeTemplate: ({ style, hasError, placeholder, disabled, value }: any) => {
+    codeTemplate: ({ style, hasError, placeholder, disabled, value }: TemplateParams) => {
       const parts = [];
       if (placeholder) parts.push(`placeholder="${placeholder}"`);
       if (hasError) parts.push("hasError");
@@ -85,7 +108,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "hasError", type: "boolean", defaultValue: "false", description: "Menandai pilihan dalam keadaan error." },
       { name: "disabled", type: "boolean", defaultValue: "false", description: "Menonaktifkan dropdown menu." },
     ],
-    codeTemplate: ({ style, hasError, disabled }: any) => {
+    codeTemplate: ({ style, hasError, disabled }: TemplateParams) => {
       const parts = [];
       if (hasError) parts.push("hasError");
       if (disabled) parts.push("disabled");
@@ -109,7 +132,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "onChange", type: "() => void", defaultValue: "undefined", description: "Aksi callback yang dipicu ketika status toggle diubah." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen latar saat toggle berstatus aktif." },
     ],
-    codeTemplate: ({ style, checked, accentColor }: any) => {
+    codeTemplate: ({ style, checked, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -129,7 +152,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "activeId", type: "number | null", defaultValue: "null", description: "ID accordion item yang sedang terbuka." },
       { name: "onToggle", type: "(id: number) => void", defaultValue: "undefined", description: "Callback dipicu ketika menekan tombol header item." },
     ],
-    codeTemplate: ({ style, activeId }: any) => {
+    codeTemplate: ({ style, activeId }: TemplateParams) => {
       return `import { ${style} } from "@/UI";
 
 const faqItems = [
@@ -152,7 +175,7 @@ const faqItems = [
       { name: "steps", type: "{ step: string; title: string; desc: string }[]", defaultValue: "[]", description: "Daftar objek langkah pendaftaran." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna lingkaran nomor langkah aktif." },
     ],
-    codeTemplate: ({ style, accentColor }: any) => {
+    codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -172,7 +195,7 @@ const pendaftaranSteps = [
       { name: "variant", type: "'accent' | 'success' | 'warning' | 'default'", defaultValue: "'default'", description: "Varian status visual badge." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna dasar jika variant diset ke 'accent'." },
     ],
-    codeTemplate: ({ style, variant, accentColor, label }: any) => {
+    codeTemplate: ({ style, variant, accentColor, label }: TemplateParams) => {
       const parts = [];
       if (variant !== "default") parts.push(`variant="${variant}"`);
       if (accentColor !== "pink" && variant === "accent") parts.push(`accentColor="${accentColor}"`);
@@ -194,8 +217,7 @@ const pendaftaranSteps = [
       { name: "extraCount", type: "number", defaultValue: "0", description: "Angka tambahan sisa siswa terdaftar (+X)." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen lingkaran counter tambahan." },
     ],
-    codeTemplate: ({ style, extraCount, accentColor }: any) => {
-      const accentProp = accentColor !== "pink" ? `, accentColor: "${accentColor}"` : "";
+    codeTemplate: ({ style, extraCount, accentColor }: TemplateParams) => {
       return `import { ${style} } from "@/UI";
 
 // Contoh Penggunaan
@@ -213,7 +235,7 @@ const pendaftaranSteps = [
       { name: "title", type: "string", defaultValue: "undefined", description: "Judul tebal pengumuman." },
       { name: "type", type: "'info' | 'warning'", defaultValue: "'info'", description: "Menentukan warna latar belakang dan ikon peringatan." },
     ],
-    codeTemplate: ({ style, type, title, content }: any) => {
+    codeTemplate: ({ style, type, title, content }: TemplateParams) => {
       const typeProp = type !== "info" ? ` type="${type}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -230,7 +252,7 @@ const pendaftaranSteps = [
       { name: "schedules", type: "{ course: string; date: string; mentor: string; status: string }[]", defaultValue: "[]", description: "Data baris log jadwal." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna highlight baris aktif." },
     ],
-    codeTemplate: ({ style, accentColor }: any) => {
+    codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -252,7 +274,7 @@ const dataSchedules = [
       { name: "onNext", type: "() => void", defaultValue: "undefined", description: "Callback tombol navigasi berikutnya." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna visual pelengkap carousel." },
     ],
-    codeTemplate: ({ style, activeIndex, accentColor }: any) => {
+    codeTemplate: ({ style, activeIndex, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -276,7 +298,7 @@ const reviews = [
       { name: "bars", type: "{ label: string; val: string }[]", defaultValue: "[]", description: "Array berisi label dan kelas persentase tinggi ('h-[X%]')." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna grafik batang." },
     ],
-    codeTemplate: ({ style, accentColor }: any) => {
+    codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -296,7 +318,7 @@ const barStats = [
       { name: "items", type: "{ label: string; active?: boolean }[]", defaultValue: "[]", description: "Daftar link navigasi halaman." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna tulisan menu aktif." },
     ],
-    codeTemplate: ({ style, accentColor }: any) => {
+    codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -319,7 +341,7 @@ const pathItems = [
       { name: "items", type: "{ label: string; onClick: () => void }[]", defaultValue: "[]", description: "Daftar aksi pilihan menu dropdown." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Aksen warna tombol dropdown." },
     ],
-    codeTemplate: ({ style, isOpen, accentColor }: any) => {
+    codeTemplate: ({ style, isOpen, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -348,7 +370,7 @@ const options = [
       { name: "onRemoveFile", type: "(index: number) => void", defaultValue: "undefined", description: "Handler membatalkan upload file tertentu." },
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna border area ketika file di-drag." },
     ],
-    codeTemplate: ({ style, isDragging, accentColor }: any) => {
+    codeTemplate: ({ style, isDragging, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
       return `import { ${style} } from "@/UI";
 
@@ -360,6 +382,41 @@ const options = [
   onDrop={(e) => handleDrop(e)}
   uploadedFiles={["tugas_frontend.zip"]}
   onRemoveFile={(idx) => handleRemove(idx)}${accentProp}
+/>`;
+    }
+  },
+  Toast: {
+    name: "Toast",
+    description: "Notifikasi melayang yang muncul di pojok kanan atas layar dengan warna dan animasi masuk yang sesuai dengan tema visual.",
+    props: [
+      { name: "type", type: "'success' | 'error' | 'info'", defaultValue: "'success'", description: "Menentukan jenis informasi dan ikon toast." },
+      { name: "message", type: "string", defaultValue: "undefined", description: "Pesan utama yang ditampilkan di dalam toast." },
+    ],
+    codeTemplate: ({ toastType, toastMessage }: TemplateParams) => {
+      return `import { showToast } from "@/app/ui/_components/ToastContainer";
+
+// Memicu Notifikasi Toast
+showToast("${toastType || "success"}", "${toastMessage || "Selamat! Akun belajar Anda telah aktif."}");`;
+    }
+  },
+  Modal: {
+    name: "Modal",
+    description: "Dialog overlay interaktif dengan efek background blur, border, dan spring rate transisi animasi sesuai gaya visual terpilih.",
+    props: [
+      { name: "isOpen", type: "boolean", defaultValue: "false", description: "Mengatur apakah modal dalam kondisi terbuka." },
+      { name: "onClose", type: "() => void", defaultValue: "undefined", description: "Aksi callback untuk mendeteksi penutupan modal." },
+      { name: "style", type: "string", defaultValue: "undefined", description: "Gaya visual yang disematkan ke modal." },
+      { name: "selectedColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen utama modal." },
+    ],
+    codeTemplate: ({ style, accentColor }: TemplateParams) => {
+      return `import ModalPreview from "@/app/ui/_components/ModalPreview";
+
+// Contoh Penggunaan
+<ModalPreview
+  isOpen={isOpen}
+  onClose={() => handleCloseModal()}
+  style="${style}"
+  selectedColor="${accentColor}"
 />`;
     }
   }

@@ -9,12 +9,13 @@ export interface ToastItem {
   id: string;
   type: "success" | "error" | "info" | "warning";
   message: string;
+  style?: string;
 }
 
-export function showToast(type: ToastItem["type"], message: string) {
+export function showToast(type: ToastItem["type"], message: string, style?: string) {
   if (typeof window !== "undefined") {
     window.dispatchEvent(
-      new CustomEvent("sakode-toast", { detail: { type, message } })
+      new CustomEvent("sakode-toast", { detail: { type, message, style } })
     );
   }
 }
@@ -31,6 +32,7 @@ export default function ToastContainer() {
         id: Math.random().toString(36).substring(2, 9),
         type: customEvent.detail.type,
         message: customEvent.detail.message,
+        style: customEvent.detail.style,
       };
       setToasts((prev) => [...prev, newToast]);
 
@@ -43,8 +45,8 @@ export default function ToastContainer() {
     return () => window.removeEventListener("sakode-toast", handleToast);
   }, []);
 
-  const getStyleClasses = (type: ToastItem["type"]) => {
-    switch (currentStyle) {
+  const getStyleClasses = (type: ToastItem["type"], itemStyle: string) => {
+    switch (itemStyle) {
       case "claymorphism": {
         const bgColors = {
           success: "bg-emerald-100 text-emerald-800 border-emerald-200",
@@ -110,8 +112,8 @@ export default function ToastContainer() {
   };
 
   // Set animation configurations per style
-  const getAnimationConfig = () => {
-    switch (currentStyle) {
+  const getAnimationConfig = (itemStyle: string) => {
+    switch (itemStyle) {
       case "claymorphism":
         return {
           initial: { opacity: 0, scale: 0.8, y: 50 },
@@ -146,39 +148,42 @@ export default function ToastContainer() {
     }
   };
 
-  const anim = getAnimationConfig();
-
   return (
     <div className="fixed top-6 right-6 z-50 flex flex-col gap-4 max-w-sm w-full">
       <AnimatePresence>
-        {toasts.map((toast) => (
-          <motion.div
-            key={toast.id}
-            initial={anim.initial}
-            animate={anim.animate}
-            exit={anim.exit}
-            transition={anim.transition as unknown as Transition}
-            layout
-            className={`flex items-start gap-3 w-full relative ${getStyleClasses(
-              toast.type
-            )}`}
-          >
-            {getIcon(toast.type)}
-            <div className="flex-1 text-sm font-medium leading-relaxed">
-              {toast.message}
-            </div>
-            <button
-              onClick={() =>
-                setToasts((prev) => prev.filter((t) => t.id !== toast.id))
-              }
-              className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded"
-              aria-label="Tutup notifikasi"
-              title="Tutup notifikasi"
+        {toasts.map((toast) => {
+          const toastStyle = toast.style || currentStyle;
+          const anim = getAnimationConfig(toastStyle);
+          return (
+            <motion.div
+              key={toast.id}
+              initial={anim.initial}
+              animate={anim.animate}
+              exit={anim.exit}
+              transition={anim.transition as unknown as Transition}
+              layout
+              className={`flex items-start gap-3 w-full relative ${getStyleClasses(
+                toast.type,
+                toastStyle
+              )}`}
             >
-              <Icons.X className="w-3.5 h-3.5" />
-            </button>
-          </motion.div>
-        ))}
+              {getIcon(toast.type)}
+              <div className="flex-1 text-sm font-medium leading-relaxed">
+                {toast.message}
+              </div>
+              <button
+                onClick={() =>
+                  setToasts((prev) => prev.filter((t) => t.id !== toast.id))
+                }
+                className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded"
+                aria-label="Tutup notifikasi"
+                title="Tutup notifikasi"
+              >
+                <Icons.X className="w-3.5 h-3.5" />
+              </button>
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
     </div>
   );

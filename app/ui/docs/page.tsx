@@ -1,18 +1,161 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import { useTheme } from "next-themes";
 import { COMPONENT_DOCS } from "./_utils/docs-data";
 import * as UIStyles from "@/UI";
 import { PaletteColorKey, PALETTE_COLORS, getBgClass, getTextClass } from "@/UI/shared/color-utils";
 import { Icons } from "@/UI/shared/Icons";
 import { showToast } from "../_components/ToastContainer";
+import ModalPreview from "../_components/ModalPreview";
+
+interface AccordionItem {
+  id: number;
+  q: string;
+  a: string;
+}
+
+interface TimelineStep {
+  step: string;
+  title: string;
+  desc: string;
+}
+
+interface ScheduleItem {
+  course: string;
+  date: string;
+  mentor: string;
+  status: string;
+}
+
+interface TestimonialItem {
+  name: string;
+  role: string;
+  review: string;
+}
+
+interface ChartBar {
+  label: string;
+  val: string;
+}
+
+interface BreadcrumbItem {
+  label: string;
+  active?: boolean;
+}
+
+interface DropdownItem {
+  label: string;
+  onClick: () => void;
+}
+
+interface UIComponents {
+  Button: React.ComponentType<{
+    variant?: "primary" | "secondary";
+    accentColor?: PaletteColorKey;
+    isLoading?: boolean;
+    disabled?: boolean;
+    children?: React.ReactNode;
+  }>;
+  Card: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    className?: string;
+    children?: React.ReactNode;
+  }>;
+  Heading: React.ComponentType<{
+    className?: string;
+    children?: React.ReactNode;
+  }>;
+  Label: React.ComponentType<React.LabelHTMLAttributes<HTMLLabelElement> & {
+    children?: React.ReactNode;
+  }>;
+  Input: React.ComponentType<React.InputHTMLAttributes<HTMLInputElement> & {
+    hasError?: boolean;
+  }>;
+  Select: React.ComponentType<React.SelectHTMLAttributes<HTMLSelectElement> & {
+    hasError?: boolean;
+    children?: React.ReactNode;
+  }>;
+  Toggle: React.ComponentType<{
+    checked: boolean;
+    onChange: () => void;
+    accentColor?: PaletteColorKey;
+    "aria-label"?: string;
+  }>;
+  Accordion: React.ComponentType<{
+    activeId: number | null;
+    onToggle: (id: number) => void;
+    items: AccordionItem[];
+  }>;
+  Timeline: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    steps: TimelineStep[];
+  }>;
+  Badge: React.ComponentType<{
+    variant?: "default" | "accent" | "success" | "warning";
+    accentColor?: PaletteColorKey;
+    children?: React.ReactNode;
+  }>;
+  AvatarGroup: React.ComponentType<{
+    initials: string[];
+    extraCount?: number;
+    accentColor?: PaletteColorKey;
+  }>;
+  Alert: React.ComponentType<{
+    type?: "info" | "warning";
+    title?: string;
+    children?: React.ReactNode;
+  }>;
+  Table: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    schedules: ScheduleItem[];
+  }>;
+  Carousel: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    activeIndex: number;
+    onPrev: () => void;
+    onNext: () => void;
+    testimonials: TestimonialItem[];
+  }>;
+  Chart: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    bars: ChartBar[];
+  }>;
+  Breadcrumbs: React.ComponentType<{
+    accentColor?: PaletteColorKey;
+    items: BreadcrumbItem[];
+  }>;
+  Dropdown: React.ComponentType<{
+    isOpen: boolean;
+    onToggle: () => void;
+    triggerText: string;
+    accentColor?: PaletteColorKey;
+    items: DropdownItem[];
+  }>;
+  UploadZone: React.ComponentType<{
+    isDragging: boolean;
+    onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+    onDragLeave: () => void;
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+    accentColor?: PaletteColorKey;
+    uploadedFiles: string[];
+    onRemoveFile: (idx: number) => void;
+  }>;
+}
 
 export default function ComponentDocsPage() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
   const [selectedComp, setSelectedComp] = useState<string>("Button");
   const [styleName, setStyleName] = useState<string>("sakode-modern");
   const [accentColor, setAccentColor] = useState<PaletteColorKey>("pink");
   const [bgPreview, setBgPreview] = useState<"checkerboard" | "light" | "dark">("checkerboard");
+
+  // Knobs for Toast & Modal
+  const [toastType, setToastType] = useState<"success" | "error" | "info">("success");
+  const [toastMessage, setToastMessage] = useState("Selamat! Akun belajar Anda telah aktif.");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Knobs states
   const [buttonVariant, setButtonVariant] = useState<"primary" | "secondary">("primary");
@@ -49,19 +192,24 @@ export default function ComponentDocsPage() {
 
   const [copied, setCopied] = useState(false);
 
-  // Sync default color to style preference if color wasn't set manually
   useEffect(() => {
-    if (styleName === "neobrutalism") setAccentColor("yellow");
-    else if (styleName === "glassmorphism") setAccentColor("cyan");
-    else if (styleName === "liquid-glass") setAccentColor("orange");
-    else if (styleName === "bento-grid") setAccentColor("green");
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const handleStyleChange = (newStyle: string) => {
+    setStyleName(newStyle);
+    if (newStyle === "neobrutalism") setAccentColor("yellow");
+    else if (newStyle === "glassmorphism") setAccentColor("cyan");
+    else if (newStyle === "liquid-glass") setAccentColor("orange");
+    else if (newStyle === "bento-grid") setAccentColor("green");
     else setAccentColor("pink");
-  }, [styleName]);
+  };
 
   const activeDoc = COMPONENT_DOCS[selectedComp] || COMPONENT_DOCS.Button;
 
   // Resolve current active UI style namespace
-  const UI = (UIStyles.UI[styleName as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]) as any;
+  const UI = (UIStyles.UI[styleName as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]) as unknown as UIComponents;
 
   // Knob values object
   const getKnobValues = () => {
@@ -98,6 +246,10 @@ export default function ComponentDocsPage() {
         return { style: styleName, isOpen: isDropdownOpen, accentColor };
       case "UploadZone":
         return { style: styleName, isDragging: isUploadDragging, accentColor };
+      case "Toast":
+        return { style: styleName, toastType, toastMessage };
+      case "Modal":
+        return { style: styleName, accentColor, isOpen: isModalOpen };
       default:
         return {};
     }
@@ -109,7 +261,7 @@ export default function ComponentDocsPage() {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(generatedCode);
       setCopied(true);
-      showToast("success", "Kode berhasil disalin!");
+      showToast("success", "Kode berhasil disalin!", styleName);
       setTimeout(() => setCopied(false), 2000);
     }
   };
@@ -147,14 +299,15 @@ export default function ComponentDocsPage() {
         case "Input":
           return (
             <div className="w-full max-w-sm">
-              <UI.Label>Nama Lengkap</UI.Label>
+              <UI.Label htmlFor="sandbox-input-demo">Nama Lengkap</UI.Label>
               <UI.Input
+                id="sandbox-input-demo"
                 type="text"
                 placeholder={inputPlaceholder}
                 hasError={inputHasError}
                 disabled={inputDisabled}
                 value={inputValue}
-                onChange={(e: any) => setInputValue(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
               />
               {inputHasError && (
                 <p className="text-[10px] text-red-500 font-semibold mt-1">Input tidak valid.</p>
@@ -164,8 +317,8 @@ export default function ComponentDocsPage() {
         case "Select":
           return (
             <div className="w-full max-w-sm">
-              <UI.Label>Program Kursus IT</UI.Label>
-              <UI.Select hasError={selectHasError} disabled={selectDisabled}>
+              <UI.Label htmlFor="sandbox-select-demo">Program Kursus IT</UI.Label>
+              <UI.Select id="sandbox-select-demo" hasError={selectHasError} disabled={selectDisabled}>
                 <option value="">-- Pilih Program --</option>
                 <option value="fe">Frontend Development (Next.js)</option>
                 <option value="be">Backend Engineering (Node.js)</option>
@@ -295,8 +448,8 @@ export default function ComponentDocsPage() {
                 triggerText="Opsi Kontrol"
                 accentColor={accentColor}
                 items={[
-                  { label: "Buka Dashboard", onClick: () => showToast("info", "Membuka Dashboard...") },
-                  { label: "Keluar Sesi", onClick: () => showToast("info", "Keluar dari sesi...") }
+                  { label: "Buka Dashboard", onClick: () => showToast("info", "Membuka Dashboard...", styleName) },
+                  { label: "Keluar Sesi", onClick: () => showToast("info", "Keluar dari sesi...", styleName) }
                 ]}
               />
             </div>
@@ -306,12 +459,49 @@ export default function ComponentDocsPage() {
             <div className="w-full max-w-sm">
               <UI.UploadZone
                 isDragging={isUploadDragging}
-                onDragOver={(e: any) => { e.preventDefault(); setIsUploadDragging(true); }}
+                onDragOver={(e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsUploadDragging(true); }}
                 onDragLeave={() => setIsUploadDragging(false)}
-                onDrop={(e: any) => { e.preventDefault(); setIsUploadDragging(false); }}
+                onDrop={(e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsUploadDragging(false); }}
                 accentColor={accentColor}
                 uploadedFiles={uploadedFiles}
                 onRemoveFile={(idx: number) => setUploadedFiles(uploadedFiles.filter((_, i) => i !== idx))}
+              />
+            </div>
+          );
+        case "Toast":
+          return (
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-xs text-zinc-500 text-center max-w-xs leading-relaxed">
+                Gunakan tombol di bawah untuk menyimulasikan pemicuan pesan notifikasi toast interaktif.
+              </span>
+              <button
+                type="button"
+                onClick={() => showToast(toastType, toastMessage, styleName)}
+                className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-xs"
+              >
+                Picu Toast ({toastType})
+              </button>
+            </div>
+          );
+        case "Modal":
+          return (
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-xs text-zinc-500 text-center max-w-xs leading-relaxed">
+                Gunakan tombol di bawah untuk membuka simulasi kotak dialog overlay modal.
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-xs"
+              >
+                Buka Modal Preview
+              </button>
+              
+              <ModalPreview
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                style={styleName}
+                selectedColor={accentColor}
               />
             </div>
           );
@@ -334,8 +524,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Label Tombol</label>
+              <label htmlFor="button-label-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Label Tombol</label>
               <input
+                id="button-label-input"
                 type="text"
                 value={buttonLabel}
                 onChange={(e) => setButtonLabel(e.target.value)}
@@ -343,10 +534,11 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Varian Button</label>
+              <label htmlFor="button-variant-select" className="block text-xs font-bold text-zinc-500 mb-1.5">Varian Button</label>
               <select
+                id="button-variant-select"
                 value={buttonVariant}
-                onChange={(e: any) => setButtonVariant(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setButtonVariant(e.target.value as "primary" | "secondary")}
                 className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 px-3 text-xs cursor-pointer focus:outline-hidden"
               >
                 <option value="primary">primary (Solid Accent)</option>
@@ -354,8 +546,9 @@ export default function ComponentDocsPage() {
               </select>
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Loading State</span>
+              <label htmlFor="button-loading-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Loading State</label>
               <input
+                id="button-loading-checkbox"
                 type="checkbox"
                 checked={buttonIsLoading}
                 onChange={(e) => setButtonIsLoading(e.target.checked)}
@@ -363,8 +556,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Disabled State</span>
+              <label htmlFor="button-disabled-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Disabled State</label>
               <input
+                id="button-disabled-checkbox"
                 type="checkbox"
                 checked={buttonDisabled}
                 onChange={(e) => setButtonDisabled(e.target.checked)}
@@ -376,8 +570,9 @@ export default function ComponentDocsPage() {
       case "Card":
         return (
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-1.5">Konten Deskripsi Kartu</label>
+            <label htmlFor="card-content-textarea" className="block text-xs font-bold text-zinc-500 mb-1.5">Konten Deskripsi Kartu</label>
             <textarea
+              id="card-content-textarea"
               value={cardContent}
               onChange={(e) => setCardContent(e.target.value)}
               rows={3}
@@ -389,8 +584,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Placeholder</label>
+              <label htmlFor="input-placeholder-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Placeholder</label>
               <input
+                id="input-placeholder-input"
                 type="text"
                 value={inputPlaceholder}
                 onChange={(e) => setInputPlaceholder(e.target.value)}
@@ -398,8 +594,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Simulasi Nilai Input</label>
+              <label htmlFor="input-value-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Simulasi Nilai Input</label>
               <input
+                id="input-value-input"
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -407,8 +604,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Error State</span>
+              <label htmlFor="input-error-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Error State</label>
               <input
+                id="input-error-checkbox"
                 type="checkbox"
                 checked={inputHasError}
                 onChange={(e) => setInputHasError(e.target.checked)}
@@ -416,8 +614,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Disabled State</span>
+              <label htmlFor="input-disabled-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Disabled State</label>
               <input
+                id="input-disabled-checkbox"
                 type="checkbox"
                 checked={inputDisabled}
                 onChange={(e) => setInputDisabled(e.target.checked)}
@@ -430,8 +629,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Error State</span>
+              <label htmlFor="select-error-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Error State</label>
               <input
+                id="select-error-checkbox"
                 type="checkbox"
                 checked={selectHasError}
                 onChange={(e) => setSelectHasError(e.target.checked)}
@@ -439,8 +639,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Disabled State</span>
+              <label htmlFor="select-disabled-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Disabled State</label>
               <input
+                id="select-disabled-checkbox"
                 type="checkbox"
                 checked={selectDisabled}
                 onChange={(e) => setSelectDisabled(e.target.checked)}
@@ -453,8 +654,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Status Aktif (Checked)</span>
+              <label htmlFor="toggle-checked-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Status Aktif (Checked)</label>
               <input
+                id="toggle-checked-checkbox"
                 type="checkbox"
                 checked={toggleChecked}
                 onChange={(e) => setToggleChecked(e.target.checked)}
@@ -466,7 +668,7 @@ export default function ComponentDocsPage() {
       case "Accordion":
         return (
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-1.5">Buka Item ID (Accordion)</label>
+            <span className="block text-xs font-bold text-zinc-500 mb-1.5">Buka Item ID (Accordion)</span>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -502,8 +704,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Teks Label Badge</label>
+              <label htmlFor="badge-label-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Teks Label Badge</label>
               <input
+                id="badge-label-input"
                 type="text"
                 value={badgeLabel}
                 onChange={(e) => setBadgeLabel(e.target.value)}
@@ -511,10 +714,11 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Varian Status</label>
+              <label htmlFor="badge-variant-select" className="block text-xs font-bold text-zinc-500 mb-1.5">Varian Status</label>
               <select
+                id="badge-variant-select"
                 value={badgeVariant}
-                onChange={(e: any) => setBadgeVariant(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBadgeVariant(e.target.value as "default" | "accent" | "success" | "warning")}
                 className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 px-3 text-xs cursor-pointer focus:outline-hidden"
               >
                 <option value="default">default (Grey)</option>
@@ -528,8 +732,9 @@ export default function ComponentDocsPage() {
       case "AvatarGroup":
         return (
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-1.5">Angka Counter Sisa Murid (+X)</label>
+            <label htmlFor="avatar-count-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Angka Counter Sisa Murid (+X)</label>
             <input
+              id="avatar-count-input"
               type="number"
               value={avatarExtraCount}
               onChange={(e) => setAvatarExtraCount(Number(e.target.value))}
@@ -541,8 +746,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Judul Alert</label>
+              <label htmlFor="alert-title-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Judul Alert</label>
               <input
+                id="alert-title-input"
                 type="text"
                 value={alertTitle}
                 onChange={(e) => setAlertTitle(e.target.value)}
@@ -550,8 +756,9 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Isi Pesan Notifikasi</label>
+              <label htmlFor="alert-content-textarea" className="block text-xs font-bold text-zinc-500 mb-1.5">Isi Pesan Notifikasi</label>
               <textarea
+                id="alert-content-textarea"
                 value={alertContent}
                 onChange={(e) => setAlertContent(e.target.value)}
                 rows={3}
@@ -559,10 +766,11 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Tipe Status Alert</label>
+              <label htmlFor="alert-type-select" className="block text-xs font-bold text-zinc-500 mb-1.5">Tipe Status Alert</label>
               <select
+                id="alert-type-select"
                 value={alertType}
-                onChange={(e: any) => setAlertType(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAlertType(e.target.value as "info" | "warning")}
                 className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 px-3 text-xs cursor-pointer focus:outline-hidden"
               >
                 <option value="info">info (Blue Banner)</option>
@@ -574,7 +782,7 @@ export default function ComponentDocsPage() {
       case "Carousel":
         return (
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-1.5">Simulasi Slide Index Aktif</label>
+            <span className="block text-xs font-bold text-zinc-500 mb-1.5">Simulasi Slide Index Aktif</span>
             <div className="flex gap-2">
               {[0, 1, 2].map((idx) => (
                 <button
@@ -594,8 +802,9 @@ export default function ComponentDocsPage() {
       case "Dropdown":
         return (
           <div className="flex items-center justify-between py-1">
-            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Dropdown Terbuka (IsOpen)</span>
+            <label htmlFor="dropdown-open-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Dropdown Terbuka (IsOpen)</label>
             <input
+              id="dropdown-open-checkbox"
               type="checkbox"
               checked={isDropdownOpen}
               onChange={(e) => setIsDropdownOpen(e.target.checked)}
@@ -607,8 +816,9 @@ export default function ComponentDocsPage() {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between py-1">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">State Seret File (isDragging)</span>
+              <label htmlFor="upload-dragging-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">State Seret File (isDragging)</label>
               <input
+                id="upload-dragging-checkbox"
                 type="checkbox"
                 checked={isUploadDragging}
                 onChange={(e) => setIsUploadDragging(e.target.checked)}
@@ -616,7 +826,7 @@ export default function ComponentDocsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-500 mb-1.5">Daftar File Pengumpulan (Simulasi)</label>
+              <span className="block text-xs font-bold text-zinc-500 mb-1.5">Daftar File Pengumpulan (Simulasi)</span>
               <div className="space-y-1">
                 {uploadedFiles.map((file, idx) => (
                   <div key={idx} className="flex items-center justify-between p-1 px-2 text-[10px] bg-zinc-100 dark:bg-zinc-900 rounded-md border border-zinc-200/50">
@@ -638,6 +848,49 @@ export default function ComponentDocsPage() {
                   </button>
                 )}
               </div>
+            </div>
+          </div>
+        );
+      case "Toast":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="toast-message-input" className="block text-xs font-bold text-zinc-500 mb-1.5">Teks Pesan Toast</label>
+              <input
+                id="toast-message-input"
+                type="text"
+                value={toastMessage}
+                onChange={(e) => setToastMessage(e.target.value)}
+                className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 px-3 text-xs focus:ring-2 focus:ring-indigo-400"
+              />
+            </div>
+            <div>
+              <label htmlFor="toast-type-select" className="block text-xs font-bold text-zinc-500 mb-1.5">Tipe Toast</label>
+              <select
+                id="toast-type-select"
+                value={toastType}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToastType(e.target.value as "success" | "error" | "info")}
+                className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 px-3 text-xs cursor-pointer focus:outline-hidden"
+              >
+                <option value="success">success (Success/Green)</option>
+                <option value="error">error (Error/Red)</option>
+                <option value="info">info (Info/Blue)</option>
+              </select>
+            </div>
+          </div>
+        );
+      case "Modal":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-1">
+              <label htmlFor="modal-open-checkbox" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer">Status Terbuka (IsOpen)</label>
+              <input
+                id="modal-open-checkbox"
+                type="checkbox"
+                checked={isModalOpen}
+                onChange={(e) => setIsModalOpen(e.target.checked)}
+                className="rounded text-indigo-600 focus:ring-indigo-400 h-4 w-4"
+              />
             </div>
           </div>
         );
@@ -663,7 +916,7 @@ export default function ComponentDocsPage() {
         {/* Left Sidebar Menu */}
         <aside className="lg:col-span-3 bg-white dark:bg-zinc-900/40 rounded-2xl border border-zinc-200 dark:border-zinc-850 p-4 space-y-4">
           <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block px-1">Daftar Komponen UI</span>
-          <nav className="space-y-1 max-h-[500px] overflow-y-auto pr-1">
+          <nav className="space-y-1 max-h-125 overflow-y-auto pr-1">
             {Object.keys(COMPONENT_DOCS).map((key) => {
               const isActive = selectedComp === key;
               return (
@@ -696,10 +949,11 @@ export default function ComponentDocsPage() {
               {/* Toolbar Settings */}
               <div className="flex flex-wrap items-center justify-between gap-4 bg-zinc-100/60 dark:bg-zinc-950/20 p-3.5 rounded-xl border border-zinc-200/40 dark:border-zinc-800/30">
                 <div className="flex items-center gap-3">
-                  <label className="text-xs font-bold text-zinc-400">Gaya UI:</label>
+                  <label htmlFor="style-name-select" className="text-xs font-bold text-zinc-400 cursor-pointer">Gaya UI:</label>
                   <select
+                    id="style-name-select"
                     value={styleName}
-                    onChange={(e) => setStyleName(e.target.value)}
+                    onChange={(e) => handleStyleChange(e.target.value)}
                     className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-1.5 px-3 text-xs cursor-pointer font-bold focus:outline-hidden"
                   >
                     <option value="claymorphism">Claymorphism</option>
@@ -713,7 +967,7 @@ export default function ComponentDocsPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <label className="text-xs font-bold text-zinc-400">Latar Preview:</label>
+                  <span className="text-xs font-bold text-zinc-400">Latar Preview:</span>
                   <div className="flex p-0.5 bg-zinc-200 dark:bg-zinc-900 rounded-lg border border-zinc-300/40 dark:border-zinc-800/40">
                     {(["checkerboard", "light", "dark"] as const).map((bg) => (
                       <button
@@ -730,6 +984,42 @@ export default function ComponentDocsPage() {
                     ))}
                   </div>
                 </div>
+
+                {mounted && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-zinc-400">Mode Tema:</span>
+                    <div className="flex p-0.5 bg-zinc-200 dark:bg-zinc-900 rounded-lg border border-zinc-300/40 dark:border-zinc-800/40">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTheme("light");
+                          showToast("success", "Mode Terang Aktif", styleName);
+                        }}
+                        className={`text-[10px] font-bold py-1 px-2.5 rounded-md transition-all ${
+                          resolvedTheme !== "dark"
+                            ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-955 shadow-sm"
+                            : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-350"
+                        }`}
+                      >
+                        Terang
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTheme("dark");
+                          showToast("success", "Mode Gelap Aktif", styleName);
+                        }}
+                        className={`text-[10px] font-bold py-1 px-2.5 rounded-md transition-all ${
+                          resolvedTheme === "dark"
+                            ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-955 shadow-sm"
+                            : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-355"
+                        }`}
+                      >
+                        Gelap
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Live Preview Container */}
@@ -741,7 +1031,7 @@ export default function ComponentDocsPage() {
                       ? "bg-zinc-50"
                       : bgPreview === "dark"
                       ? "bg-zinc-950"
-                      : "bg-zinc-100 dark:bg-zinc-950 bg-[radial-gradient(#00000008_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff04_1px,transparent_1px)] bg-size-[16px_16px]"
+                      : "bg-zinc-100 dark:bg-zinc-955 bg-[radial-gradient(#00000008_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff04_1px,transparent_1px)] bg-size-[16px_16px]"
                   }`}
                 >
                   {/* Subtle background nodes simulation for liquid glass inside preview container */}
@@ -757,7 +1047,11 @@ export default function ComponentDocsPage() {
                     <div className="absolute inset-0 pointer-events-none opacity-40 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-size-[16px_16px]" />
                   )}
 
-                  <div className="relative z-10 flex w-full items-center justify-center">
+                  <div className={`relative z-10 flex w-full items-center justify-center ${
+                    bgPreview === "dark" || (bgPreview === "checkerboard" && resolvedTheme === "dark")
+                      ? "dark text-zinc-100"
+                      : "text-zinc-900"
+                  }`}>
                     {renderSandboxComponent()}
                   </div>
                 </div>
@@ -777,7 +1071,7 @@ export default function ComponentDocsPage() {
 
               {/* Accent Color Picker Control (if style allows or uses standard colors) */}
               <div className="border-t border-zinc-150 dark:border-zinc-800 pt-5 space-y-2.5">
-                <label className="block text-xs font-bold text-zinc-500">Warna Aksen (Brand Accent)</label>
+                <span className="block text-xs font-bold text-zinc-500">Warna Aksen (Brand Accent)</span>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {PALETTE_COLORS.map((c) => {
                     const isSelected = accentColor === c.key;

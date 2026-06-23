@@ -184,6 +184,7 @@ export default function ModalPreview({
                             detail: {
                               type: "success",
                               message: "Pendaftaran kelas berhasil dikirim langsung dari Modal!",
+                              style: style,
                             },
                           })
                         );
