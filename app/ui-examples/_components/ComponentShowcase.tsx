@@ -111,6 +111,17 @@ const getBgOpacity15Class = (color: PaletteColorKey) => {
   }
 };
 
+const getBgOpacity5Class = (color: PaletteColorKey) => {
+  switch (color) {
+    case "pink": return "bg-sakode-pink/5";
+    case "orange": return "bg-sakode-orange/5";
+    case "yellow": return "bg-sakode-yellow/5";
+    case "blue": return "bg-sakode-blue/5";
+    case "green": return "bg-sakode-green/5";
+    case "cyan": return "bg-sakode-cyan/5";
+  }
+};
+
 const getTextClass = (color: PaletteColorKey) => {
   switch (color) {
     case "pink": return "text-sakode-pink";
@@ -343,10 +354,10 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
   const getAccentTextClass = () => getTextClass(selectedColor);
   const getAccentBgClass = () => getBgClass(selectedColor);
 
-  const getBorderRadius = () => {
-    if (style === "neobrutalism" || style === "minimalism") return "0px";
-    if (style === "bento-grid") return "12px";
-    return "16px";
+  const getBorderRadiusClass = () => {
+    if (style === "neobrutalism" || style === "minimalism") return "rounded-none";
+    if (style === "bento-grid") return "rounded-xl";
+    return "rounded-2xl";
   };
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -399,21 +410,24 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                       setSelectedColor(c.key);
                       showToast("info", `Warna aksen diubah ke ${c.name}`);
                     }}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold transition-all border ${
+                    className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold transition-all border ${
+                      style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
+                    } ${
+                      style === "neobrutalism"
+                        ? "border-3 border-zinc-900 dark:border-white"
+                        : "border-zinc-200/80 dark:border-zinc-700"
+                    } ${
+                      style === "neobrutalism" && isSelected
+                        ? "shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] dark:shadow-[3px_3px_0px_0px_rgba(250,250,250,1)]"
+                        : ""
+                    } ${
                       isSelected
                         ? `${getBgClass(c.key)} text-white border-transparent scale-105 shadow-md`
-                        : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-750 dark:text-zinc-300 dark:border-zinc-700"
+                        : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-750 dark:text-zinc-300"
                     }`}
-                    style={{
-                      borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "9999px",
-                      borderWidth: style === "neobrutalism" ? "3px" : "1px",
-                      borderColor: style === "neobrutalism" ? "#18181b" : undefined,
-                      boxShadow: style === "neobrutalism" && isSelected ? "3px 3px 0px 0px #18181b" : undefined,
-                    }}
                   >
                     <span
-                      className="w-3 h-3 rounded-full border border-black/10 shrink-0"
-                      style={{ backgroundColor: c.hex }}
+                      className={`w-3 h-3 rounded-full border border-black/10 shrink-0 ${getBgClass(c.key)}`}
                     />
                     {c.name}
                   </button>
@@ -426,13 +440,12 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             <span className={classMap.label}>Mode Tampilan (Ubah Tema)</span>
             <div
               className={`grid grid-cols-2 p-1 bg-zinc-200/50 dark:bg-zinc-900 border ${
+                style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-xl"
+              } ${
                 style === "neobrutalism"
                   ? "border-3 border-zinc-900 dark:border-white"
                   : "border-zinc-200 dark:border-zinc-800"
               }`}
-              style={{
-                borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "12px",
-              }}
             >
               <button
                 type="button"
@@ -441,15 +454,14 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                   showToast("success", "Mode Terang (Light Mode) Aktif");
                 }}
                 className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-black transition-all ${
+                  style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-md"
+                } ${
                   !isDark
                     ? style === "neobrutalism"
                       ? "bg-zinc-900 text-white"
-                      : "bg-white text-zinc-950 shadow-md rounded-lg"
+                      : "bg-white text-zinc-950 shadow-md"
                     : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
                 }`}
-                style={{
-                  borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : undefined,
-                }}
               >
                 ☀️ Terang
               </button>
@@ -461,15 +473,14 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                   showToast("success", "Mode Gelap (Dark Mode) Aktif");
                 }}
                 className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-black transition-all ${
+                  style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-md"
+                } ${
                   isDark
                     ? style === "neobrutalism"
                       ? "bg-zinc-900 text-zinc-900 dark:text-zinc-950"
-                      : "bg-zinc-800 text-white shadow-md rounded-lg"
+                      : "bg-zinc-800 text-white shadow-md"
                     : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
                 }`}
-                style={{
-                  borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : undefined,
-                }}
               >
                 🌙 Gelap
               </button>
@@ -551,8 +562,10 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
 
         {/* Course dropdown selection */}
         <div>
-          <label className={classMap.label}>Program Kursus IT</label>
+          <label htmlFor="course-selection" className={classMap.label}>Program Kursus IT</label>
           <select
+            id="course-selection"
+            aria-label="Program Kursus IT"
             value={formCourse}
             onChange={(e) => setFormCourse(e.target.value)}
             className={`${classMap.input} appearance-none cursor-pointer bg-white dark:bg-zinc-900`}
@@ -580,7 +593,8 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
           <button
             type="button"
             role="switch"
-            aria-checked={formChecked}
+            aria-checked={formChecked ? "true" : "false"}
+            aria-label="Setuju Ketentuan Layanan Akademi"
             onClick={() => setFormChecked(!formChecked)}
             className={`${classMap.toggle} ${
               formChecked
@@ -591,19 +605,17 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white dark:bg-zinc-900 transform ring-0 transition duration-200 ease-in-out ${
+              className={`pointer-events-none inline-block transform ring-0 transition duration-200 ease-in-out ${
+                style === "neobrutalism" || style === "minimalism" ? "rounded-none h-4.5 w-4.5" : "rounded-full h-5 w-5"
+              } ${
+                style === "neobrutalism" && formChecked ? "bg-white" : "bg-white dark:bg-zinc-900"
+              } ${
                 formChecked
                   ? style === "minimalism"
                     ? "translate-x-4 border border-zinc-900 dark:border-white bg-zinc-900 dark:bg-white"
                     : "translate-x-5"
                   : "translate-x-0"
               }`}
-              style={{
-                borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "9999px",
-                height: style === "neobrutalism" || style === "minimalism" ? "18px" : "20px",
-                width: style === "neobrutalism" || style === "minimalism" ? "18px" : "20px",
-                backgroundColor: style === "neobrutalism" && formChecked ? "#ffffff" : undefined,
-              }}
             />
           </button>
         </div>
@@ -674,10 +686,9 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             <span className="text-3xl font-black">{counter}</span>
             <button
               onClick={() => setCounter((prev) => prev + 1)}
-              className={`text-[10px] px-2 py-0.5 rounded font-black ${getAccentBgClass()} text-white flex items-center gap-0.5`}
-              style={{
-                borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "6px",
-              }}
+              className={`text-[10px] px-2 py-0.5 font-black ${getAccentBgClass()} text-white flex items-center gap-0.5 ${
+                style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-sm"
+              }`}
             >
               + Tambah
             </button>
@@ -691,19 +702,16 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             <span className="text-zinc-800 dark:text-zinc-200">76% Completed</span>
           </div>
           <div
-            className="w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden"
-            style={{
-              borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "9999px",
-              height: "8px",
-            }}
+            className={`w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden h-2 ${
+              style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
+            }`}
           >
             <div
-              className={`h-full ${
+              className={`h-full w-[76%] ${
                 style === "liquid-glass"
-                  ? `bg-gradient-to-r ${getGradientClass(selectedColor)}`
+                  ? `bg-linear-to-r ${getGradientClass(selectedColor)}`
                   : getBgClass(selectedColor)
               }`}
-              style={{ width: "76%" }}
             />
           </div>
         </div>
@@ -719,7 +727,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
         <div className={`${classMap.card} flex flex-col justify-between h-full`}>
           <div className="space-y-4">
             <div
-              className={`relative w-full h-40 bg-gradient-to-tr ${getGradientBgLightClass(selectedColor)} rounded-xl overflow-hidden flex items-center justify-center border border-zinc-200/25`}
+              className={`relative w-full h-40 bg-linear-to-tr ${getGradientBgLightClass(selectedColor)} rounded-xl overflow-hidden flex items-center justify-center border border-zinc-200/25`}
             >
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 text-center px-4">
                 Front-End Next.js v16 & Tailwind v4
@@ -784,7 +792,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
               <span className="font-bold text-zinc-800 dark:text-zinc-200 ml-1">4.9</span>
               <span className="text-[10px] text-zinc-400">(120+ Review)</span>
             </div>
-            <button className={`${getBtnSecondaryClass()} !py-1.5 !px-3 text-[10px]`}>
+            <button className={`${getBtnSecondaryClass()} py-1.5! px-3! text-[10px]`}>
               Jadwal Sesi
             </button>
           </div>
@@ -822,8 +830,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             return (
               <div
                 key={item.id}
-                className="border border-zinc-200/60 dark:border-zinc-800/80 overflow-hidden"
-                style={{ borderRadius: getBorderRadius() }}
+                className={`border border-zinc-200/60 dark:border-zinc-800/80 overflow-hidden ${getBorderRadiusClass()}`}
               >
                 <button
                   type="button"
@@ -864,7 +871,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
         <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-6">
           {steps.map((item, idx) => (
             <div key={idx} className="relative">
-              <span className={`absolute left-[-35px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white ${getAccentBgClass()}`}>
+              <span className={`absolute -left-8.75 top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white ${getAccentBgClass()}`}>
                 {item.step}
               </span>
               <div>
@@ -911,7 +918,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             {["AN", "BS", "CL", "DK"].map((initial, idx) => (
               <div
                 key={idx}
-                className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-700 dark:text-zinc-300"
+                className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 bg-zinc-200 dark:bg-zinc-800 items-center justify-center text-[10px] font-bold text-zinc-700 dark:text-zinc-300"
               >
                 {initial}
               </div>
@@ -1014,12 +1021,16 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             <button
               onClick={() => setCarouselIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
               className="p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              aria-label="Slide sebelumnya"
+              title="Slide sebelumnya"
             >
               <Icons.ArrowLeft className="w-3.5 h-3.5 text-zinc-500" />
             </button>
             <button
               onClick={() => setCarouselIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
               className="p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              aria-label="Slide berikutnya"
+              title="Slide berikutnya"
             >
               <Icons.ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
             </button>
@@ -1066,11 +1077,11 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                 <div
                   className={`w-full rounded-t-lg transition-all duration-300 ${bar.val} ${
                     style === "liquid-glass"
-                      ? `bg-gradient-to-t ${getGradientClass(selectedColor)}`
+                      ? `bg-linear-to-t ${getGradientClass(selectedColor)}`
                       : getBgClass(selectedColor)
                   }`}
                 />
-                <span className="absolute top-[-25px] left-1/2 translate-x-[-50%] text-[8px] bg-zinc-900 text-white rounded px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="absolute -top-6.25 left-1/2 translate-x-[-50%] text-[8px] bg-zinc-900 text-white rounded px-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   {bar.val.replace("h-[", "").replace("%]", "")}%
                 </span>
               </div>
@@ -1106,7 +1117,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
         <div className="relative inline-block text-left z-20">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`${getBtnSecondaryClass()} !py-2 !px-4 flex items-center gap-2`}
+            className={`${getBtnSecondaryClass()} py-2! px-4! flex items-center gap-2`}
           >
             <span>Aksi Profil</span>
             <Icons.X className={`w-3.5 h-3.5 transform transition-transform ${isDropdownOpen ? "" : "rotate-45"}`} />
@@ -1114,8 +1125,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
 
           {isDropdownOpen && (
             <div
-              className="absolute left-0 mt-2 w-48 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg p-1.5 space-y-1 z-30"
-              style={{ borderRadius: getBorderRadius() }}
+              className={`absolute left-0 mt-2 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg p-1.5 space-y-1 z-30 ${getBorderRadiusClass()}`}
             >
               <button
                 onClick={() => {
@@ -1170,12 +1180,11 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`border-2 border-dashed py-8 px-4 text-center cursor-pointer transition-all ${
+          className={`border-2 border-dashed py-8 px-4 text-center cursor-pointer transition-all ${getBorderRadiusClass()} ${
             isDragging
-              ? `border-sakode-${selectedColor} bg-sakode-${selectedColor}/5`
+              ? `${getBorderClass(selectedColor)} ${getBgOpacity5Class(selectedColor)}`
               : "border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700"
           }`}
-          style={{ borderRadius: getBorderRadius() }}
         >
           <div className="flex flex-col items-center justify-center gap-2">
             <Icons.X className="w-8 h-8 text-zinc-400 rotate-45" />
@@ -1199,6 +1208,8 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                       showToast("info", "File dibatalkan.");
                     }}
                     className="text-rose-500 hover:text-rose-600"
+                    aria-label="Batalkan unggahan file"
+                    title="Batalkan unggahan file"
                   >
                     <Icons.X className="w-3.5 h-3.5" />
                   </button>
@@ -1306,7 +1317,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 -mx-4 sm:-mx-6 lg:-mx-8">
           {/* Vector Blueprint grids lines */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:32px_32px] opacity-70 pointer-events-none z-0" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-size-[32px_32px] opacity-70 pointer-events-none z-0" />
           
           {/* Mesh overlay glows */}
           <div className={`absolute top-[-10%] left-[50%] translate-x-[-50%] h-150 w-[95%] rounded-full bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.06)_0%,transparent_65%)] dark:bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.11)_0%,transparent_65%)] blur-[60px] pointer-events-none z-0`} />

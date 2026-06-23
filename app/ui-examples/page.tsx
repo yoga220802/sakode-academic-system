@@ -35,7 +35,7 @@ export default function UIExamplesIndexPage() {
               {/* Dynamic visual preview based on style type */}
               {style.slug === "claymorphism" && (
                 <div className="w-full h-full bg-slate-50 dark:bg-zinc-900 flex items-center justify-center">
-                  <div className="px-5 py-2.5 rounded-2xl bg-indigo-100 text-indigo-700 text-sm font-bold shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.06),_inset_4px_4px_8px_rgba(255,255,255,0.8),_4px_4px_12px_rgba(0,0,0,0.12)]">
+                  <div className="px-5 py-2.5 rounded-2xl bg-indigo-100 text-indigo-700 text-sm font-bold shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.06),inset_4px_4px_8px_rgba(255,255,255,0.8),4px_4px_12px_rgba(0,0,0,0.12)]">
                     Claymorphism Button
                   </div>
                 </div>
@@ -81,7 +81,7 @@ export default function UIExamplesIndexPage() {
               {style.slug === "minimalism" && (
                 <div className="w-full h-full bg-white dark:bg-zinc-950 flex flex-col justify-center p-6 border-b border-zinc-100 dark:border-zinc-800">
                   <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-zinc-400">Minimalism</span>
-                  <div className="w-full h-[1px] bg-zinc-200 dark:bg-zinc-800 my-2" />
+                  <div className="w-full h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
                   <span className="text-xs text-zinc-800 dark:text-zinc-300 font-light">Clean typography & hairlines.</span>
                 </div>
               )}
@@ -89,7 +89,7 @@ export default function UIExamplesIndexPage() {
               {style.slug === "sakode-modern" && (
                 <div className="w-full h-full bg-[#030307] relative flex flex-col justify-center p-6 overflow-hidden">
                   {/* Grid layout */}
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-size-[16px_16px] pointer-events-none" />
                   {/* Glow */}
                   <div className="absolute w-24 h-24 bg-sakode-blue/10 rounded-full blur-xl top-[-20%] left-[-20%]" />
                   <div className="absolute w-24 h-24 bg-sakode-pink/10 rounded-full blur-xl bottom-[-20%] right-[-20%]" />

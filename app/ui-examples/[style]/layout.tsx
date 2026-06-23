@@ -4,6 +4,20 @@ import { notFound } from "next/navigation";
 import { UI_STYLES } from "../_utils/styles-data";
 import { Icons } from "../_components/Icons";
 
+const getColorDotClass = (slug: string) => {
+  switch (slug) {
+    case "claymorphism": return "bg-sakode-pink";
+    case "neobrutalism": return "bg-sakode-yellow";
+    case "glassmorphism": return "bg-sakode-cyan";
+    case "liquid-glass": return "bg-sakode-orange";
+    case "bento-grid": return "bg-sakode-green";
+    case "sakode-modern": return "bg-sakode-pink";
+    case "minimalism":
+    default:
+      return "bg-sakode-charcoal";
+  }
+};
+
 interface StyleLayoutProps {
   children: React.ReactNode;
   params: Promise<{ style: string }>;
@@ -36,21 +50,7 @@ export default async function StyleLayout({ children, params }: StyleLayoutProps
               Gaya: {styleInfo.name}
             </h1>
             <span
-              className={`inline-block w-3 h-3 rounded-full bg-${styleInfo.colorName}`}
-              style={{
-                backgroundColor:
-                  styleInfo.slug === "claymorphism"
-                    ? "#FF409F"
-                    : styleInfo.slug === "neobrutalism"
-                    ? "#EDAC1C"
-                    : styleInfo.slug === "glassmorphism"
-                    ? "#71CFFE"
-                    : styleInfo.slug === "liquid-glass"
-                    ? "#F9723B"
-                    : styleInfo.slug === "bento-grid"
-                    ? "#009670"
-                    : "#383838",
-              }}
+              className={`inline-block w-3 h-3 rounded-full ${getColorDotClass(styleInfo.slug)}`}
             />
           </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl">

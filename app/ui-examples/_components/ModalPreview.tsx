@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Transition } from "framer-motion";
+import { useTheme } from "next-themes";
 import { Icons } from "./Icons";
 
 interface ModalPreviewProps {
@@ -25,6 +26,7 @@ export default function ModalPreview({
   cardClass,
   labelClass,
 }: ModalPreviewProps) {
+  const { resolvedTheme } = useTheme();
   // Styles for the backdrop overlay
   const getOverlayClass = () => {
     switch (style) {
@@ -83,15 +85,7 @@ export default function ModalPreview({
 
   const anim = getModalAnimation();
 
-  // Color text class mapping for subtitle/headings
-  const accentTextMap = {
-    pink: "text-sakode-pink",
-    orange: "text-sakode-orange",
-    yellow: "text-sakode-yellow",
-    blue: "text-sakode-blue",
-    green: "text-sakode-green",
-    cyan: "text-sakode-cyan",
-  };
+
 
   return (
     <AnimatePresence>
@@ -111,7 +105,7 @@ export default function ModalPreview({
             initial={anim.initial}
             animate={anim.animate}
             exit={anim.exit}
-            transition={anim.transition as any}
+            transition={anim.transition as unknown as Transition}
             className={`w-full max-w-lg relative ${cardClass} z-10 pointer-events-auto border`}
             style={{
               borderRadius: style === "neobrutalism" || style === "minimalism" ? "0px" : "24px",
@@ -141,7 +135,7 @@ export default function ModalPreview({
             {/* Grid backdrop overlay for sakode-modern */}
             {style === "sakode-modern" && (
               <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:16px_16px] opacity-40" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-size-[16px_16px] opacity-40" />
                 <div className={`absolute w-36 h-36 rounded-full bg-sakode-${selectedColor}/5 dark:bg-sakode-${selectedColor}/10 blur-2xl top-[-20%] left-[-20%]`} />
                 <div className={`absolute w-36 h-36 rounded-full bg-sakode-${selectedColor}/5 dark:bg-sakode-${selectedColor}/5 blur-2xl bottom-[-20%] right-[-20%]`} />
               </div>
@@ -152,7 +146,7 @@ export default function ModalPreview({
               {/* Header */}
               <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
                 <div>
-                  <span className={`${labelClass} !mb-0.5`}>Preview Modal</span>
+                  <span className={`${labelClass} mb-0.5!`}>Preview Modal</span>
                   <h3
                     className={`text-xl font-bold ${
                       style === "neobrutalism" ? "font-mono uppercase tracking-wide text-zinc-900 dark:text-white" : ""
@@ -164,6 +158,8 @@ export default function ModalPreview({
                 <button
                   onClick={onClose}
                   className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-150/50 dark:hover:bg-zinc-850/50 transition-colors"
+                  aria-label="Tutup modal"
+                  title="Tutup modal"
                 >
                   <Icons.X className="w-5 h-5" />
                 </button>
@@ -222,5 +218,4 @@ export default function ModalPreview({
   );
 }
 
-// Mock theme resolver
-const resolvedTheme = typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "dark" : "light";
+

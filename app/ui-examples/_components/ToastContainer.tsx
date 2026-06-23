@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Transition } from "framer-motion";
 import { Icons } from "./Icons";
 
 export interface ToastItem {
@@ -157,7 +157,7 @@ export default function ToastContainer() {
             initial={anim.initial}
             animate={anim.animate}
             exit={anim.exit}
-            transition={anim.transition as any}
+            transition={anim.transition as unknown as Transition}
             layout
             className={`flex items-start gap-3 w-full relative ${getStyleClasses(
               toast.type
@@ -172,6 +172,8 @@ export default function ToastContainer() {
                 setToasts((prev) => prev.filter((t) => t.id !== toast.id))
               }
               className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded"
+              aria-label="Tutup notifikasi"
+              title="Tutup notifikasi"
             >
               <Icons.X className="w-3.5 h-3.5" />
             </button>
