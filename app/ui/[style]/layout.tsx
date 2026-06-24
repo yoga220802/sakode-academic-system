@@ -39,7 +39,7 @@ export default async function StyleLayout({ children, params }: StyleLayoutProps
         <div className="space-y-2">
           {/* Back button */}
           <Link
-            href="/ui-examples"
+            href="/ui"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
           >
             <Icons.ArrowLeft className="w-4 h-4" />
@@ -58,16 +58,24 @@ export default async function StyleLayout({ children, params }: StyleLayoutProps
           </p>
         </div>
 
-        {/* Feature Tags */}
-        <div className="flex flex-wrap gap-2 md:self-end">
-          {styleInfo.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-xs px-2.5 py-1 rounded-full font-semibold bg-zinc-100 text-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300"
-            >
-              {tag}
-            </span>
-          ))}
+        {/* Feature Tags & Sandbox Docs Button */}
+        <div className="flex flex-col items-end gap-2.5 md:self-end shrink-0">
+          <div className="flex flex-wrap gap-2">
+            {styleInfo.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs px-2.5 py-1 rounded-full font-semibold bg-zinc-100 text-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <Link
+            href="/ui/docs"
+            className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/45 text-indigo-700 dark:text-indigo-350 border border-indigo-100 dark:border-indigo-900/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all shadow-xs"
+          >
+            <span>Sandbox Docs</span>
+          </Link>
         </div>
       </div>
 
