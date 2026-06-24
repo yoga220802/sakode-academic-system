@@ -48,17 +48,17 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     codeTemplate: ({ style, accentColor, variant, isLoading, disabled, label }: TemplateParams) => {
       const parts = [];
       if (variant !== "primary") parts.push(`variant="${variant}"`);
-      if (accentColor !== "pink" && variant === "accent") parts.push(`accentColor="${accentColor}"`);
+      if (accentColor !== "pink" && variant === "primary") parts.push(`accentColor="${accentColor}"`);
       if (isLoading) parts.push("isLoading");
       if (disabled) parts.push("disabled");
       
       const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Button } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Button${propsStr}>
+<Button${propsStr}>
   ${label || "Daftar Sekarang"}
-</${style}.Button>`;
+</Button>`;
     }
   },
   Card: {
@@ -70,13 +70,13 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
     codeTemplate: ({ style, accentColor, content }: TemplateParams) => {
       const accentProp = accentColor ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Card, Heading } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Card${accentProp}>
-  <${style}.Heading>Kartu Informasi</${style}.Heading>
+<Card${accentProp}>
+  <Heading>Kartu Informasi</Heading>
   <p className="text-sm text-zinc-500">${content || "Isi konten kartu di sini."}</p>
-</${style}.Card>`;
+</Card>`;
     }
   },
   Input: {
@@ -95,10 +95,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       if (value) parts.push(`value="${value}"`);
 
       const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Input } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Input${propsStr} />`;
+<Input${propsStr} />`;
     }
   },
   Select: {
@@ -114,14 +114,14 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       if (disabled) parts.push("disabled");
 
       const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Select } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Select${propsStr}>
+<Select${propsStr}>
   <option value="">Pilih Program</option>
   <option value="nextjs">Next.js Bootcamp</option>
   <option value="nodejs">Node.js Backend</option>
-</${style}.Select>`;
+</Select>`;
     }
   },
   Toggle: {
@@ -134,10 +134,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
     codeTemplate: ({ style, checked, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Toggle } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Toggle 
+<Toggle 
   checked={${checked}} 
   onChange={() => handleToggle()}${accentProp}
   aria-label="Contoh Switch"
@@ -153,7 +153,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: "onToggle", type: "(id: number) => void", defaultValue: "undefined", description: "Callback dipicu ketika menekan tombol header item." },
     ],
     codeTemplate: ({ style, activeId }: TemplateParams) => {
-      return `import { ${style} } from "@/UI";
+      return `import { Accordion } from "@/UI/${style}";
 
 const faqItems = [
   { id: 1, q: "Apa itu Next.js?", a: "Framework React untuk Production." },
@@ -161,7 +161,7 @@ const faqItems = [
 ];
 
 // Contoh Penggunaan
-<${style}.Accordion 
+<Accordion 
   items={faqItems}
   activeId={${activeId === undefined ? null : activeId}}
   onToggle={(id) => handleToggleId(id)}
@@ -177,7 +177,7 @@ const faqItems = [
     ],
     codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Timeline } from "@/UI/${style}";
 
 const pendaftaranSteps = [
   { step: "01", title: "Registrasi", desc: "Buat akun baru." },
@@ -185,7 +185,7 @@ const pendaftaranSteps = [
 ];
 
 // Contoh Penggunaan
-<${style}.Timeline steps={pendaftaranSteps}${accentProp} />`;
+<Timeline steps={pendaftaranSteps}${accentProp} />`;
     }
   },
   Badge: {
@@ -201,12 +201,12 @@ const pendaftaranSteps = [
       if (accentColor !== "pink" && variant === "accent") parts.push(`accentColor="${accentColor}"`);
 
       const propsStr = parts.length > 0 ? " " + parts.join(" ") : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Badge } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Badge${propsStr}>
+<Badge${propsStr}>
   ${label || "Pemula (Basic)"}
-</${style}.Badge>`;
+</Badge>`;
     }
   },
   AvatarGroup: {
@@ -218,10 +218,10 @@ const pendaftaranSteps = [
       { name: "accentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen lingkaran counter tambahan." },
     ],
     codeTemplate: ({ style, extraCount, accentColor }: TemplateParams) => {
-      return `import { ${style} } from "@/UI";
+      return `import { AvatarGroup } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.AvatarGroup 
+<AvatarGroup 
   initials={["AN", "RY", "CL"]} 
   extraCount={${extraCount || 10}}
   accentColor="${accentColor}"
@@ -237,12 +237,12 @@ const pendaftaranSteps = [
     ],
     codeTemplate: ({ style, type, title, content }: TemplateParams) => {
       const typeProp = type !== "info" ? ` type="${type}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Alert } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.Alert title="${title || "Pemberitahuan Sistem"}"${typeProp}>
+<Alert title="${title || "Pemberitahuan Sistem"}"${typeProp}>
   ${content || "Mentoring akan segera dimulai."}
-</${style}.Alert>`;
+</Alert>`;
     }
   },
   Table: {
@@ -254,14 +254,14 @@ const pendaftaranSteps = [
     ],
     codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Table } from "@/UI/${style}";
 
 const dataSchedules = [
   { course: "Next.js", date: "24 Juni", mentor: "Rian Y.", status: "Aktif" }
 ];
 
 // Contoh Penggunaan
-<${style}.Table schedules={dataSchedules}${accentProp} />`;
+<Table schedules={dataSchedules}${accentProp} />`;
     }
   },
   Carousel: {
@@ -276,14 +276,14 @@ const dataSchedules = [
     ],
     codeTemplate: ({ style, activeIndex, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Carousel } from "@/UI/${style}";
 
 const reviews = [
   { name: "Andi", role: "Siswa", review: "Sangat menyenangkan!" }
 ];
 
 // Contoh Penggunaan
-<${style}.Carousel 
+<Carousel 
   testimonials={reviews} 
   activeIndex={${activeIndex}} 
   onPrev={() => handlePrev()} 
@@ -300,7 +300,7 @@ const reviews = [
     ],
     codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Chart } from "@/UI/${style}";
 
 const barStats = [
   { label: "M1", val: "h-[30%]" },
@@ -308,7 +308,7 @@ const barStats = [
 ];
 
 // Contoh Penggunaan
-<${style}.Chart bars={barStats}${accentProp} />`;
+<Chart bars={barStats}${accentProp} />`;
     }
   },
   Breadcrumbs: {
@@ -320,7 +320,7 @@ const barStats = [
     ],
     codeTemplate: ({ style, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Breadcrumbs } from "@/UI/${style}";
 
 const pathItems = [
   { label: "Kelas" },
@@ -328,7 +328,7 @@ const pathItems = [
 ];
 
 // Contoh Penggunaan
-<${style}.Breadcrumbs items={pathItems}${accentProp} />`;
+<Breadcrumbs items={pathItems}${accentProp} />`;
     }
   },
   Dropdown: {
@@ -343,14 +343,14 @@ const pathItems = [
     ],
     codeTemplate: ({ style, isOpen, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { Dropdown } from "@/UI/${style}";
 
 const options = [
   { label: "Dashboard", onClick: () => openDashboard() }
 ];
 
 // Contoh Penggunaan
-<${style}.Dropdown
+<Dropdown
   isOpen={${isOpen}}
   onToggle={() => handleToggleDropdown()}
   triggerText="Opsi Profil"
@@ -372,10 +372,10 @@ const options = [
     ],
     codeTemplate: ({ style, isDragging, accentColor }: TemplateParams) => {
       const accentProp = accentColor !== "pink" ? ` accentColor="${accentColor}"` : "";
-      return `import { ${style} } from "@/UI";
+      return `import { UploadZone } from "@/UI/${style}";
 
 // Contoh Penggunaan
-<${style}.UploadZone
+<UploadZone
   isDragging={${isDragging}}
   onDragOver={(e) => handleDragOver(e)}
   onDragLeave={() => handleDragLeave()}
