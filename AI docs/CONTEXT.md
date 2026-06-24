@@ -10,7 +10,7 @@ Any AI agent starting a new session in this workspace must read and adhere to th
 **Sakode Academy** is a fullstack IT course learning portal designed for managing course registrations, trial classes, learning materials, and mentoring schedules.
 
 * **Target Launch Date**: July 10, 2026 (`2026-07-10T00:00:00`)
-* **Current Status**: 15% (Interactive welcome landing page, dynamic themes, and a production-ready 17-component Design System & UI Showcase page under `/ui-examples` are fully completed)
+* **Current Status**: 18% (Interactive welcome landing page, dynamic themes, a custom namespace-based UI component engine under `@/UI` outside Next.js routing, and a production-ready 18-component Design System & UI Showcase page under `/ui` are fully completed)
 * **Subscribers File**: Emails registered via the newsletter are saved locally to `data/subscribers.json`
 
 ---
@@ -29,7 +29,7 @@ The application will consist of 5 core fullstack modules:
 * **Framework**: Next.js 16.2.9 (App Router with Turbopack)
 * **Library**: React 19.2.4
 * **Styling**: Tailwind CSS v4 (CSS-first engine)
-* **Component Library**: HeroUI v3 (Compound components architecture, wcag-compliant React Aria)
+* **Component Library**: HeroUI v3 (Compound components architecture, wcag-compliant React Aria) & Custom Namespace-Based Local UI Engine (`@/UI`)
 * **Animations**: Framer Motion
 * **Theming**: `next-themes` (Class-based toggle on the `<html>` tag)
 * **Database Target**: Schema models are prepared for Drizzle ORM / Prisma. For initial staging, JSON/SQLite drivers can be colocated in `app/_database/`.
@@ -146,3 +146,5 @@ Branding values are derived from `/public/assets/Palette.svg` and configured ins
 5. **Asynchronous Mounting**: When mounting client-side state, wrap triggers inside `requestAnimationFrame` to avoid linter warnings regarding synchronous state mutations in `useEffect`.
 6. **No Emoji Overuse**: Emojis should not be used for primary SaaS visual components. Rely on professional numbers or clean typography instead.
 7. **Consistent Action Responses**: Always return standard JSON objects with success/error/data structures from actions. Do not throw arbitrary exceptions to the client.
+8. **Use Custom Namespace UI Library (`@/UI`)**: To build custom visual styled layouts (e.g. Claymorphism, Neobrutalism, etc.) without third-party component library overhead, use components from `@/UI` (e.g. `<claymorphism.Button>`, `<neobrutalism.Input>`). This is located at the root-level `UI/` folder, completely safe from App Router route generation. Refer to [CUSTOM_UI_BUILDING.md](CUSTOM_UI_BUILDING.md) for details on adding new components to the style system.
+

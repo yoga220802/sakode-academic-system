@@ -21,6 +21,29 @@ export default function UIExamplesIndexPage() {
         <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg leading-relaxed">
           Eksplorasi enam pendekatan gaya visual antarmuka modern yang akan menjadi fondasi komponen sistem akademik Sakode Academy. Pilih tema di bawah untuk melihat implementasi komponen lengkap secara live.
         </p>
+        <div className="pt-2">
+          <Link
+            href="/ui/docs"
+            className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-md gap-1.5"
+          >
+            <span>Buka Sandbox Docs Komponen</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       {/* Styles Grid */}
@@ -124,7 +147,7 @@ export default function UIExamplesIndexPage() {
 
             {/* Link Action */}
             <Link
-              href={`/ui-examples/${style.slug}`}
+              href={`/ui/${style.slug}`}
               className="inline-flex items-center justify-center w-full py-2.5 rounded-xl text-sm font-semibold border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors gap-1.5"
             >
               Lihat Live Demo

@@ -132,7 +132,7 @@ export function WelcomePage() {
 				{mounted && (
 					<div className="flex items-center gap-3">
 						<Link
-							href="/ui-examples"
+							href="/ui"
 							className="text-xs sm:text-sm font-extrabold px-3.5 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-xs hover:shadow-sm transition-all active:scale-95 cursor-pointer"
 						>
 							Eksplorasi Gaya UI

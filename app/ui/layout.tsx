@@ -29,10 +29,17 @@ export default function UIExamplesLayout({
             </Link>
             <span className="text-zinc-300 dark:text-zinc-700">|</span>
             <Link
-              href="/ui-examples"
+              href="/ui"
               className="text-xs sm:text-sm font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
             >
               UI Showcase
+            </Link>
+            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+            <Link
+              href="/ui/docs"
+              className="text-xs sm:text-sm font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+            >
+              Sandbox Docs
             </Link>
           </div>
 
