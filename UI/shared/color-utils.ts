@@ -1,11 +1,11 @@
 export type PaletteColorKey = "pink" | "orange" | "yellow" | "blue" | "green" | "cyan";
 
 export const PALETTE_COLORS = [
-  { key: "pink", name: "Pink", hex: "#FF409F", class: "sakode-pink", secondary: "orange" },
-  { key: "orange", name: "Orange", hex: "#F9723B", class: "sakode-orange", secondary: "yellow" },
-  { key: "yellow", name: "Kuning", hex: "#EDAC1C", class: "sakode-yellow", secondary: "orange" },
-  { key: "blue", name: "Biru", hex: "#54A5E4", class: "sakode-blue", secondary: "cyan" },
-  { key: "green", name: "Hijau", hex: "#009670", class: "sakode-green", secondary: "blue" },
+  { key: "pink", name: "Pink", hex: "#BC71FE", class: "sakode-pink", secondary: "orange" },
+  { key: "orange", name: "Orange", hex: "#FEA071", class: "sakode-orange", secondary: "yellow" },
+  { key: "yellow", name: "Kuning", hex: "#FCD202", class: "sakode-yellow", secondary: "orange" },
+  { key: "blue", name: "Biru", hex: "#79A2FC", class: "sakode-blue", secondary: "cyan" },
+  { key: "green", name: "Hijau", hex: "#6EBF22", class: "sakode-green", secondary: "blue" },
   { key: "cyan", name: "Cyan", hex: "#71CFFE", class: "sakode-cyan", secondary: "blue" },
 ] as const;
 
@@ -94,6 +94,17 @@ export const getBgOpacity15Class = (color: PaletteColorKey) => {
     case "blue": return "bg-sakode-blue/15";
     case "green": return "bg-sakode-green/15";
     case "cyan": return "bg-sakode-cyan/15";
+  }
+};
+
+export const getBgOpacity10Class = (color: PaletteColorKey) => {
+  switch (color) {
+    case "pink": return "bg-sakode-pink/10";
+    case "orange": return "bg-sakode-orange/10";
+    case "yellow": return "bg-sakode-yellow/10";
+    case "blue": return "bg-sakode-blue/10";
+    case "green": return "bg-sakode-green/10";
+    case "cyan": return "bg-sakode-cyan/10";
   }
 };
 

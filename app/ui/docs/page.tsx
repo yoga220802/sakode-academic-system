@@ -149,7 +149,9 @@ export default function ComponentDocsPage() {
 
   const [selectedComp, setSelectedComp] = useState<string>("Button");
   const [styleName, setStyleName] = useState<string>("sakode-modern");
-  const [accentColor, setAccentColor] = useState<PaletteColorKey>("pink");
+  const [primaryColor, setPrimaryColor] = useState<PaletteColorKey>("cyan");
+  const [secondaryColor, setSecondaryColor] = useState<PaletteColorKey>("orange");
+  const [ascentColor, setAscentColor] = useState<PaletteColorKey>("pink");
   const [bgPreview, setBgPreview] = useState<"checkerboard" | "light" | "dark">("checkerboard");
 
   // Knobs for Toast & Modal
@@ -163,9 +165,9 @@ export default function ComponentDocsPage() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("Daftar Sekarang");
 
-  const [cardContent, setCardContent] = useState("Ini adalah isi deskripsi dari modul kursus intensif Next.js.");
+  const [cardContent, setCardContent] = useState("Kuasai Server Actions, Server Components, dan styling modern Tailwind CSS v4 dari dasar hingga standar industri.");
 
-  const [inputPlaceholder, setInputPlaceholder] = useState("Masukkan nama lengkap Anda...");
+  const [inputPlaceholder, setInputPlaceholder] = useState("Contoh: Budi Santoso");
   const [inputHasError, setInputHasError] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -176,14 +178,14 @@ export default function ComponentDocsPage() {
   const [toggleChecked, setToggleChecked] = useState(false);
 
   const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
-  const [badgeVariant, setBadgeVariant] = useState<"default" | "accent" | "success" | "warning">("accent");
+  const [badgeVariant, setBadgeVariant] = useState<"accent" | "success" | "warning" | "default">("accent");
   const [badgeLabel, setBadgeLabel] = useState("Pemula (Basic)");
 
   const [avatarExtraCount, setAvatarExtraCount] = useState(14);
 
-  const [alertType, setAlertType] = useState<"info" | "warning">("info");
-  const [alertTitle, setAlertTitle] = useState("Pemberitahuan Sistem");
-  const [alertContent, setAlertContent] = useState("Portal akademik akan melakukan pemeliharaan pada hari Minggu jam 02:00 WIB.");
+  const [alertType, setAlertType] = useState<"warning" | "info">("warning");
+  const [alertTitle, setAlertTitle] = useState("Batas Sesi Mentoring");
+  const [alertContent, setAlertContent] = useState("Mentoring 1-on-1 dengan Mentor Rian harus diselesaikan sebelum pukul 15.00 WIB.");
 
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -199,11 +201,9 @@ export default function ComponentDocsPage() {
 
   const handleStyleChange = (newStyle: string) => {
     setStyleName(newStyle);
-    if (newStyle === "neobrutalism") setAccentColor("yellow");
-    else if (newStyle === "glassmorphism") setAccentColor("cyan");
-    else if (newStyle === "liquid-glass") setAccentColor("orange");
-    else if (newStyle === "bento-grid") setAccentColor("green");
-    else setAccentColor("pink");
+    setPrimaryColor("cyan");
+    setSecondaryColor("orange");
+    setAscentColor("pink");
   };
 
   const activeDoc = COMPONENT_DOCS[selectedComp] || COMPONENT_DOCS.Button;
@@ -215,41 +215,41 @@ export default function ComponentDocsPage() {
   const getKnobValues = () => {
     switch (selectedComp) {
       case "Button":
-        return { style: styleName, accentColor, variant: buttonVariant, isLoading: buttonIsLoading, disabled: buttonDisabled, label: buttonLabel };
+        return { style: styleName, accentColor: (buttonVariant === "primary" ? primaryColor : secondaryColor), variant: buttonVariant, isLoading: buttonIsLoading, disabled: buttonDisabled, label: buttonLabel };
       case "Card":
-        return { style: styleName, accentColor, content: cardContent };
+        return { style: styleName, accentColor: primaryColor, content: cardContent };
       case "Input":
         return { style: styleName, hasError: inputHasError, placeholder: inputPlaceholder, disabled: inputDisabled, value: inputValue };
       case "Select":
         return { style: styleName, hasError: selectHasError, disabled: selectDisabled };
       case "Toggle":
-        return { style: styleName, checked: toggleChecked, accentColor };
+        return { style: styleName, checked: toggleChecked, accentColor: primaryColor };
       case "Accordion":
         return { style: styleName, activeId: activeAccordion };
       case "Timeline":
-        return { style: styleName, accentColor };
+        return { style: styleName, accentColor: primaryColor };
       case "Badge":
-        return { style: styleName, variant: badgeVariant, accentColor, label: badgeLabel };
+        return { style: styleName, variant: badgeVariant, accentColor: (badgeVariant === "accent" ? ascentColor : primaryColor), label: badgeLabel };
       case "AvatarGroup":
-        return { style: styleName, extraCount: avatarExtraCount, accentColor };
+        return { style: styleName, extraCount: avatarExtraCount, accentColor: primaryColor };
       case "Alert":
         return { style: styleName, type: alertType, title: alertTitle, content: alertContent };
       case "Table":
-        return { style: styleName, accentColor };
+        return { style: styleName, accentColor: primaryColor };
       case "Carousel":
-        return { style: styleName, activeIndex: carouselIndex, accentColor };
+        return { style: styleName, activeIndex: carouselIndex, accentColor: primaryColor };
       case "Chart":
-        return { style: styleName, accentColor };
+        return { style: styleName, accentColor: primaryColor };
       case "Breadcrumbs":
-        return { style: styleName, accentColor };
+        return { style: styleName, accentColor: primaryColor };
       case "Dropdown":
-        return { style: styleName, isOpen: isDropdownOpen, accentColor };
+        return { style: styleName, isOpen: isDropdownOpen, accentColor: primaryColor };
       case "UploadZone":
-        return { style: styleName, isDragging: isUploadDragging, accentColor };
+        return { style: styleName, isDragging: isUploadDragging, accentColor: primaryColor };
       case "Toast":
         return { style: styleName, toastType, toastMessage };
       case "Modal":
-        return { style: styleName, accentColor, isOpen: isModalOpen };
+        return { style: styleName, primaryColor, secondaryColor, ascentColor, isOpen: isModalOpen };
       default:
         return {};
     }
@@ -276,7 +276,7 @@ export default function ComponentDocsPage() {
           return (
             <UI.Button
               variant={buttonVariant}
-              accentColor={accentColor}
+              accentColor={buttonVariant === "primary" ? primaryColor : secondaryColor}
               isLoading={buttonIsLoading}
               disabled={buttonDisabled}
             >
@@ -285,14 +285,14 @@ export default function ComponentDocsPage() {
           );
         case "Card":
           return (
-            <UI.Card accentColor={accentColor} className="max-w-md w-full">
+            <UI.Card accentColor={primaryColor} className="max-w-md w-full">
               <UI.Heading>Next.js & React Bootcamp</UI.Heading>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed mb-4">
                 {cardContent || "Isi deskripsi modul atau program di sini."}
               </p>
               <div className="flex items-center justify-between border-t border-zinc-200/50 dark:border-zinc-800/60 pt-3">
                 <span className="text-xs text-zinc-400">32 Modul</span>
-                <span className={`text-xs font-bold ${getTextClass(accentColor)}`}>Rp 499.000</span>
+                <span className={`text-xs font-bold ${getTextClass(primaryColor)}`}>Rp 499.000</span>
               </div>
             </UI.Card>
           );
@@ -331,7 +331,7 @@ export default function ComponentDocsPage() {
               <UI.Toggle
                 checked={toggleChecked}
                 onChange={() => setToggleChecked(!toggleChecked)}
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 aria-label="Contoh Switch"
               />
               <span className="text-xs font-semibold text-zinc-500">
@@ -356,7 +356,7 @@ export default function ComponentDocsPage() {
           return (
             <div className="w-full max-w-md">
               <UI.Timeline
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 steps={[
                   { step: "01", title: "Registrasi Akun", desc: "Buat akun belajar di portal akademik." },
                   { step: "02", title: "Pilih Kelas IT", desc: "Pilih kurikulum belajar pemrograman Anda." }
@@ -366,7 +366,7 @@ export default function ComponentDocsPage() {
           );
         case "Badge":
           return (
-            <UI.Badge variant={badgeVariant} accentColor={accentColor}>
+            <UI.Badge variant={badgeVariant} accentColor={badgeVariant === "accent" ? ascentColor : primaryColor}>
               {badgeLabel || "Status Tag"}
             </UI.Badge>
           );
@@ -375,7 +375,7 @@ export default function ComponentDocsPage() {
             <UI.AvatarGroup
               initials={["AN", "BS", "CL"]}
               extraCount={avatarExtraCount}
-              accentColor={accentColor}
+              accentColor={primaryColor}
             />
           );
         case "Alert":
@@ -388,9 +388,9 @@ export default function ComponentDocsPage() {
           );
         case "Table":
           return (
-            <div className="w-full max-w-md overflow-hidden bg-white/40 dark:bg-zinc-950/20 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
+            <div className="w-full max-w-md overflow-hidden bg-white/40 dark:bg-zinc-955/20 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
               <UI.Table
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 schedules={[
                   { course: "Next.js & Tailwind v4", date: "24 Juni, 10:00", mentor: "Rian Y.", status: "Aktif" },
                   { course: "Git & Version Control", date: "25 Juni, 13:00", mentor: "Sarah D.", status: "Selesai" }
@@ -400,9 +400,9 @@ export default function ComponentDocsPage() {
           );
         case "Carousel":
           return (
-            <div className="w-full max-w-md p-4 bg-white/40 dark:bg-zinc-950/20 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
+            <div className="w-full max-w-md p-4 bg-white/40 dark:bg-zinc-955/20 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
               <UI.Carousel
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 activeIndex={carouselIndex}
                 onPrev={() => setCarouselIndex((prev) => (prev === 0 ? 2 : prev - 1))}
                 onNext={() => setCarouselIndex((prev) => (prev === 2 ? 0 : prev + 1))}
@@ -416,9 +416,9 @@ export default function ComponentDocsPage() {
           );
         case "Chart":
           return (
-            <div className="w-full max-w-md p-4 bg-white/40 dark:bg-zinc-950/20 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
+            <div className="w-full max-w-md p-4 bg-white/40 dark:bg-zinc-955/20 rounded-xl border border-zinc-200/50 dark:border-zinc-800/40">
               <UI.Chart
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 bars={[
                   { label: "M1", val: "h-[30%]" },
                   { label: "M2", val: "h-[65%]" },
@@ -431,7 +431,7 @@ export default function ComponentDocsPage() {
         case "Breadcrumbs":
           return (
             <UI.Breadcrumbs
-              accentColor={accentColor}
+              accentColor={primaryColor}
               items={[
                 { label: "Kelas" },
                 { label: "Frontend" },
@@ -446,7 +446,7 @@ export default function ComponentDocsPage() {
                 isOpen={isDropdownOpen}
                 onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
                 triggerText="Opsi Kontrol"
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 items={[
                   { label: "Buka Dashboard", onClick: () => showToast("info", "Membuka Dashboard...", styleName) },
                   { label: "Keluar Sesi", onClick: () => showToast("info", "Keluar dari sesi...", styleName) }
@@ -462,7 +462,7 @@ export default function ComponentDocsPage() {
                 onDragOver={(e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsUploadDragging(true); }}
                 onDragLeave={() => setIsUploadDragging(false)}
                 onDrop={(e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsUploadDragging(false); }}
-                accentColor={accentColor}
+                accentColor={primaryColor}
                 uploadedFiles={uploadedFiles}
                 onRemoveFile={(idx: number) => setUploadedFiles(uploadedFiles.filter((_, i) => i !== idx))}
               />
@@ -501,7 +501,9 @@ export default function ComponentDocsPage() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 style={styleName}
-                selectedColor={accentColor}
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                ascentColor={ascentColor}
               />
             </div>
           );
@@ -1069,28 +1071,81 @@ export default function ComponentDocsPage() {
                 {renderControlsKnobs()}
               </div>
 
-              {/* Accent Color Picker Control (if style allows or uses standard colors) */}
-              <div className="border-t border-zinc-150 dark:border-zinc-800 pt-5 space-y-2.5">
-                <span className="block text-xs font-bold text-zinc-500">Warna Aksen (Brand Accent)</span>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {PALETTE_COLORS.map((c) => {
-                    const isSelected = accentColor === c.key;
-                    return (
-                      <button
-                        key={c.key}
-                        onClick={() => setAccentColor(c.key)}
-                        className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${getBgClass(c.key)} ${
-                          isSelected
-                            ? "ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-zinc-950 scale-110"
-                            : "border-black/10 hover:scale-105"
-                        }`}
-                        title={c.name}
-                        aria-label={c.name}
-                      >
-                        {isSelected && <Icons.Check className="w-3.5 h-3.5 text-white" />}
-                      </button>
-                    );
-                  })}
+              {/* Color Customizers Panel */}
+              <div className="border-t border-zinc-150 dark:border-zinc-800 pt-5 space-y-4">
+                {/* 1. Primary Color Selector */}
+                <div className="space-y-2">
+                  <span className="block text-xs font-bold text-zinc-500">Warna Utama (Primary Color) - Default: Cyan</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {PALETTE_COLORS.map((c) => {
+                      const isSelected = primaryColor === c.key;
+                      return (
+                        <button
+                          key={c.key}
+                          onClick={() => setPrimaryColor(c.key)}
+                          className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${getBgClass(c.key)} ${
+                            isSelected
+                              ? "ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-zinc-955 scale-110"
+                              : "border-black/10 hover:scale-105"
+                          }`}
+                          title={c.name}
+                          aria-label={c.name}
+                        >
+                          {isSelected && <Icons.Check className="w-3.5 h-3.5 text-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 2. Secondary Color Selector */}
+                <div className="space-y-2">
+                  <span className="block text-xs font-bold text-zinc-500">Warna Sekunder (Secondary Color) - Default: Orange</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {PALETTE_COLORS.map((c) => {
+                      const isSelected = secondaryColor === c.key;
+                      return (
+                        <button
+                          key={c.key}
+                          onClick={() => setSecondaryColor(c.key)}
+                          className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${getBgClass(c.key)} ${
+                            isSelected
+                              ? "ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-zinc-955 scale-110"
+                              : "border-black/10 hover:scale-105"
+                          }`}
+                          title={c.name}
+                          aria-label={c.name}
+                        >
+                          {isSelected && <Icons.Check className="w-3.5 h-3.5 text-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 3. Ascent Color Selector */}
+                <div className="space-y-2">
+                  <span className="block text-xs font-bold text-zinc-500">Warna Aksen / Ascent (Ascent Color) - Default: Pink</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {PALETTE_COLORS.map((c) => {
+                      const isSelected = ascentColor === c.key;
+                      return (
+                        <button
+                          key={c.key}
+                          onClick={() => setAscentColor(c.key)}
+                          className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${getBgClass(c.key)} ${
+                            isSelected
+                              ? "ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-zinc-955 scale-110"
+                              : "border-black/10 hover:scale-105"
+                          }`}
+                          title={c.name}
+                          aria-label={c.name}
+                        >
+                          {isSelected && <Icons.Check className="w-3.5 h-3.5 text-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>

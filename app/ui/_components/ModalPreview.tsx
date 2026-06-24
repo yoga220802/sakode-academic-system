@@ -5,19 +5,29 @@ import { motion, AnimatePresence, Transition } from "framer-motion";
 import { useTheme } from "next-themes";
 import { Icons } from "@/UI/shared/Icons";
 import { UI as UIStyles } from "@/UI";
+import {
+  PaletteColorKey,
+  getBgOpacity20Class,
+  getBgOpacity10Class,
+  getBgOpacity5Class,
+} from "@/UI/shared/color-utils";
 
 interface ModalPreviewProps {
   isOpen: boolean;
   onClose: () => void;
   style: string;
-  selectedColor: "pink" | "orange" | "yellow" | "blue" | "green" | "cyan";
+  primaryColor?: PaletteColorKey;
+  secondaryColor?: PaletteColorKey;
+  ascentColor?: PaletteColorKey;
 }
 
 export default function ModalPreview({
   isOpen,
   onClose,
   style,
-  selectedColor,
+  primaryColor = "cyan",
+  secondaryColor = "orange",
+  ascentColor = "pink",
 }: ModalPreviewProps) {
   const { resolvedTheme } = useTheme();
   
@@ -40,7 +50,7 @@ export default function ModalPreview({
       case "sakode-modern":
         return "bg-black/40 backdrop-blur-md";
       case "minimalism":
-        return "bg-zinc-950/20 backdrop-blur-xs";
+        return "bg-zinc-955/20 backdrop-blur-xs";
       case "bento-grid":
       default:
         return "bg-zinc-900/40 backdrop-blur-xs";
@@ -107,12 +117,12 @@ export default function ModalPreview({
             transition={anim.transition as unknown as Transition}
             className="w-full max-w-lg relative z-10 pointer-events-auto"
           >
-            <UI.Card accentColor={selectedColor} className="border border-zinc-200/50 dark:border-zinc-800/80">
+            <UI.Card accentColor={primaryColor} className="border border-zinc-200/50 dark:border-zinc-800/80">
               {/* Liquid Blobs inside the Modal overlay for liquid glass */}
               {style === "liquid-glass" && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                  <div className={`absolute w-32 h-32 rounded-full bg-sakode-${selectedColor}/20 blur-2xl top-[-20%] left-[-20%]`} />
-                  <div className={`absolute w-32 h-32 rounded-full bg-sakode-${selectedColor}/10 blur-2xl bottom-[-20%] right-[-20%]`} />
+                  <div className={`absolute w-32 h-32 rounded-full ${getBgOpacity20Class(primaryColor)} blur-2xl top-[-20%] left-[-20%]`} />
+                  <div className={`absolute w-32 h-32 rounded-full ${getBgOpacity10Class(primaryColor)} blur-2xl bottom-[-20%] right-[-20%]`} />
                 </div>
               )}
 
@@ -120,8 +130,8 @@ export default function ModalPreview({
               {style === "sakode-modern" && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-size-[16px_16px] opacity-40" />
-                  <div className={`absolute w-36 h-36 rounded-full bg-sakode-${selectedColor}/5 dark:bg-sakode-${selectedColor}/10 blur-2xl top-[-20%] left-[-20%]`} />
-                  <div className={`absolute w-36 h-36 rounded-full bg-sakode-${selectedColor}/5 dark:bg-sakode-${selectedColor}/5 blur-2xl bottom-[-20%] right-[-20%]`} />
+                  <div className={`absolute w-36 h-36 rounded-full ${getBgOpacity5Class(primaryColor)} dark:${getBgOpacity10Class(primaryColor)} blur-2xl top-[-20%] left-[-20%]`} />
+                  <div className={`absolute w-36 h-36 rounded-full ${getBgOpacity5Class(primaryColor)} dark:${getBgOpacity5Class(primaryColor)} blur-2xl bottom-[-20%] right-[-20%]`} />
                 </div>
               )}
 
@@ -171,7 +181,7 @@ export default function ModalPreview({
 
                 {/* Footer Buttons */}
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50">
-                  <UI.Button variant="secondary" onClick={onClose} accentColor={selectedColor}>
+                  <UI.Button variant="secondary" onClick={onClose} accentColor={secondaryColor}>
                     Kembali
                   </UI.Button>
                   <UI.Button
@@ -190,7 +200,7 @@ export default function ModalPreview({
                         );
                       }
                     }}
-                    accentColor={selectedColor}
+                    accentColor={primaryColor}
                   >
                     Mulai Bergabung
                   </UI.Button>
