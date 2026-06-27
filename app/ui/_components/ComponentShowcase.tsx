@@ -485,6 +485,12 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                 ? "w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] h-3 rounded-none overflow-hidden"
                 : style === "glassmorphism" || style === "liquid-glass"
                 ? "w-full bg-white/20 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md shadow-inner h-3 rounded-full overflow-hidden"
+                : style === "bento-grid"
+                ? "w-full bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-800 h-3 rounded-lg overflow-hidden"
+                : style === "minimalism"
+                ? "w-full bg-zinc-200/60 dark:bg-zinc-800/60 h-1 rounded-none overflow-hidden"
+                : style === "sakode-modern"
+                ? "w-full bg-zinc-150 dark:bg-zinc-850 h-2 rounded-full overflow-hidden"
                 : `w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden h-2 ${
                     style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
                   }`
@@ -498,6 +504,12 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                   ? `h-full w-[76%] ${getBgClass(primaryColor)} border-r-2 border-zinc-900 dark:border-white`
                   : style === "glassmorphism" || style === "liquid-glass"
                   ? `h-full w-[76%] rounded-full bg-linear-to-r ${getGradientClass(primaryColor)} border-r border-white/30`
+                  : style === "bento-grid"
+                  ? `h-full w-[76%] rounded-r-md ${getBgClass(primaryColor)}`
+                  : style === "minimalism"
+                  ? `h-full w-[76%] ${getBgClass(primaryColor)}`
+                  : style === "sakode-modern"
+                  ? `h-full w-[76%] rounded-full ${getBgClass(primaryColor)}`
                   : `h-full w-[76%] ${
                       style === "liquid-glass"
                         ? `bg-linear-to-r ${getBgClass(primaryColor)}`
