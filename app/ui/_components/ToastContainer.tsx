@@ -49,12 +49,12 @@ export default function ToastContainer() {
     switch (itemStyle) {
       case "claymorphism": {
         const bgColors = {
-          success: "bg-emerald-100 text-emerald-800 border-emerald-200",
-          error: "bg-rose-100 text-rose-800 border-rose-200",
-          info: "bg-sky-100 text-sky-800 border-sky-200",
-          warning: "bg-amber-100 text-amber-800 border-amber-200",
+          success: "bg-emerald-50 dark:bg-zinc-800 text-emerald-800 dark:text-emerald-300 border-emerald-250 dark:border-emerald-800/40",
+          error: "bg-rose-50 dark:bg-zinc-800 text-rose-800 dark:text-rose-300 border-rose-250 dark:border-rose-800/40",
+          info: "bg-sky-50 dark:bg-zinc-800 text-sky-800 dark:text-sky-300 border-sky-250 dark:border-sky-800/40",
+          warning: "bg-amber-50 dark:bg-zinc-800 text-amber-800 dark:text-amber-300 border-amber-250 dark:border-amber-800/40",
         };
-        return `${bgColors[type]} rounded-2xl border shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.06),_inset_4px_4px_8px_rgba(255,255,255,0.8),_4px_4px_12px_rgba(0,0,0,0.1)] p-4`;
+        return `${bgColors[type]} rounded-2xl border shadow-[inset_-3px_-3px_8px_rgba(0,0,0,0.06),_inset_3px_3px_8px_rgba(255,255,255,0.9),_4px_4px_16px_rgba(0,0,0,0.12)] p-4`;
       }
       case "neobrutalism": {
         const bgColors = {
@@ -67,19 +67,19 @@ export default function ToastContainer() {
       }
       case "glassmorphism": {
         const borderColors = {
-          success: "border-emerald-500/30 text-emerald-800 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/20",
-          error: "border-rose-500/30 text-rose-800 dark:text-rose-300 bg-rose-100/80 dark:bg-rose-950/20",
-          info: "border-sky-500/30 text-sky-800 dark:text-sky-300 bg-sky-100/80 dark:bg-sky-950/20",
-          warning: "border-amber-500/30 text-amber-800 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-950/20",
+          success: "border-emerald-500/40 text-emerald-850 dark:text-emerald-300 bg-emerald-100/95 dark:bg-emerald-950/80",
+          error: "border-rose-500/40 text-rose-850 dark:text-rose-300 bg-rose-100/95 dark:bg-rose-950/80",
+          info: "border-sky-500/40 text-sky-850 dark:text-sky-300 bg-sky-100/95 dark:bg-sky-950/80",
+          warning: "border-amber-500/40 text-amber-850 dark:text-amber-300 bg-amber-100/95 dark:bg-amber-950/80",
         };
-        return `${borderColors[type]} backdrop-blur-md border rounded-xl shadow-lg p-4`;
+        return `${borderColors[type]} backdrop-blur-lg border rounded-xl shadow-lg p-4`;
       }
       case "liquid-glass": {
         const glowGradients = {
-          success: "border-emerald-500/35 text-emerald-800 dark:text-emerald-300 bg-emerald-100/90 dark:bg-gradient-to-br dark:from-emerald-500/20 dark:to-teal-500/10",
-          error: "border-rose-500/35 text-rose-800 dark:text-rose-300 bg-rose-100/90 dark:bg-gradient-to-br dark:from-rose-500/20 dark:to-pink-500/10",
-          info: "border-sky-500/35 text-sky-800 dark:text-sky-300 bg-sky-100/90 dark:bg-gradient-to-br dark:from-sky-500/20 dark:to-blue-500/10",
-          warning: "border-amber-500/35 text-amber-800 dark:text-amber-300 bg-amber-100/90 dark:bg-gradient-to-br dark:from-amber-500/20 dark:to-orange-500/10",
+          success: "border-emerald-500/45 text-emerald-850 dark:text-emerald-300 bg-emerald-50/95 dark:bg-zinc-900/90 dark:bg-gradient-to-br dark:from-emerald-500/15 dark:to-teal-500/5",
+          error: "border-rose-500/45 text-rose-850 dark:text-rose-300 bg-rose-50/95 dark:bg-zinc-900/90 dark:bg-gradient-to-br dark:from-rose-500/15 dark:to-pink-500/5",
+          info: "border-sky-500/45 text-sky-850 dark:text-sky-300 bg-sky-50/95 dark:bg-zinc-900/90 dark:bg-gradient-to-br dark:from-sky-500/15 dark:to-blue-500/5",
+          warning: "border-amber-500/45 text-amber-850 dark:text-amber-300 bg-amber-50/95 dark:bg-zinc-900/90 dark:bg-gradient-to-br dark:from-amber-500/15 dark:to-orange-500/5",
         };
         return `${glowGradients[type]} backdrop-blur-xl border-2 rounded-2xl shadow-[0_0_25px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_0_25px_-5px_rgba(255,255,255,0.1)] p-4`;
       }
@@ -175,7 +175,15 @@ export default function ToastContainer() {
                 onClick={() =>
                   setToasts((prev) => prev.filter((t) => t.id !== toast.id))
                 }
-                className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded"
+                className={
+                  toastStyle === "claymorphism"
+                    ? "absolute top-3 right-3 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 bg-white/80 dark:bg-zinc-700/85 hover:scale-105 active:scale-95 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.06),_inset_1px_1px_2px_rgba(255,255,255,0.9),_2px_2px_4px_rgba(0,0,0,0.05)] dark:shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.3),_inset_1px_1px_2px_rgba(255,255,255,0.06),_2px_2px_4px_rgba(0,0,0,0.2)] border border-zinc-200/50 dark:border-zinc-600/50 rounded-full p-1 transition-all cursor-pointer"
+                    : toastStyle === "neobrutalism"
+                    ? "absolute top-3 right-3 text-black hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black border-2 border-black dark:border-white shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,1)] rounded-none p-0.5 transition-all active:translate-x-px active:translate-y-px active:shadow-none cursor-pointer"
+                    : toastStyle === "glassmorphism" || toastStyle === "liquid-glass"
+                    ? "absolute top-3 right-3 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100 bg-white/10 hover:bg-white/20 dark:bg-zinc-800/10 dark:hover:bg-zinc-800/20 backdrop-blur-md rounded-full border border-white/20 dark:border-zinc-700/25 p-1 transition-all hover:scale-105 cursor-pointer"
+                    : "absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded cursor-pointer"
+                }
                 aria-label="Tutup notifikasi"
                 title="Tutup notifikasi"
               >
