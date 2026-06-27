@@ -3,6 +3,9 @@ import { PaletteColorKey } from "@/UI/shared/color-utils";
 export interface TemplateParams {
   style?: string;
   accentColor?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  ascentColor?: string;
   variant?: string;
   isLoading?: boolean;
   disabled?: boolean;
@@ -406,9 +409,11 @@ showToast("${toastType || "success"}", "${toastMessage || "Selamat! Akun belajar
       { name: "isOpen", type: "boolean", defaultValue: "false", description: "Mengatur apakah modal dalam kondisi terbuka." },
       { name: "onClose", type: "() => void", defaultValue: "undefined", description: "Aksi callback untuk mendeteksi penutupan modal." },
       { name: "style", type: "string", defaultValue: "undefined", description: "Gaya visual yang disematkan ke modal." },
-      { name: "selectedColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen utama modal." },
+      { name: "primaryColor", type: "PaletteColorKey", defaultValue: "'cyan'", description: "Warna aksen utama modal (Primary)." },
+      { name: "secondaryColor", type: "PaletteColorKey", defaultValue: "'orange'", description: "Warna aksen alternatif modal (Secondary)." },
+      { name: "ascentColor", type: "PaletteColorKey", defaultValue: "'pink'", description: "Warna aksen penanda modal (Ascent)." },
     ],
-    codeTemplate: ({ style, accentColor }: TemplateParams) => {
+    codeTemplate: ({ style, primaryColor, secondaryColor, ascentColor }: TemplateParams) => {
       return `import ModalPreview from "@/app/ui/_components/ModalPreview";
 
 // Contoh Penggunaan
@@ -416,7 +421,9 @@ showToast("${toastType || "success"}", "${toastMessage || "Selamat! Akun belajar
   isOpen={isOpen}
   onClose={() => handleCloseModal()}
   style="${style}"
-  selectedColor="${accentColor}"
+  primaryColor="${primaryColor || "cyan"}"
+  secondaryColor="${secondaryColor || "orange"}"
+  ascentColor="${ascentColor || "pink"}"
 />`;
     }
   }
