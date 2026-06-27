@@ -82,7 +82,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
 
   const activeColorInfo = PALETTE_COLORS.find((c) => c.key === selectedColor) || PALETTE_COLORS[0];
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formName) {
       setShowFormError(true);
