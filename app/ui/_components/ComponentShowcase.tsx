@@ -422,24 +422,27 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
         Picu notifikasi toast mengambang di pojok kanan atas. Tampilannya akan menyesuaikan secara visual dengan tema gaya yang aktif saat ini.
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
+        <UI.Button
           onClick={() => showToast("success", "Selamat! Akun belajar Anda telah berhasil dikonfigurasi.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white transition-colors cursor-pointer border border-transparent"
+          variant="primary"
+          accentColor="green"
         >
           Picu Success
-        </button>
-        <button
+        </UI.Button>
+        <UI.Button
           onClick={() => showToast("error", "Sesi login kedaluwarsa. Mohon autentikasi ulang akun Anda.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors cursor-pointer border border-transparent"
+          variant="primary"
+          accentColor="pink"
         >
           Picu Error
-        </button>
-        <button
+        </UI.Button>
+        <UI.Button
           onClick={() => showToast("info", "Jadwal mentoring 1-on-1 dengan Mentor Rian akan dimulai dalam 10 menit.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white transition-colors cursor-pointer border border-transparent"
+          variant="primary"
+          accentColor="blue"
         >
           Picu Info
-        </button>
+        </UI.Button>
       </div>
     </UI.Card>
   );
@@ -456,14 +459,14 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black">{counter}</span>
-            <button
+            <UI.Button
               onClick={() => setCounter((prev) => prev + 1)}
-              className={`text-[10px] px-2 py-0.5 font-black ${getBgClass(ascentColor)} text-white flex items-center gap-0.5 ${
-                style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-sm"
-              }`}
+              variant="primary"
+              accentColor={ascentColor}
+              className="py-1! px-2.5! text-[10px]! rounded-lg!"
             >
               + Tambah
-            </button>
+            </UI.Button>
           </div>
         </div>
 
@@ -474,16 +477,24 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             <span className="text-zinc-800 dark:text-zinc-200">76% Completed</span>
           </div>
           <div
-            className={`w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden h-2 ${
-              style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
-            }`}
+            className={
+              style === "claymorphism"
+                ? "w-full bg-slate-100/80 dark:bg-zinc-900/60 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.05)] border border-slate-200/20 dark:border-zinc-800/20 h-3 rounded-full overflow-hidden"
+                : `w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden h-2 ${
+                    style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
+                  }`
+            }
           >
             <div
-              className={`h-full w-[76%] ${
-                style === "liquid-glass"
-                  ? `bg-linear-to-r ${getBgClass(primaryColor)}`
-                  : getBgClass(primaryColor)
-              }`}
+              className={
+                style === "claymorphism"
+                  ? `h-full w-[76%] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.15),inset_2px_2px_4px_rgba(255,255,255,0.4)] rounded-full ${getBgClass(primaryColor)}`
+                  : `h-full w-[76%] ${
+                      style === "liquid-glass"
+                        ? `bg-linear-to-r ${getBgClass(primaryColor)}`
+                        : getBgClass(primaryColor)
+                    }`
+              }
             />
           </div>
         </div>
