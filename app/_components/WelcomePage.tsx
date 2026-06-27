@@ -207,7 +207,7 @@ export function WelcomePage() {
 				{/* Navigation & Theme Switcher */}
 				{mounted && (
 					<div className="flex items-center gap-3">
-						<Link href="/ui" passHref legacyBehavior>
+						<Link href="/ui">
 							<UI.Button
 								variant="primary"
 								accentColor="blue"
