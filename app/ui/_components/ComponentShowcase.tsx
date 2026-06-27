@@ -480,6 +480,8 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             className={
               style === "claymorphism"
                 ? "w-full bg-slate-100/80 dark:bg-zinc-900/60 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.05)] border border-slate-200/20 dark:border-zinc-800/20 h-3 rounded-full overflow-hidden"
+                : style === "neobrutalism"
+                ? "w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] h-3 rounded-none overflow-hidden"
                 : `w-full bg-zinc-200 dark:bg-zinc-800/80 overflow-hidden h-2 ${
                     style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-full"
                   }`
@@ -489,6 +491,8 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
               className={
                 style === "claymorphism"
                   ? `h-full w-[76%] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.15),inset_2px_2px_4px_rgba(255,255,255,0.4)] rounded-full ${getBgClass(primaryColor)}`
+                  : style === "neobrutalism"
+                  ? `h-full w-[76%] ${getBgClass(primaryColor)} border-r-2 border-zinc-900 dark:border-white`
                   : `h-full w-[76%] ${
                       style === "liquid-glass"
                         ? `bg-linear-to-r ${getBgClass(primaryColor)}`

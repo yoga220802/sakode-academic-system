@@ -253,38 +253,41 @@ export const Alert: React.FC<{
 export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ schedules, accentColor = "pink" }) => (
-  <div className="overflow-x-auto">
-    <table className="w-full text-left text-xs border-collapse">
-      <thead>
-        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-extrabold text-zinc-400 uppercase tracking-wider">
-          <th className="pb-3 pr-2">Kelas Kursus</th>
-          <th className="pb-3 pr-2">Tanggal Mentoring</th>
-          <th className="pb-3 pr-2">Mentor</th>
-          <th className="pb-3 text-right">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {schedules.map((item, idx) => (
-          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/20 dark:hover:bg-zinc-900/10">
-            <td className="py-3 font-extrabold text-zinc-900 dark:text-white pr-2">{item.course}</td>
-            <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
-            <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
-            <td className="py-3 text-right">
-              <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
-                item.status === "Selesai"
-                  ? "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                  : `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)}`
-              }`}>
-                {item.status}
-              </span>
-            </td>
+}> = ({ schedules, accentColor = "pink" }) => {
+  const isDarkText = accentColor === "yellow" || accentColor === "cyan";
+  return (
+    <div className="overflow-x-auto p-1">
+      <table className="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr className="bg-slate-100/60 dark:bg-zinc-800/30 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.03),_inset_2px_2px_4px_rgba(255,255,255,0.8)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.2),_inset_2px_2px_4px_rgba(255,255,255,0.05)] rounded-xl border border-slate-200/20 dark:border-zinc-800/10 font-extrabold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+            <th className="py-3 px-4 rounded-l-xl">Kelas Kursus</th>
+            <th className="py-3 px-2">Tanggal Mentoring</th>
+            <th className="py-3 px-2">Mentor</th>
+            <th className="py-3 px-4 text-right rounded-r-xl">Status</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
+        </thead>
+        <tbody>
+          {schedules.map((item, idx) => (
+            <tr key={idx} className="border-b border-slate-100 dark:border-zinc-800/40 hover:bg-slate-50/50 dark:hover:bg-zinc-900/15 transition-colors">
+              <td className="py-3.5 px-4 font-extrabold text-slate-800 dark:text-white">{item.course}</td>
+              <td className="py-3.5 px-2 text-slate-500 dark:text-zinc-400 font-medium">{item.date}</td>
+              <td className="py-3.5 px-2 text-slate-700 dark:text-zinc-300 font-semibold">{item.mentor}</td>
+              <td className="py-3.5 px-4 text-right">
+                <span className={
+                  item.status === "Selesai"
+                    ? "inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-slate-100 text-slate-500 dark:bg-zinc-800 dark:text-zinc-450 border border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-1.5px_-1.5px_3px_rgba(0,0,0,0.05),_inset_1.5px_1.5px_3px_rgba(255,255,255,0.9)]"
+                    : `inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full ${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border border-white/20 dark:border-black/10 shadow-[inset_-1.5px_-1.5px_3px_rgba(0,0,0,0.2),_inset_1.5px_1.5px_3px_rgba(255,255,255,0.45),_1.5px_1.5px_3px_rgba(0,0,0,0.05)]`
+                }>
+                  {item.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 // 14. Carousel Component
 export const Carousel: React.FC<{
