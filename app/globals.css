@@ -18,11 +18,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sakode-cyan: #71CFFE;
-  --color-sakode-orange: #F9723B;
+  --color-sakode-orange: var(--sakode-secondary-color, #F9723B);
   --color-sakode-yellow: #EDAC1C;
   --color-sakode-charcoal: #383838;
-  --color-sakode-green: #009670;
-  --color-sakode-blue: #54A5E4;
+  --color-sakode-green: var(--sakode-accent-color, #009670);
+  --color-sakode-blue: var(--sakode-primary-color, #54A5E4);
   --color-sakode-red: #F94052;
   --color-sakode-pink: #FF409F;
   --font-sans: var(--font-geist-sans);

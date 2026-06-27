@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { PaletteColorKey } from "@/UI/shared/color-utils";
 
 interface UIStyleContextProps {
@@ -8,6 +8,12 @@ interface UIStyleContextProps {
   setSelectedStyle: (s: string) => void;
   selectedColor: PaletteColorKey;
   setSelectedColor: (c: PaletteColorKey) => void;
+  primaryColorHex: string;
+  setPrimaryColorHex: (hex: string) => void;
+  secondaryColorHex: string;
+  setSecondaryColorHex: (hex: string) => void;
+  accentColorHex: string;
+  setAccentColorHex: (hex: string) => void;
 }
 
 const UIStyleContext = createContext<UIStyleContextProps | undefined>(undefined);
@@ -15,9 +21,44 @@ const UIStyleContext = createContext<UIStyleContextProps | undefined>(undefined)
 export const UIStyleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedStyle, setSelectedStyle] = useState("sakode-modern");
   const [selectedColor, setSelectedColor] = useState<PaletteColorKey>("blue");
+  
+  // Custom colors (Initial defaults match Blue, Orange, Green)
+  const [primaryColorHex, setPrimaryColorHex] = useState("#54A5E4");
+  const [secondaryColorHex, setSecondaryColorHex] = useState("#F9723B");
+  const [accentColorHex, setAccentColorHex] = useState("#009670");
+
+  // Synchronize CSS custom properties with selected colors
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.document) {
+      document.documentElement.style.setProperty("--sakode-primary-color", primaryColorHex);
+    }
+  }, [primaryColorHex]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.document) {
+      document.documentElement.style.setProperty("--sakode-secondary-color", secondaryColorHex);
+    }
+  }, [secondaryColorHex]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.document) {
+      document.documentElement.style.setProperty("--sakode-accent-color", accentColorHex);
+    }
+  }, [accentColorHex]);
 
   return (
-    <UIStyleContext.Provider value={{ selectedStyle, setSelectedStyle, selectedColor, setSelectedColor }}>
+    <UIStyleContext.Provider value={{
+      selectedStyle,
+      setSelectedStyle,
+      selectedColor,
+      setSelectedColor,
+      primaryColorHex,
+      setPrimaryColorHex,
+      secondaryColorHex,
+      setSecondaryColorHex,
+      accentColorHex,
+      setAccentColorHex
+    }}>
       {children}
     </UIStyleContext.Provider>
   );
