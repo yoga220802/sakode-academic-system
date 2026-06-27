@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Tooltip } from "@heroui/react";
 import * as UIStyles from "@/UI";
+import { useUIStyle } from "./UIStyleContext";
 import {
   getBgClass,
   getGradientClass,
@@ -17,9 +18,9 @@ import {
 } from "@/UI/shared/color-utils";
 
 export function WelcomePage() {
+	const { selectedStyle, setSelectedStyle, selectedColor } = useUIStyle();
 	const { resolvedTheme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
-	const [selectedStyle, setSelectedStyle] = useState<string>("sakode-modern");
 	const [timeLeft, setTimeLeft] = useState({
 		days: 0,
 		hours: 0,
@@ -67,17 +68,6 @@ export function WelcomePage() {
 
 	// Resolve style namespace
 	const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
-
-	// Styling options for client presentation
-	const stylesList = [
-		{ slug: "sakode-modern", name: "Modern Style" },
-		{ slug: "claymorphism", name: "Claymorphism" },
-		{ slug: "neobrutalism", name: "Neobrutalism" },
-		{ slug: "glassmorphism", name: "Glassmorphism" },
-		{ slug: "liquid-glass", name: "Liquid Glass" },
-		{ slug: "bento-grid", name: "Bento Grid" },
-		{ slug: "minimalism", name: "Minimalism" }
-	];
 
 	// Helper to extract clean color key from textClass
 	const getAccentKey = (textClass: string): PaletteColorKey => {
@@ -209,11 +199,20 @@ export function WelcomePage() {
 					<div className="flex items-center gap-3">
 						<Link href="/ui">
 							<UI.Button
-								variant="primary"
-								accentColor="blue"
-								className="!text-xs !py-2 !px-3.5 !rounded-xl !h-auto !font-extrabold cursor-pointer"
+								variant="secondary"
+								accentColor={selectedColor}
+								className="text-xs! py-2! px-3.5! rounded-xl! h-auto! font-extrabold! cursor-pointer"
 							>
 								Eksplorasi Gaya UI
+							</UI.Button>
+						</Link>
+						<Link href="/login">
+							<UI.Button
+								variant="primary"
+								accentColor={selectedColor}
+								className="text-xs! py-2! px-3.5! rounded-xl! h-auto! font-extrabold! cursor-pointer"
+							>
+								Masuk Ke Akun
 							</UI.Button>
 						</Link>
 						<button
@@ -315,19 +314,19 @@ export function WelcomePage() {
 					animate={{ opacity: 1, scale: 1 }}
 					transition={{ delay: 0.6, duration: 0.8 }}
 					className='w-full max-w-2xl mb-16 relative z-10'>
-					<UI.Card accentColor="green">
+					<UI.Card accentColor={selectedColor}>
 						<div className='gap-6 p-4 sm:p-8 flex flex-col'>
 							{/* Development Progress Indicator */}
 							<div className='flex flex-col gap-2'>
 								<div className='flex justify-between items-center text-sm font-bold text-zinc-555 dark:text-zinc-405'>
 									<span>Tahap Pengembangan Sistem</span>
-									<span className='text-sakode-green font-black'>2%</span>
+									<span className={`font-black ${getTextClass(selectedColor)}`}>2%</span>
 								</div>
 								
 								<div
 									className={
 										selectedStyle === "claymorphism"
-											? "w-full bg-slate-100/80 dark:bg-zinc-900/60 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),_inset_-2px_-2px_4px_rgba(255,255,255,0.05)] border border-slate-200/20 dark:border-zinc-800/20 h-3 rounded-full overflow-hidden"
+											? "w-full bg-slate-100/80 dark:bg-zinc-900/60 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.05)] border border-slate-200/20 dark:border-zinc-800/20 h-3 rounded-full overflow-hidden"
 											: selectedStyle === "neobrutalism"
 											? "w-full bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] h-3 rounded-none overflow-hidden"
 											: selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass"
@@ -344,16 +343,16 @@ export function WelcomePage() {
 									<div
 										className={
 											selectedStyle === "claymorphism"
-												? "h-full w-[2%] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.15),_inset_2px_2px_4px_rgba(255,255,255,0.4)] rounded-full bg-sakode-green"
+												? `h-full w-[2%] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.15),inset_2px_2px_4px_rgba(255,255,255,0.4)] rounded-full ${getBgClass(selectedColor)}`
 												: selectedStyle === "neobrutalism"
-												? "h-full w-[2%] bg-sakode-green border-r-2 border-zinc-900 dark:border-white"
+												? `h-full w-[2%] ${getBgClass(selectedColor)} border-r-2 border-zinc-900 dark:border-white`
 												: selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass"
 												? "h-full w-[2%] rounded-full bg-linear-to-r from-sakode-pink to-sakode-orange border-r border-white/30"
 												: selectedStyle === "bento-grid"
-												? "h-full w-[2%] rounded-r-md bg-sakode-green"
+												? `h-full w-[2%] rounded-r-md ${getBgClass(selectedColor)}`
 												: selectedStyle === "minimalism"
 												? "h-full w-[2%] bg-zinc-900 dark:bg-white"
-												: "h-full w-[2%] rounded-full bg-sakode-green"
+												: `h-full w-[2%] rounded-full ${getBgClass(selectedColor)}`
 										}
 									/>
 								</div>
@@ -405,7 +404,7 @@ export function WelcomePage() {
 									<Tooltip.Trigger className="w-full">
 										<div className="w-full text-left h-full">
 											<UI.Card accentColor={accent}>
-												<div className="flex flex-col p-1.5 h-full min-h-[170px] justify-between">
+												<div className="flex flex-col p-1.5 h-full min-h-42.5 justify-between">
 													<div className='flex items-center justify-between mb-4'>
 														<span className={`text-3xl font-extrabold tracking-tight font-mono select-none ${feat.textClass}`}>
 															{feat.number}
@@ -436,40 +435,6 @@ export function WelcomePage() {
 						})}
 					</motion.div>
 				</div>
-
-				{/* Style Selector Toolbar for presentation - moved to bottom below cards list */}
-				<motion.div
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.9, duration: 0.8 }}
-					className="w-full max-w-4xl mt-16 relative z-30 animate-fade-in"
-				>
-					<div className="bg-white/90 dark:bg-zinc-955/80 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-						<div className="flex flex-col text-left w-full md:w-auto">
-							<span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-widest leading-none mb-1">
-								Pilih Gaya Visual Landing Page
-							</span>
-							<span className="text-sm font-black text-zinc-800 dark:text-zinc-100 leading-tight">
-								Live Preview Client Showcase
-							</span>
-						</div>
-						<div className="flex flex-wrap gap-2 justify-center w-full md:w-auto">
-							{stylesList.map((st) => (
-								<button
-									key={st.slug}
-									onClick={() => setSelectedStyle(st.slug)}
-									className={`text-xs font-bold px-3.5 py-2 rounded-xl transition-all active:scale-95 cursor-pointer ${
-										selectedStyle === st.slug
-											? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs"
-											: "bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-900 text-zinc-650 dark:text-zinc-355 border border-zinc-200/50 dark:border-zinc-800/40"
-									}`}
-								>
-									{st.name}
-								</button>
-							))}
-						</div>
-					</div>
-				</motion.div>
 			</main>
 
 			{/* Footer */}

@@ -6,18 +6,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as UIStyles from "@/UI";
-import {
-  PaletteColorKey,
-  getBgClass,
-  getGradientClass,
-  getTextClass,
-} from "@/UI/shared/color-utils";
+import { useUIStyle } from "@/app/_components/UIStyleContext";
 
 export default function LoginPage() {
 	const router = useRouter();
+	const { selectedStyle, selectedColor } = useUIStyle();
 	const { resolvedTheme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
-	const [selectedStyle, setSelectedStyle] = useState<string>("sakode-modern");
 	
 	// Form state
 	const [email, setEmail] = useState("");
@@ -27,19 +22,16 @@ export default function LoginPage() {
 	const [alertMsg, setAlertMsg] = useState<{ type: "warning" | "info"; title: string; desc: string } | null>(null);
 
 	useEffect(() => {
-		setMounted(true);
+		let active = true;
+		requestAnimationFrame(() => {
+			if (active) {
+				setMounted(true);
+			}
+		});
+		return () => {
+			active = false;
+		};
 	}, []);
-
-	// Styling options for client presentation
-	const stylesList = [
-		{ slug: "sakode-modern", name: "Modern Style" },
-		{ slug: "claymorphism", name: "Claymorphism" },
-		{ slug: "neobrutalism", name: "Neobrutalism" },
-		{ slug: "glassmorphism", name: "Glassmorphism" },
-		{ slug: "liquid-glass", name: "Liquid Glass" },
-		{ slug: "bento-grid", name: "Bento Grid" },
-		{ slug: "minimalism", name: "Minimalism" }
-	];
 
 	const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
@@ -75,25 +67,7 @@ export default function LoginPage() {
 
 	const isGlassBg = selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass";
 
-	// Custom class for countdown cell wrapper based on style
-	const getFormCellClass = () => {
-		switch (selectedStyle) {
-			case "claymorphism":
-				return "bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/20 dark:border-zinc-800/20 shadow-[inset_-3px_-3px_6px_rgba(0,0,0,0.06),_inset_3px_3px_6px_rgba(255,255,255,0.6),_2px_4px_8px_rgba(0,0,0,0.05)] rounded-2xl p-4";
-			case "neobrutalism":
-				return "bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none p-4 font-mono";
-			case "glassmorphism":
-			case "liquid-glass":
-				return "bg-white/20 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md shadow-xs rounded-2xl p-4";
-			case "bento-grid":
-				return "bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl shadow-3xs p-4";
-			case "minimalism":
-				return "bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-250/30 rounded-none p-4";
-			case "sakode-modern":
-			default:
-				return "bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-850/50 rounded-2xl p-4 shadow-3xs";
-		}
-	};
+
 
 	return (
 		<div className='relative min-h-screen w-full flex flex-col justify-between items-center bg-background text-foreground overflow-hidden font-sans transition-colors duration-300'>
@@ -118,7 +92,7 @@ export default function LoginPage() {
 
 			{/* Navbar Header */}
 			<header className='w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-900/50 z-20 relative'>
-				<button onClick={() => router.push("/")} className="bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center cursor-pointer">
+				<button onClick={() => router.push("/")} aria-label="Kembali ke Beranda" className="bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center cursor-pointer">
 					<Image
 						src='/assets/logo/sakode.svg'
 						alt='Sakode Academy Logo'
@@ -156,11 +130,11 @@ export default function LoginPage() {
 					transition={{ duration: 0.6 }}
 					className="w-full relative z-10"
 				>
-					<UI.Card accentColor="green">
+					<UI.Card accentColor={selectedColor}>
 						<div className="p-2 sm:p-6 flex flex-col gap-6">
 							{/* Form Title & Switcher */}
 							<div className="text-center">
-								<UI.Heading className="!text-2xl !font-extrabold !mb-1 text-zinc-900 dark:text-white font-sans">
+								<UI.Heading className="text-2xl! font-extrabold! mb-1! text-zinc-900 dark:text-white font-sans">
 									Selamat Datang
 								</UI.Heading>
 								<p className="text-xs text-zinc-550 dark:text-zinc-400 font-medium">
@@ -240,7 +214,7 @@ export default function LoginPage() {
 									<UI.Button
 										type="submit"
 										variant="primary"
-										accentColor="blue"
+										accentColor={selectedColor}
 										isLoading={isLoading}
 										className="w-full cursor-pointer"
 									>
@@ -265,43 +239,6 @@ export default function LoginPage() {
 							</div>
 						</div>
 					</UI.Card>
-				</motion.div>
-
-				{/* Style Selector Toolbar for presentation */}
-				<motion.div
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.4, duration: 0.8 }}
-					className="w-full max-w-xl mt-12 relative z-30 animate-fade-in"
-				>
-					<div className="bg-white/90 dark:bg-zinc-955/80 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4 shadow-sm flex flex-col items-center justify-between gap-4">
-						<div className="flex flex-col text-center w-full">
-							<span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-widest leading-none mb-1">
-								Pilih Gaya Visual Autentikasi
-							</span>
-							<span className="text-sm font-black text-zinc-800 dark:text-zinc-100 leading-tight">
-								Live Preview Client Showcase
-							</span>
-						</div>
-						<div className="flex flex-wrap gap-2 justify-center w-full">
-							{stylesList.map((st) => (
-								<button
-									key={st.slug}
-									onClick={() => {
-										setSelectedStyle(st.slug);
-										setAlertMsg(null);
-									}}
-									className={`text-xs font-bold px-3.5 py-2 rounded-xl transition-all active:scale-95 cursor-pointer ${
-										selectedStyle === st.slug
-											? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs"
-											: "bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-900 text-zinc-650 dark:text-zinc-350 border border-zinc-200/50 dark:border-zinc-800/40"
-									}`}
-								>
-									{st.name}
-								</button>
-							))}
-						</div>
-					</div>
 				</motion.div>
 			</main>
 
