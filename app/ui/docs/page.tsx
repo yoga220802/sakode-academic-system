@@ -151,7 +151,7 @@ export default function ComponentDocsPage() {
   const [styleName, setStyleName] = useState<string>("sakode-modern");
   const [primaryColor, setPrimaryColor] = useState<PaletteColorKey>("cyan");
   const [secondaryColor, setSecondaryColor] = useState<PaletteColorKey>("orange");
-  const [ascentColor, setAscentColor] = useState<PaletteColorKey>("pink");
+  const [ascentColor, setAscentColor] = useState<PaletteColorKey>("green");
   const [bgPreview, setBgPreview] = useState<"checkerboard" | "light" | "dark">("checkerboard");
 
   // Knobs for Toast & Modal
@@ -203,7 +203,7 @@ export default function ComponentDocsPage() {
     setStyleName(newStyle);
     setPrimaryColor("cyan");
     setSecondaryColor("orange");
-    setAscentColor("pink");
+    setAscentColor("green");
   };
 
   const activeDoc = COMPONENT_DOCS[selectedComp] || COMPONENT_DOCS.Button;
@@ -1125,7 +1125,7 @@ export default function ComponentDocsPage() {
 
                 {/* 3. Ascent Color Selector */}
                 <div className="space-y-2">
-                  <span className="block text-xs font-bold text-zinc-500">Warna Aksen / Ascent (Ascent Color) - Default: Pink</span>
+                  <span className="block text-xs font-bold text-zinc-500">Warna Aksen / Ascent (Ascent Color) - Default: Hijau</span>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {PALETTE_COLORS.map((c) => {
                       const isSelected = ascentColor === c.key;

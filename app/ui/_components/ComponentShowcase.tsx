@@ -50,7 +50,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
   // Initialize primary, secondary, and ascent colors according to the docs guidelines
   const [primaryColor, setPrimaryColor] = useState<PaletteColorKey>("cyan");
   const [secondaryColor, setSecondaryColor] = useState<PaletteColorKey>("orange");
-  const [ascentColor, setAscentColor] = useState<PaletteColorKey>("pink");
+  const [ascentColor, setAscentColor] = useState<PaletteColorKey>("green");
 
   // State managers for interactive sections
   const [formName, setFormName] = useState("");
@@ -195,7 +195,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
 
             {/* 3. Ascent Color Selector */}
             <div className="space-y-2">
-              <UI.Label className="text-xs">Warna Aksen / Ascent (Ascent Color) - Default: Pink</UI.Label>
+              <UI.Label className="text-xs">Warna Aksen / Ascent (Ascent Color) - Default: Hijau</UI.Label>
               <div className="flex flex-wrap items-center gap-1.5">
                 {PALETTE_COLORS.map((c) => {
                   const isSelected = ascentColor === c.key;

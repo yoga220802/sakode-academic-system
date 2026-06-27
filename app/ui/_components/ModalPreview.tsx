@@ -27,7 +27,7 @@ export default function ModalPreview({
   style,
   primaryColor = "cyan",
   secondaryColor = "orange",
-  ascentColor = "pink",
+  ascentColor = "green",
 }: ModalPreviewProps) {
   const { resolvedTheme } = useTheme();
   

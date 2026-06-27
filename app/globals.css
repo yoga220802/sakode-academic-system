@@ -24,7 +24,8 @@
   --color-sakode-green: #6EBF22;    /* Success: Hijau */
   --color-sakode-blue: #79A2FC;     /* Information: Biru */
   --color-sakode-red: #FF5F47;      /* Error: Merah */
-  --color-sakode-pink: #BC71FE;     /* Ascent: Ungu */
+  --color-sakode-pink: #FF409F;     /* Accent: Pink Sakode */
+  --color-sakode-purple: #BC71FE;   /* Purple / Lavender */
   --font-sans: var(--font-nunito);
   --font-kalam: var(--font-kalam);
 
@@ -70,11 +71,22 @@ body {
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1, .font-kalam {
+h1 {
   font-family: var(--font-kalam), var(--font-sans), cursive, sans-serif;
 }
 
 h2, h3, h4, h5, h6 {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  font-weight: 800; /* Extrabold Nunito styling */
+}
+
+h2 {
+  font-weight: 800;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+h4, h5, h6 {
+  font-weight: 600;
 }
