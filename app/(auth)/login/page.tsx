@@ -7,10 +7,12 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as UIStyles from "@/UI";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
+import { useAuth } from "@/app/_components/AuthContext";
 
 export default function LoginPage() {
 	const router = useRouter();
 	const { selectedStyle, selectedColor } = useUIStyle();
+	const { login } = useAuth();
 	const { resolvedTheme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
 	
@@ -58,7 +60,8 @@ export default function LoginPage() {
 			});
 			// Mock redirect
 			setTimeout(() => {
-				router.push("/ui");
+				login("murid");
+				router.push("/dashboard");
 			}, 1500);
 		}, 1500);
 	};
@@ -222,6 +225,27 @@ export default function LoginPage() {
 									</UI.Button>
 								</div>
 							</form>
+							
+							{/* Quick Login Sandbox */}
+							<div className="mt-5 pt-5 border-t border-zinc-200/50 dark:border-zinc-800/50 flex flex-col gap-2">
+								<span className="text-[10px] font-black text-zinc-400 dark:text-zinc-555 uppercase tracking-widest text-center">
+									Akses Uji Coba Demo (Quick Login)
+								</span>
+								<div className="grid grid-cols-2 gap-2">
+									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("admin"); router.push("/dashboard"); }}>
+										Admin
+									</UI.Button>
+									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("mentor_lead"); router.push("/dashboard"); }}>
+										Mentor Lead
+									</UI.Button>
+									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("mentor"); router.push("/dashboard"); }}>
+										Mentor
+									</UI.Button>
+									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("murid"); router.push("/dashboard"); }}>
+										Murid
+									</UI.Button>
+								</div>
+							</div>
 
 							{/* Signup Toggle Link */}
 							<div className="text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 border-t border-zinc-150/40 dark:border-zinc-800/40 pt-4">
