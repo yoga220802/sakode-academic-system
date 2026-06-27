@@ -17,3 +17,9 @@ Welcome to the Sakode Academy workspace. You are **Antigravity**, the Google Dee
 
 ## 4. UI Style Consistency
 * Maintain adaptation checks for Light/Dark modes in all styles: Claymorphism, Neobrutalism, Glassmorphism, Liquid Glass, Bento Grid, Minimalism, and Modern Style. Ensure proper text contrast (like black text on cyan/yellow backgrounds and white text on dark backgrounds).
+
+## 5. Event Typings & Form Guidelines
+* **React 19 Form Typings**: For form submit event handlers, always use `React.SyntheticEvent<HTMLFormElement>` as `React.FormEvent` is deprecated.
+* **WCAG Axe Accessibility**: Ensure all input elements, buttons, and triggers inside visual config controls always have descriptive `title` and `aria-label` attributes.
+* **Branding Customization**: Colors `sakode-blue` (Primary), `sakode-orange` (Secondary), and `sakode-green` (Accent) are mapped to `--sakode-primary-color`, `--sakode-secondary-color`, and `--sakode-accent-color` respectively to allow dynamic real-time CSS custom property overrides. Do not use hardcoded hex values in client state selectors.
+

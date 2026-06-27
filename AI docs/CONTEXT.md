@@ -10,7 +10,7 @@ Any AI agent starting a new session in this workspace must read and adhere to th
 **Sakode Academy** is a fullstack IT course learning portal designed for managing course registrations, trial classes, learning materials, and mentoring schedules.
 
 * **Target Launch Date**: July 10, 2026 (`2026-07-10T00:00:00`)
-* **Current Status**: 18% (Interactive welcome landing page, dynamic themes, a custom namespace-based UI component engine under `@/UI` outside Next.js routing, and a production-ready 18-component Design System & UI Showcase page under `/ui` are fully completed)
+* **Current Status**: 30% (Interactive welcome landing page, global aesthetics config switcher FAB supporting custom branding hex overrides, fully styled `/login` & `/register` routes under route group `(auth)`, dynamic client-side `AuthProvider` session manager, and unified RBAC adaptive `/dashboard` with widgets for Murid, Mentor, Mentor Lead, and Admin are fully completed)
 * **Subscribers File**: Emails registered via the newsletter are saved locally to `data/subscribers.json`
 
 ---
@@ -47,24 +47,40 @@ All Frontend UI, Backend Logic, Database Queries, and APIs associated with a spe
 app/
 ├── _actions/             <-- Shared Server Actions (BE)
 ├── _components/          <-- Shared UI components (FE)
+│   ├── AuthContext.tsx   <-- AuthProvider managing mock session state
+│   ├── UIStyleContext.tsx <-- UIStyleProvider managing selectedStyle & color hex
+│   ├── StyleSwitcherFAB.tsx <-- Draggable global visual selector FAB
+│   └── WelcomePage.tsx   <-- Welcome landing page view
 ├── _database/            <-- Database configuration & schemas (BE)
 │   ├── db.ts             <-- DB Client (e.g. Prisma client, Drizzle db, or local JSON driver)
 │   └── schema.ts         <-- DB Table / Schema definitions
 ├── _hooks/               <-- Shared custom React hooks (FE)
 ├── _services/            <-- Shared Business Logic & DB queries (BE Service Layer)
 ├── _types/               <-- Shared TS interfaces and types
-├── _utils/               <-- Shared utility helper functions
+│   └── auth.ts           <-- UserRole ("admin" | "mentor" | "mentor_lead" | "murid") & UserSession types
 │
-├── (welcome)/            <-- Route group: welcome landing page
-│   ├── _actions/         <-- Route-specific Server Actions (BE mutation)
-│   │   └── subscribe.ts
-│   ├── _components/      <-- Route-specific UI components (FE view)
-│   │   └── WelcomePage.tsx
-│   ├── _services/        <-- Route-specific business logic & validation (BE)
-│   └── page.tsx          <-- Route Entry-point (renders _components/WelcomePage)
+├── (auth)/               <-- Route group: authentication pages
+│   ├── login/
+│   │   └── page.tsx      <-- Renders login form & sandbox quick logins
+│   └── register/
+│       └── page.tsx      <-- Renders student registration form
+│
+├── (welcome)/            <-- Route group: welcome landing page entry
+│   └── page.tsx
+│
+├── dashboard/            <-- Unified layout dashboard routing (RBAC)
+│   ├── _components/      <-- Adaptive widgets colocated inside dashboard
+│   │   ├── AdminWidget.tsx      <-- Widget rendering stats & log audits for admin
+│   │   ├── MentorLeadWidget.tsx <-- Widget rendering student plotting allocation queues
+│   │   ├── MentorWidget.tsx     <-- Widget rendering teaching schedule calendars
+│   │   ├── StudentWidget.tsx    <-- Widget rendering student progress bars & active courses
+│   │   ├── Sidebar.tsx          <-- Sidebar menu dynamically filtered by user session role
+│   │   └── Header.tsx           <-- Header bar with profile card and theme toggles
+│   ├── page.tsx          <-- Renders active role widget inside Framer Motion AnimatePresence
+│   └── layout.tsx        <-- Main panel layout container containing Sidebar & Header
 │
 ├── layout.tsx            <-- Root Layout (sets suppressHydrationWarning and Providers)
-├── providers.tsx         <-- next-themes wrapper provider
+├── providers.tsx         <-- ThemeProvider, UIStyleProvider, and AuthProvider wrapper
 └── globals.css           <-- Custom Tailwind theme variables and CSS overrides
 ```
 
@@ -121,12 +137,15 @@ Branding values are derived from `/public/assets/Palette.svg` and configured ins
 
 ### Theme Colors:
 * `sakode-pink` (`#FF409F`)
-* `sakode-orange` (`#F9723B`)
-* `sakode-yellow` (`#EDAC1C`) - *Primary Gold Color representation.*
-* `sakode-blue` (`#54A5E4`)
-* `sakode-green` (`#009670`)
+* `sakode-orange` (`var(--sakode-secondary-color, #F9723B)`) - *Secondary Color*
+* `sakode-yellow` (`#EDAC1C`) - *Gold Color representation*
+* `sakode-blue` (`var(--sakode-primary-color, #54A5E4)`) - *Primary Color*
+* `sakode-green` (`var(--sakode-accent-color, #009670)`) - *Accent / Ascent Color*
 * `sakode-cyan` (`#71CFFE`)
 * `sakode-charcoal` (`#383838`)
+
+> [!NOTE]
+> Primary, Secondary, and Accent colors are mapped to CSS custom variables (`--sakode-primary-color`, etc.) to support dynamic custom branding overrides in real-time from the Aesthetics Configurator FAB.
 
 ### Theme Configuration (next-themes):
 * Light Mode (`:root`): `--background: #f9fafb` (zinc-50), `--foreground: #09090b` (zinc-950).
@@ -142,9 +161,12 @@ Branding values are derived from `/public/assets/Palette.svg` and configured ins
    * Do not use custom bracket classes if they can be written as modular variables (e.g. `h-150` instead of `h-[600px]`).
    * Use `bg-linear-to-r` instead of `bg-gradient-to-r`.
    * Use `translate-x-[-50%]` instead of `-translate-x-[50%]`.
+   * Use standard suffix logic for important overrides (e.g. `text-xs!` instead of `!text-xs`).
 4. **React 19 Event Typings**: Use `SyntheticEvent<HTMLFormElement>` for form events, as standard `FormEvent` is deprecated.
 5. **Asynchronous Mounting**: When mounting client-side state, wrap triggers inside `requestAnimationFrame` to avoid linter warnings regarding synchronous state mutations in `useEffect`.
 6. **No Emoji Overuse**: Emojis should not be used for primary SaaS visual components. Rely on professional numbers or clean typography instead.
 7. **Consistent Action Responses**: Always return standard JSON objects with success/error/data structures from actions. Do not throw arbitrary exceptions to the client.
 8. **Use Custom Namespace UI Library (`@/UI`)**: To build custom visual styled layouts (e.g. Claymorphism, Neobrutalism, etc.) without third-party component library overhead, use components from `@/UI` (e.g. `<claymorphism.Button>`, `<neobrutalism.Input>`). This is located at the root-level `UI/` folder, completely safe from App Router route generation. Refer to [CUSTOM_UI_BUILDING.md](CUSTOM_UI_BUILDING.md) for details on adding new components to the style system.
+9. **Form Element Accessibility**: Always provide `title` and `aria-label` attributes for all form input/button controls to pass WCAG Axe compliance. Do not leave interactive controls unlabeled.
+
 

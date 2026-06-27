@@ -105,6 +105,26 @@ npm run build
 
 ---
 
+## 🔑 Akses Demo & Uji Coba (Sandbox RBAC)
+Untuk mempermudah demonstrasi visual kepada klien, portal ini dilengkapi dengan **Aesthetics Configurator (FAB)** dan **Quick Login Sandbox** di halaman login.
+
+### 👥 Kredensial Akun Percobaan (Dummy Data):
+Anda dapat mengklik tombol *Quick Login* di halaman `/login` untuk masuk secara otomatis, atau mengetikkan email percobaan berikut (password bebas):
+
+| Peran (Role) | Nama Pengguna | E-mail Uji Coba | Deskripsi Tampilan Widget Dasbor |
+| :--- | :--- | :--- | :--- |
+| **Admin** | Super Admin Sakode | `admin@sakode.com` | Ringkasan stats server, tindakan cepat sistem, log audit aktivitas. |
+| **Mentor Lead** | Hamzah Mentor Lead | `hamzah@sakode.com` | Antrean siswa baru belum di-plot, kapasitas kapasitas mentor bimbingan. |
+| **Mentor** | Udin Mentor React | `udin@sakode.com` | Jadwal bimbingan harian, antrean penilaian tugas coding, jam mengajar. |
+| **Murid** | Panjul Siswa Baru | `panjul@gmail.com` | Progres kurikulum IT, jadwal mentoring terdekat, modul belajar aktif. |
+
+### 🛠️ Aesthetics Configurator (FAB):
+* Terletak di kanan bawah layar (dapat digeser/di-drag secara bebas).
+* Memungkinkan pengubahan **Gaya Visual UI** (Claymorphism, Neobrutalism, Glassmorphism, dll.) secara instan untuk seluruh website.
+* Memungkinkan pengujian **Kustom Warna Branding**: Anda dapat memasukkan kode Hex (misal: `#BC71FE`) atau memilih dari roda warna untuk mengubah warna *Primer*, *Sekunder*, dan *Aksen* secara global pada seluruh elemen dasbor saat itu juga.
+
+---
+
 ## 💾 Penyimpanan Data Subs
 Pendaftaran email melalui formulir "Dapatkan Notifikasi" saat ini diproses secara aman di sisi server menggunakan *Server Action* Next.js, dan data email akan disimpan ke dalam berkas JSON lokal pada path **`data/subscribers.json`**. 
 
@@ -117,3 +137,4 @@ Format penyimpanan berkas:
 ```
 
 Ke depan, database akan dimigrasikan menggunakan ORM modern seperti Drizzle atau Prisma setelah skema disepakati dan diimplementasikan.
+

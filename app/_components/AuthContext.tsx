@@ -40,16 +40,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let email = "";
     if (role === "admin") {
       name = "Super Admin Sakode";
-      email = "admin@sakode.cc";
+      email = "admin@sakode.com";
     } else if (role === "mentor_lead") {
-      name = "Yogi Mentor Lead";
-      email = "yogi.lead@sakode.cc";
+      name = "Hamzah Mentor Lead";
+      email = "hamzah@sakode.com";
     } else if (role === "mentor") {
-      name = "Akbar Mentor React";
-      email = "akbar.mentor@sakode.cc";
+      name = "Udin Mentor React";
+      email = "udin@sakode.com";
     } else {
-      name = "Budi Siswa Baru";
-      email = "budi.student@gmail.com";
+      name = "Panjul Siswa Baru";
+      email = "panjul@gmail.com";
     }
     const newSession = { userId: `usr-${role}`, name, email, role };
     setSession(newSession);

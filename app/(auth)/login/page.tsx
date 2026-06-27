@@ -60,7 +60,19 @@ export default function LoginPage() {
 			});
 			// Mock redirect
 			setTimeout(() => {
-				login("murid");
+				let resolvedRole: "admin" | "mentor_lead" | "mentor" | "murid" = "murid";
+				const cleanedEmail = email.toLowerCase().trim();
+				if (cleanedEmail === "admin@sakode.com") {
+					resolvedRole = "admin";
+				} else if (cleanedEmail === "hamzah@sakode.com") {
+					resolvedRole = "mentor_lead";
+				} else if (cleanedEmail === "udin@sakode.com") {
+					resolvedRole = "mentor";
+				} else if (cleanedEmail === "panjul@gmail.com") {
+					resolvedRole = "murid";
+				}
+
+				login(resolvedRole);
 				router.push("/dashboard");
 			}, 1500);
 		}, 1500);
