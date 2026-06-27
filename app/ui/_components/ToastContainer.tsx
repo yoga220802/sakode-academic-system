@@ -177,9 +177,11 @@ export default function ToastContainer() {
                 }
                 className={
                   toastStyle === "claymorphism"
-                    ? "absolute top-3 right-3 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 bg-white/80 dark:bg-zinc-700/85 hover:scale-105 active:scale-95 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.06),inset_1px_1px_2px_rgba(255,255,255,0.9),2px_2px_4px_rgba(0,0,0,0.05)] dark:shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.3),inset_1px_1px_2px_rgba(255,255,255,0.06),2px_2px_4px_rgba(0,0,0,0.2)] border border-zinc-200/50 dark:border-zinc-600/50 rounded-full p-1 transition-all"
+                    ? "absolute top-3 right-3 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 bg-white/80 dark:bg-zinc-700/85 hover:scale-105 active:scale-95 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.06),_inset_1px_1px_2px_rgba(255,255,255,0.9),_2px_2px_4px_rgba(0,0,0,0.05)] dark:shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.3),_inset_1px_1px_2px_rgba(255,255,255,0.06),_2px_2px_4px_rgba(0,0,0,0.2)] border border-zinc-200/50 dark:border-zinc-600/50 rounded-full p-1 transition-all cursor-pointer"
                     : toastStyle === "neobrutalism"
                     ? "absolute top-3 right-3 text-black hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black border-2 border-black dark:border-white shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,1)] rounded-none p-0.5 transition-all active:translate-x-px active:translate-y-px active:shadow-none cursor-pointer"
+                    : toastStyle === "glassmorphism" || toastStyle === "liquid-glass"
+                    ? "absolute top-3 right-3 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100 bg-white/10 hover:bg-white/20 dark:bg-zinc-800/10 dark:hover:bg-zinc-800/20 backdrop-blur-md rounded-full border border-white/20 dark:border-zinc-700/25 p-1 transition-all hover:scale-105 cursor-pointer"
                     : "absolute top-3 right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-0.5 rounded cursor-pointer"
                 }
                 aria-label="Tutup notifikasi"
