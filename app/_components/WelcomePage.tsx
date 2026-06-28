@@ -8,6 +8,8 @@ import { useTheme } from "next-themes";
 import { Tooltip } from "@heroui/react";
 import * as UIStyles from "@/UI";
 import { useUIStyle } from "./UIStyleContext";
+import { Icons } from "@/UI/shared/Icons";
+import { AestheticBackground } from "./AestheticBackground";
 import {
   getBgClass,
   getGradientClass,
@@ -162,21 +164,7 @@ export function WelcomePage() {
 
 	return (
 		<div className='relative min-h-screen w-full flex flex-col justify-between items-center bg-background text-foreground overflow-hidden font-sans transition-colors duration-300'>
-			{/* Background Gradients */}
-			{isGlassBg ? (
-				<>
-					<div className="absolute top-[-10%] left-[20%] w-96 h-96 rounded-full bg-sakode-pink/20 dark:bg-sakode-pink/25 blur-3xl pointer-events-none z-0" />
-					<div className="absolute bottom-[-10%] right-[10%] w-96 h-96 rounded-full bg-sakode-orange/20 dark:bg-sakode-orange/20 blur-3xl pointer-events-none z-0" />
-					<div className="absolute top-[40%] left-[-10%] w-80 h-80 rounded-full bg-sakode-cyan/20 dark:bg-sakode-cyan/20 blur-3xl pointer-events-none z-0" />
-					<div className="absolute bottom-[25%] left-[30%] w-80 h-80 rounded-full bg-sakode-yellow/15 dark:bg-sakode-yellow/15 blur-3xl pointer-events-none z-0" />
-				</>
-			) : (
-				<>
-					<div className='absolute top-[-10%] left-[50%] translate-x-[-50%] h-150 w-[90%] sm:w-200 rounded-full bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.06)_0%,transparent_65%)] dark:bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.12)_0%,transparent_65%)] blur-[60px] pointer-events-none z-0' />
-					<div className='absolute bottom-[-10%] right-[-10%] h-125 w-125 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,64,159,0.04)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,64,159,0.08)_0%,transparent_70%)] blur-[50px] pointer-events-none z-0' />
-					<div className='absolute top-[40%] left-[-10%] h-100 w-100 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.03)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.06)_0%,transparent_70%)] blur-[50px] pointer-events-none z-0' />
-				</>
-			)}
+			<AestheticBackground mode="landing" />
 
 			{/* Grid Pattern overlay */}
 			<div className='absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-size-[32px_32px] pointer-events-none z-0' />
@@ -219,35 +207,11 @@ export function WelcomePage() {
 							onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
 							className='p-2.5 rounded-full border border-zinc-200/50 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-xs hover:shadow-sm transition-all active:scale-95 cursor-pointer'
 							aria-label='Toggle Light/Dark Theme'>
-							{
-								resolvedTheme === "dark" ?
-									// Sun Icon
-									<svg
-										className='w-4 h-4'
-										fill='none'
-										viewBox='0 0 24 24'
-										stroke='currentColor'
-										strokeWidth={2.5}>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											d='M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z'
-										/>
-									</svg>
-									// Moon Icon
-								:	<svg
-										className='w-4 h-4'
-										fill='none'
-										viewBox='0 0 24 24'
-										stroke='currentColor'
-										strokeWidth={2.5}>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											d='M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z'
-										/>
-									</svg>
-							}
+							{resolvedTheme === "dark" ? (
+								<Icons.Sun className="w-4 h-4" />
+							) : (
+								<Icons.Moon className="w-4 h-4" />
+							)}
 						</button>
 					</div>
 				)}

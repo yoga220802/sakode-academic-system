@@ -6,6 +6,7 @@ import { useAuth } from "@/app/_components/AuthContext";
 import { Sidebar } from "./_components/Sidebar";
 import { Header } from "./_components/Header";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
+import { AestheticBackground } from "../_components/AestheticBackground";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { session } = useAuth();
@@ -30,18 +31,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  const isGlassStyle = selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass";
-
   return (
     <div className="min-h-screen w-full flex bg-background text-foreground overflow-hidden font-sans transition-colors duration-300">
       
-      {/* Dynamic Background Overlays for Glass/Liquid style */}
-      {isGlassStyle && (
-        <>
-          <div className="absolute top-[10%] left-[10%] h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.08)_0%,transparent_70%)] blur-[40px] pointer-events-none z-0" />
-          <div className="absolute bottom-[10%] right-[10%] h-90 w-90 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.04)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.07)_0%,transparent_70%)] blur-[50px] pointer-events-none z-0" />
-        </>
-      )}
+      <AestheticBackground mode="dashboard" />
 
       {/* Sidebar Panel */}
       <div className="relative z-10">
