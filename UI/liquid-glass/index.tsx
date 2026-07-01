@@ -1,16 +1,89 @@
-import React from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, HTMLMotionProps, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Icons } from "../shared/Icons";
 import { PaletteColorKey, getBgClass, getGradientClass, getShadow20Class, getLiquidGlassShadow, getFocusRingClass, getBgOpacity15Class, getBgOpacity20Class, getBgOpacity25Class, getBgOpacity5Class, getBorderClass, getGradientBgLightClass, getTextClass, getBorderRadiusClass } from "../shared/color-utils";
 
-export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor = "orange", children, ...props }) => (
-  <div
-    className={`bg-white/80 dark:bg-zinc-950/60 backdrop-blur-xl border border-zinc-200/80 dark:border-white/15 rounded-2xl p-6 shadow-2xl ${getLiquidGlassShadow(accentColor)} relative z-10 text-zinc-800 dark:text-white/90 ${className}`}
-    {...props}
-  >
-    {children}
-  </div>
-);
+export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor = "orange", children, ...props }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  // Motion values for tracking cursor relative offset (-0.5 to 0.5)
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  
+  // Springs to smoothen real-time rotation transition
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { damping: 25, stiffness: 200 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { damping: 25, stiffness: 200 });
+  
+  // Shine cursor coordinates relative to card element
+  const [shinePos, setShinePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    
+    const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
+    const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
+    
+    x.set(relativeX);
+    y.set(relativeY);
+    
+    setShinePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        perspective: 1000,
+      }}
+      className={`relative p-6 text-zinc-800 dark:text-white/90 transition-shadow duration-300 ${className}`}
+      {...(props as any)}
+    >
+      {/* Liquid Glass Background layer with directional borders */}
+      <div 
+        className={`absolute inset-0 z-0 bg-white/75 dark:bg-zinc-950/50 backdrop-blur-2xl rounded-2xl shadow-2xl ${getLiquidGlassShadow(accentColor)} border-t border-l border-t-white/35 border-l-white/35 border-b border-r border-b-white/10 border-r-white/10`}
+      />
+
+      {/* Specular Corner Shine (Water Drop highlight effect) */}
+      <div className="absolute top-0 left-0 w-20 h-20 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.35)_0%,transparent_70%)] pointer-events-none rounded-tl-2xl z-10" />
+
+      {/* Specular Highlight Gloss (Light Refraction) Overlay */}
+      {isHovered && (
+        <div
+          className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay transition-opacity duration-300 rounded-2xl"
+          style={{
+            background: `radial-gradient(circle at ${shinePos.x}px ${shinePos.y}px, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%)`,
+          }}
+        />
+      )}
+      
+      {/* Content wrapper popped out slightly to create 3D depth */}
+      <div style={{ transform: "translateZ(15px)" }} className="relative z-10">
+        {children}
+      </div>
+    </motion.div>
+  );
+};
 
 export const Heading: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className = "", children, ...props }) => (
   <h3 className={`text-lg font-bold text-zinc-850 dark:text-white/90 mb-4 ${className}`} {...props}>
