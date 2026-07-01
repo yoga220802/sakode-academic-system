@@ -25,14 +25,19 @@
   --color-sakode-blue: var(--sakode-primary-color, #54A5E4);
   --color-sakode-red: #F94052;
   --color-sakode-pink: #FF409F;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Nunito', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-kalam: 'Kalam', cursive;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+h1 {
+  font-family: var(--font-kalam), cursive !important;
 }
 
