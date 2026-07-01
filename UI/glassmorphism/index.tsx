@@ -103,28 +103,28 @@ export const Accordion: React.FC<{
   activeId: number | null;
   onToggle: (id: number) => void;
 }> = ({ items, activeId, onToggle }) => (
-  <div className="space-y-3">
+  <div className="space-y-3.5">
     {items.map((item) => {
       const isOpen = activeId === item.id;
       return (
         <div
           key={item.id}
-          className="border border-zinc-200/60 dark:border-zinc-800/80 overflow-hidden rounded-2xl"
+          className="bg-white/25 dark:bg-white/5 border border-white/25 dark:border-white/10 backdrop-blur-md shadow-xs rounded-2xl overflow-hidden"
         >
           <button
             type="button"
             onClick={() => onToggle(item.id)}
             className={`w-full flex items-center justify-between p-4 font-bold text-left transition-colors ${
-              isOpen ? "bg-zinc-150/20 dark:bg-zinc-800/30" : "bg-transparent"
+              isOpen ? "bg-white/15 dark:bg-white/10" : "bg-transparent hover:bg-white/10 dark:hover:bg-white/5"
             }`}
           >
             <span className="text-sm">{item.q}</span>
-            <span className={`transform transition-transform ${isOpen ? "rotate-180" : ""}`}>
-              <Icons.X className="w-4 h-4 rotate-45 text-zinc-400" />
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center bg-white/20 dark:bg-white/10 border border-white/20 dark:border-white/10 transform transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}>
+              <Icons.Plus className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-300" />
             </span>
           </button>
           {isOpen && (
-            <div className="p-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/20 dark:bg-zinc-950/25">
+            <div className="p-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 border-t border-white/20 dark:border-white/10 bg-white/5 dark:bg-black/10">
               {item.a}
             </div>
           )}
@@ -138,21 +138,24 @@ export const Accordion: React.FC<{
 export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ steps, accentColor = "cyan" }) => (
-  <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-6">
-    {steps.map((item, idx) => (
-      <div key={idx} className="relative">
-        <span className={`absolute -left-8.75 top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white ${getBgClass(accentColor)}`}>
-          {item.step}
-        </span>
-        <div>
-          <h4 className="text-sm font-extrabold text-zinc-900 dark:text-white leading-tight">{item.title}</h4>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{item.desc}</p>
+}> = ({ steps, accentColor = "cyan" }) => {
+  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  return (
+    <div className="relative pl-6 border-l border-white/25 dark:border-white/10 space-y-6">
+      {steps.map((item, idx) => (
+        <div key={idx} className="relative">
+          <span className={`absolute -left-8.75 top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${textColor} bg-linear-to-br ${getGradientClass(accentColor)} border border-white/30 dark:border-white/15 shadow-sm backdrop-blur-xs`}>
+            {item.step}
+          </span>
+          <div>
+            <h4 className="text-sm font-extrabold text-zinc-900 dark:text-white leading-tight">{item.title}</h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{item.desc}</p>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 // 10. Badge Component
 export const Badge: React.FC<{
@@ -160,17 +163,16 @@ export const Badge: React.FC<{
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
 }> = ({ children, accentColor = "cyan", variant = "default" }) => {
-  let badgeClass = "bg-white/10 dark:bg-white/5 border-white/10 text-zinc-650 dark:text-zinc-350 backdrop-blur-xs";
-  if (variant === "accent") {
-    badgeClass = `${getBgOpacity15Class(accentColor)} border-white/20 text-zinc-900 dark:text-white backdrop-blur-xs`;
-  } else if (variant === "success") {
-    badgeClass = "bg-emerald-500/15 border-emerald-500/25 text-emerald-800 dark:text-emerald-300 backdrop-blur-xs";
-  } else if (variant === "warning") {
-    badgeClass = "bg-amber-500/15 border-amber-500/25 text-amber-800 dark:text-amber-300 backdrop-blur-xs";
-  }
+  const isDarkText = accentColor === "yellow" || accentColor === "cyan";
+  const badgeColors = {
+    default: "bg-white/30 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 border-white/20 dark:border-white/10",
+    accent: `${getBgOpacity90Class(accentColor)} ${isDarkText ? "text-zinc-955 font-extrabold" : "text-white font-bold"} border-white/30 dark:border-white/15`,
+    success: "bg-emerald-100/40 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-350 border-emerald-500/20 dark:border-emerald-500/10",
+    warning: "bg-amber-100/40 text-amber-800 dark:bg-amber-950/20 dark:text-amber-350 border-amber-500/20 dark:border-amber-500/10",
+  };
 
   return (
-    <span className={`text-[9px] font-black tracking-wide px-2.5 py-0.5 rounded-md border backdrop-blur-xs ${badgeClass}`}>
+    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border backdrop-blur-xs shadow-xs ${badgeColors[variant]}`}>
       {children}
     </span>
   );
@@ -181,23 +183,26 @@ export const AvatarGroup: React.FC<{
   initials: string[];
   extraCount: number;
   accentColor?: PaletteColorKey;
-}> = ({ initials, extraCount, accentColor = "cyan" }) => (
-  <div className="flex items-center gap-3">
-    <div className="flex -space-x-2.5 overflow-hidden">
-      {initials.map((initial, idx) => (
-        <div
-          key={idx}
-          className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 bg-zinc-200 dark:bg-zinc-800 items-center justify-center text-[10px] font-bold text-zinc-700 dark:text-zinc-300 text-center leading-8"
-        >
-          {initial}
+}> = ({ initials, extraCount, accentColor = "cyan" }) => {
+  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex -space-x-2.5 overflow-hidden p-0.5">
+        {initials.map((initial, idx) => (
+          <div
+            key={idx}
+            className="inline-block h-8 w-8 rounded-full border border-white/25 dark:border-white/10 bg-white/20 dark:bg-white/5 text-[10px] font-bold text-zinc-700 dark:text-zinc-300 text-center leading-7 shadow-xs backdrop-blur-xs"
+          >
+            {initial}
+          </div>
+        ))}
+        <div className={`inline-block h-8 w-8 rounded-full border border-white/30 dark:border-white/15 bg-linear-to-br ${getGradientClass(accentColor)} ${extraTextColor} flex items-center justify-center text-[9px] font-black shadow-xs backdrop-blur-xs`}>
+          +{extraCount}
         </div>
-      ))}
-      <div className={`inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 ${getBgClass(accentColor)} text-white flex items-center justify-center text-[9px] font-black`}>
-        +{extraCount}
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // 12. Alert Component
 export const Alert: React.FC<{
@@ -296,18 +301,19 @@ export const Carousel: React.FC<{
           <span className="block text-xs font-extrabold text-zinc-900 dark:text-white">{activeReview.name}</span>
           <span className="text-[10px] text-zinc-400">{activeReview.role}</span>
         </div>
-        <div className={`flex gap-0.5 ${getTextClass(accentColor)}`}>
-          <Icons.Star className="w-3 h-3 fill-current backdrop-blur-xs opacity-90" />
-          <Icons.Star className="w-3 h-3 fill-current backdrop-blur-xs opacity-90" />
-          <Icons.Star className="w-3 h-3 fill-current backdrop-blur-xs opacity-90" />
-          <Icons.Star className="w-3 h-3 fill-current backdrop-blur-xs opacity-90" />
-          <Icons.Star className="w-3 h-3 fill-current backdrop-blur-xs opacity-90" />
+        <div className="flex gap-0.5 text-amber-500">
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
         </div>
       </div>
     </div>
   );
 };
 
+// 15. Chart Component
 // 15. Chart Component
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];

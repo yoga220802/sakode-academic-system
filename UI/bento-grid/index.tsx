@@ -103,28 +103,28 @@ export const Accordion: React.FC<{
   activeId: number | null;
   onToggle: (id: number) => void;
 }> = ({ items, activeId, onToggle }) => (
-  <div className="space-y-3">
+  <div className="space-y-3.5">
     {items.map((item) => {
       const isOpen = activeId === item.id;
       return (
         <div
           key={item.id}
-          className="border border-zinc-200/60 dark:border-zinc-800/80 overflow-hidden rounded-2xl"
+          className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-205"
         >
           <button
             type="button"
             onClick={() => onToggle(item.id)}
-            className={`w-full flex items-center justify-between p-4 font-bold text-left transition-colors ${
-              isOpen ? "bg-zinc-150/20 dark:bg-zinc-800/30" : "bg-transparent"
+            className={`w-full flex items-center justify-between p-4.5 font-bold text-left transition-colors ${
+              isOpen ? "bg-zinc-50 dark:bg-zinc-900/60" : "bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20"
             }`}
           >
-            <span className="text-sm">{item.q}</span>
-            <span className={`transform transition-transform ${isOpen ? "rotate-180" : ""}`}>
-              <Icons.X className="w-4 h-4 rotate-45 text-zinc-400" />
+            <span className="text-sm font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">{item.q}</span>
+            <span className={`w-6 h-6 rounded-lg flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/45 dark:border-zinc-705/45 text-zinc-500 dark:text-zinc-400 transform transition-transform duration-200 ${isOpen ? "rotate-45 bg-zinc-250 dark:bg-zinc-750 text-zinc-805 dark:text-zinc-195" : ""}`}>
+              <Icons.Plus className="w-3.5 h-3.5" />
             </span>
           </button>
           {isOpen && (
-            <div className="p-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/20 dark:bg-zinc-950/25">
+            <div className="p-4.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-450 border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/45 dark:bg-zinc-900/30">
               {item.a}
             </div>
           )}
@@ -138,39 +138,41 @@ export const Accordion: React.FC<{
 export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ steps, accentColor = "green" }) => (
-  <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-6">
-    {steps.map((item, idx) => (
-      <div key={idx} className="relative">
-        <span className={`absolute -left-8.75 top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white ${getBgClass(accentColor)}`}>
-          {item.step}
-        </span>
-        <div>
-          <h4 className="text-sm font-extrabold text-zinc-900 dark:text-white leading-tight">{item.title}</h4>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{item.desc}</p>
+}> = ({ steps, accentColor = "green" }) => {
+  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950" : "text-white";
+  return (
+    <div className="relative pl-7 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
+      {steps.map((item, idx) => (
+        <div key={idx} className="relative">
+          <span className={`absolute -left-9.5 top-0.5 w-6.5 h-6.5 rounded-lg flex items-center justify-center text-[10px] font-black ${textColor} ${getBgClass(accentColor)} border border-zinc-300/10 dark:border-zinc-850 shadow-xs`}>
+            {item.step}
+          </span>
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/65 dark:border-zinc-800/65 p-3.5 rounded-xl shadow-3xs hover:border-zinc-305 dark:hover:border-zinc-695 transition-all">
+            <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">{item.title}</h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{item.desc}</p>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 // 10. Badge Component
 export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "orange", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 border-zinc-200/50 dark:border-zinc-700/50";
-  if (variant === "accent") {
-    badgeClass = `${getBgClass(accentColor)} text-zinc-900`;
-  } else if (variant === "success") {
-    badgeClass = "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-800/50";
-  } else if (variant === "warning") {
-    badgeClass = "bg-amber-50 text-amber-800 dark:bg-amber-950/20 dark:text-amber-300 border-amber-200/50 dark:border-amber-800/50";
-  }
+}> = ({ children, accentColor = "green", variant = "default" }) => {
+  const isDarkText = accentColor === "yellow" || accentColor === "cyan";
+  const badgeColors = {
+    default: "bg-zinc-100 text-zinc-800 dark:bg-zinc-850 dark:text-zinc-300 border-zinc-200/80 dark:border-zinc-700/50",
+    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955 font-extrabold" : "text-white font-bold"} border-zinc-900/10 dark:border-white/10`,
+    success: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30",
+    warning: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+  };
 
   return (
-    <span className={`text-[8.5px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg border shadow-3xs ${badgeClass}`}>
+    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border shadow-3xs ${badgeColors[variant]}`}>
       {children}
     </span>
   );
@@ -181,23 +183,26 @@ export const AvatarGroup: React.FC<{
   initials: string[];
   extraCount: number;
   accentColor?: PaletteColorKey;
-}> = ({ initials, extraCount, accentColor = "green" }) => (
-  <div className="flex items-center gap-3">
-    <div className="flex -space-x-2.5 overflow-hidden">
-      {initials.map((initial, idx) => (
-        <div
-          key={idx}
-          className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 bg-zinc-200 dark:bg-zinc-800 items-center justify-center text-[10px] font-bold text-zinc-700 dark:text-zinc-300 text-center leading-8"
-        >
-          {initial}
+}> = ({ initials, extraCount, accentColor = "green" }) => {
+  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950" : "text-white";
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex -space-x-2 overflow-hidden p-0.5">
+        {initials.map((initial, idx) => (
+          <div
+            key={idx}
+            className="inline-block h-8 w-8 rounded-lg border border-zinc-200 dark:border-zinc-850 bg-zinc-100 dark:bg-zinc-800 items-center justify-center text-[10px] font-bold text-zinc-750 dark:text-zinc-350 text-center leading-7 shadow-3xs"
+          >
+            {initial}
+          </div>
+        ))}
+        <div className={`inline-block h-8 w-8 rounded-lg border border-zinc-200/50 dark:border-zinc-850/50 ${getBgClass(accentColor)} ${extraTextColor} flex items-center justify-center text-[9px] font-black shadow-3xs`}>
+          +{extraCount}
         </div>
-      ))}
-      <div className={`inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-zinc-950 ${getBgClass(accentColor)} text-white flex items-center justify-center text-[9px] font-black`}>
-        +{extraCount}
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // 12. Alert Component
 export const Alert: React.FC<{
@@ -296,18 +301,19 @@ export const Carousel: React.FC<{
           <span className="block text-xs font-extrabold text-zinc-900 dark:text-white">{activeReview.name}</span>
           <span className="text-[10px] text-zinc-400">{activeReview.role}</span>
         </div>
-        <div className={`flex gap-0.5 ${getTextClass(accentColor)}`}>
-          <Icons.Star className="w-3 h-3 fill-current shadow-3xs" />
-          <Icons.Star className="w-3 h-3 fill-current shadow-3xs" />
-          <Icons.Star className="w-3 h-3 fill-current shadow-3xs" />
-          <Icons.Star className="w-3 h-3 fill-current shadow-3xs" />
-          <Icons.Star className="w-3 h-3 fill-current shadow-3xs" />
+        <div className="flex gap-0.5 text-amber-500">
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
+          <Icons.Star className="w-3 h-3 fill-current" />
         </div>
       </div>
     </div>
   );
 };
 
+// 15. Chart Component
 // 15. Chart Component
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
