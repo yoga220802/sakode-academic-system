@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "mentor" | "mentor_lead" | "murid";
+export type UserRole = "admin" | "mentor" | "mentor_lead" | "murid" | "school_principal";
 
 export interface UserSession {
   userId: string;

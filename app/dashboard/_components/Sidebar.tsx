@@ -1,41 +1,179 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { useAuth } from "@/app/_components/AuthContext";
 import * as UIStyles from "@/UI";
 import { UserRole } from "@/app/_types/auth";
+import { Icons } from "@/UI/shared/Icons";
 
 interface SidebarProps {
   role: UserRole;
+  isCollapsed: boolean;
+  setIsCollapsed: (collapsed: boolean) => void;
+  isMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
-export function Sidebar({ role }: SidebarProps) {
+interface MenuItem {
+  label: string;
+  href: string;
+  icon: string;
+}
+
+interface MenuGroup {
+  groupName: string;
+  items: MenuItem[];
+}
+
+export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { selectedStyle, selectedColor } = useUIStyle();
   const { logout } = useAuth();
 
+  // Local hover state for temporary uncollapse
+  const [isHovered, setIsHovered] = useState(false);
+
   const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
-  const MENU_ITEMS = [
-    { label: "Ringkasan", href: "/dashboard", roles: ["admin", "mentor", "mentor_lead", "murid"], icon: "Home" },
-    // Admin specific
-    { label: "Manajemen User", href: "/dashboard/users", roles: ["admin"], icon: "Users" },
-    { label: "Sistem Log", href: "/dashboard/logs", roles: ["admin"], icon: "Terminal" },
-    // Mentor Lead specific
-    { label: "Plotting Mentor", href: "/dashboard/plotting", roles: ["admin", "mentor_lead"], icon: "Compass" },
-    // Mentor specific
-    { label: "Jadwal Kelas", href: "/dashboard/schedules", roles: ["mentor", "mentor_lead"], icon: "Calendar" },
-    { label: "Penilaian Bimbingan", href: "/dashboard/grading", roles: ["mentor", "mentor_lead"], icon: "Award" },
-    // Student specific
-    { label: "Kelas Aktif", href: "/dashboard/my-classes", roles: ["murid"], icon: "BookOpen" },
-    { label: "Portofolio & Sertifikat", href: "/dashboard/portfolio", roles: ["murid"], icon: "Briefcase" },
-  ];
+  // Render as expanded if hovered (temporary uncollapse)
+  const currentCollapsed = isCollapsed && !isHovered && !isMobile;
 
-  const allowedMenu = MENU_ITEMS.filter((item) => item.roles.includes(role));
+  // Uncollapse permanently on click inside the sidebar
+  const handleSidebarClick = () => {
+    if (isCollapsed) {
+      setIsCollapsed(false);
+      setIsHovered(false);
+    }
+  };
+
+  // Grouped menu items by role
+  const getNavigationMatrix = (userRole: UserRole): MenuGroup[] => {
+    switch (userRole) {
+      case "admin":
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Manajemen Pendaftaran",
+            items: [
+              { label: "Review Pendaftaran", href: "/dashboard/registration-review", icon: "ClipboardCheck" },
+              { label: "Program & Paket", href: "/dashboard/programs", icon: "BookOpen" },
+              { label: "Manajemen Trial", href: "/dashboard/trials", icon: "Sparkles" }
+            ]
+          },
+          {
+            groupName: "Sumber Daya & Jadwal",
+            items: [
+              { label: "Direktori Pengguna", href: "/dashboard/users", icon: "Users" },
+              { label: "Direktori Mentor", href: "/dashboard/mentors", icon: "UserCheck" },
+              { label: "Plotting Mentor", href: "/dashboard/plotting", icon: "Compass" },
+              { label: "Jadwal Mentoring", href: "/dashboard/schedules-admin", icon: "Calendar" }
+            ]
+          },
+          {
+            groupName: "Program Akuisisi",
+            items: [{ label: "Program Referral", href: "/dashboard/referrals", icon: "Gift" }]
+          },
+          {
+            groupName: "Ekstrakurikuler",
+            items: [
+              { label: "Organisasi Ekskul", href: "/dashboard/extracurriculars-admin", icon: "AcademicCap" },
+              { label: "Keanggotaan Kepsek", href: "/dashboard/principal-membership", icon: "ShieldCheck" }
+            ]
+          },
+          {
+            groupName: "Sistem & Keamanan",
+            items: [{ label: "Sistem Log", href: "/dashboard/logs", icon: "Terminal" }]
+          }
+        ];
+      case "mentor_lead":
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Plotting & Penjadwalan",
+            items: [
+              { label: "Antrean Plotting", href: "/dashboard/plotting-queue", icon: "Compass" },
+              { label: "Kelola Jadwal Sesi", href: "/dashboard/schedules-lead", icon: "Calendar" }
+            ]
+          },
+          {
+            groupName: "Evaluasi Akademik",
+            items: [{ label: "Penilaian Bimbingan", href: "/dashboard/grading", icon: "Award" }]
+          }
+        ];
+      case "mentor":
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Bimbingan Aktif",
+            items: [
+              { label: "Siswa Bimbingan", href: "/dashboard/my-students", icon: "Users" },
+              { label: "Jadwal Mengajar", href: "/dashboard/schedules", icon: "Calendar" }
+            ]
+          },
+          {
+            groupName: "Evaluasi",
+            items: [{ label: "Penilaian Bimbingan", href: "/dashboard/grading", icon: "Award" }]
+          }
+        ];
+      case "school_principal":
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Laporan Sekolah",
+            items: [
+              { label: "Organisasi Terkait", href: "/dashboard/principal-org", icon: "Users" },
+              { label: "Laporan & Roster Ekskul", href: "/dashboard/principal-reports", icon: "DocumentReport" }
+            ]
+          }
+        ];
+      case "murid":
+      default:
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Akademik & Kelas",
+            items: [
+              { label: "Kelas Aktif Saya", href: "/dashboard/my-classes", icon: "BookOpen" },
+              { label: "Modul Belajar IT", href: "/dashboard/modules", icon: "Clipboard" },
+              { label: "Mentor & Jadwal Sesi", href: "/dashboard/my-mentor-schedule", icon: "Calendar" }
+            ]
+          },
+          {
+            groupName: "Pendaftaran & Minat",
+            items: [
+              { label: "Booking Trial Gratis", href: "/dashboard/trial-registration", icon: "Sparkles" },
+              { label: "Pendaftaran Ekskul", href: "/dashboard/extracurricular-registration", icon: "AcademicCap" },
+              { label: "Status Pendaftaran", href: "/dashboard/enrollment-status", icon: "DocumentText" }
+            ]
+          },
+          {
+            groupName: "Portofolio Saya",
+            items: [{ label: "Portofolio & Sertifikat", href: "/dashboard/portfolio", icon: "Briefcase" }]
+          }
+        ];
+    }
+  };
+
+  const menuGroups = getNavigationMatrix(role);
 
   const handleLogout = () => {
     logout();
@@ -44,124 +182,182 @@ export function Sidebar({ role }: SidebarProps) {
 
   // Determine container styling based on style
   const getSidebarContainerClass = () => {
+    const baseWidth = isMobile ? "w-64" : currentCollapsed ? "w-20" : "w-64";
+    const transitionClass = "transition-all duration-300 flex flex-col justify-between h-full";
     switch (selectedStyle) {
       case "claymorphism":
-        return "bg-slate-50 dark:bg-zinc-900 border-r border-slate-200/20 dark:border-zinc-800/20 shadow-[5px_0_15px_rgba(0,0,0,0.03)] p-5 rounded-r-3xl";
+        return `${baseWidth} bg-slate-50 dark:bg-zinc-900 border-r border-slate-200/20 dark:border-zinc-800/20 shadow-[5px_0_15px_rgba(0,0,0,0.03)] p-4 rounded-r-3xl ${transitionClass}`;
       case "neobrutalism":
-        return "bg-white dark:bg-zinc-900 border-r-3 border-zinc-900 dark:border-white p-5 font-mono";
+        return `${baseWidth} bg-white dark:bg-zinc-900 border-r-3 border-zinc-900 dark:border-white p-4 font-mono ${transitionClass}`;
       case "glassmorphism":
       case "liquid-glass":
-        return "bg-white/10 dark:bg-zinc-950/20 border-r border-white/10 backdrop-blur-md p-5";
+        return `${baseWidth} bg-white/10 dark:bg-zinc-950/20 border-r border-white/10 backdrop-blur-md p-4 ${transitionClass}`;
       case "bento-grid":
-        return "bg-white dark:bg-zinc-900 border-r border-zinc-200/80 dark:border-zinc-800/80 p-5 shadow-3xs";
+        return `${baseWidth} bg-white dark:bg-zinc-900 border-r border-zinc-200/80 dark:border-zinc-800/80 p-4 shadow-3xs ${transitionClass}`;
       case "minimalism":
-        return "bg-zinc-50/50 dark:bg-zinc-900/30 border-r border-zinc-250/20 p-5";
+        return `${baseWidth} bg-zinc-50/50 dark:bg-zinc-900/30 border-r border-zinc-250/20 p-4 ${transitionClass}`;
       case "sakode-modern":
       default:
-        return "bg-zinc-50 dark:bg-zinc-900/60 border-r border-zinc-200/50 dark:border-zinc-850/50 p-5 shadow-3xs";
+        return `${baseWidth} bg-zinc-50 dark:bg-zinc-900/60 border-r border-zinc-200/50 dark:border-zinc-850/50 p-4 shadow-3xs ${transitionClass}`;
+    }
+  };
+
+  const renderIcon = (iconName: string) => {
+    const IconComponent = Icons[iconName as keyof typeof Icons];
+    if (IconComponent) {
+      return <IconComponent className="w-4.5 h-4.5 shrink-0" />;
+    }
+    return <Icons.Home className="w-4.5 h-4.5 shrink-0" />;
+  };
+
+  const showRoleLabel = (userRole: UserRole) => {
+    switch (userRole) {
+      case "admin": return "Super Admin";
+      case "mentor_lead": return "Mentor Lead";
+      case "mentor": return "Mentor Mode";
+      case "school_principal": return "Kepala Sekolah";
+      case "murid": default: return "Siswa Baru";
     }
   };
 
   return (
-    <aside className={`w-64 h-full flex flex-col justify-between ${getSidebarContainerClass()}`}>
-      <div className="flex flex-col gap-6">
+    <aside 
+      onMouseEnter={() => !isMobile && setIsHovered(true)}
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
+      onClick={handleSidebarClick}
+      className={getSidebarContainerClass()}
+    >
+      <div className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden flex-1 pr-1 scrollbar-thin">
         {/* Brand Header */}
-        <div className="flex items-center gap-2.5 px-2">
-          <div className="w-8 h-8 rounded-lg bg-sakode-blue flex items-center justify-center font-black text-white text-base">
-            S
+        <div className="flex items-center justify-between px-2 py-1">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-sakode-blue flex items-center justify-center font-black text-white text-base shrink-0 select-none">
+              S
+            </div>
+            {(!currentCollapsed || isMobile) && (
+              <div className="flex flex-col text-left">
+                <span className="text-xs font-black text-zinc-800 dark:text-zinc-100 tracking-tight leading-none">
+                  SAKODE SYSTEM
+                </span>
+                <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-widest mt-1">
+                  {showRoleLabel(role)}
+                </span>
+              </div>
+            )}
           </div>
-          <div className="flex flex-col">
-            <span className="text-xs font-black text-zinc-800 dark:text-zinc-100 tracking-tight leading-none">
-              SAKODE SYSTEM
-            </span>
-            <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mt-1">
-              {role === "admin" ? "Admin Mode" : role === "mentor_lead" ? "Mentor Lead" : role === "mentor" ? "Mentor Mode" : "Student Mode"}
-            </span>
-          </div>
+
+          {/* Close button for Mobile Drawer */}
+          {isMobile && onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 cursor-pointer"
+              aria-label="Tutup Menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex flex-col gap-1.5">
-          {allowedMenu.map((item) => {
-            const isActive = pathname === item.href;
-            
-            // Dynamic item styling
-            let itemClass = "flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ";
-            if (isActive) {
-              if (selectedStyle === "neobrutalism") {
-                itemClass += "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none";
-              } else if (selectedStyle === "claymorphism") {
-                itemClass += "bg-white dark:bg-zinc-800 text-sakode-blue shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)] border border-slate-100/50 dark:border-zinc-700/50";
-              } else if (selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass") {
-                itemClass += "bg-white/20 dark:bg-white/10 text-zinc-900 dark:text-white border border-white/20 dark:border-white/15 backdrop-blur-xs";
-              } else {
-                itemClass += "bg-zinc-200/50 dark:bg-zinc-800/60 text-zinc-900 dark:text-white";
-              }
-            } else {
-              itemClass += "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40";
-              if (selectedStyle === "neobrutalism") {
-                itemClass += " border-2 border-transparent rounded-none";
-              }
-            }
+        {/* Navigation Groups */}
+        <nav className="flex flex-col gap-4 text-left">
+          {menuGroups.map((group, groupIdx) => (
+            <div key={groupIdx} className="flex flex-col gap-1">
+              {/* Group Name Header */}
+              {(!currentCollapsed || isMobile) ? (
+                <span className="text-[9px] font-black text-zinc-400 dark:text-zinc-550 uppercase tracking-widest px-3 mb-1 mt-2 block select-none">
+                  {group.groupName}
+                </span>
+              ) : (
+                <div className="h-px bg-zinc-200/50 dark:bg-zinc-800/50 my-1 mx-2" />
+              )}
 
-            return (
-              <Link key={item.href} href={item.href} className={itemClass}>
-                {item.icon === "Home" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                  </svg>
-                )}
-                {item.icon === "Users" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m0 0-.003-.031c0-.225.012-.447.037-.666A11.944 11.944 0 0 1 12 15c2.17 0 4.207.576 5.963 1.584A6.062 6.062 0 0 1 18 18.72Zm-1.8-9.75a3.48 3.48 0 1 1-6.96 0 3.48 3.48 0 0 1 6.96 0Zm.75-2.25a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                  </svg>
-                )}
-                {item.icon === "Terminal" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
-                  </svg>
-                )}
-                {item.icon === "Compass" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                )}
-                {item.icon === "Calendar" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                  </svg>
-                )}
-                {item.icon === "Award" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75c-.622 0-1.125.504-1.125 1.125v3.375m9 0h-9M9 3h6M12 6v6.75m-3-3.75h6" />
-                  </svg>
-                )}
-                {item.icon === "BookOpen" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-16.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-16.25v14.25" />
-                  </svg>
-                )}
-                {item.icon === "Briefcase" && (
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                  </svg>
-                )}
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+              {/* Group Items */}
+              <div className="flex flex-col gap-1">
+                {group.items.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
+                  
+                  // Dynamic item styling
+                  let itemClass = "relative flex items-center rounded-xl text-xs font-extrabold transition-all cursor-pointer ";
+                  if (currentCollapsed && !isMobile) {
+                    itemClass += "justify-center p-2.5 ";
+                  } else {
+                    itemClass += "gap-3 px-3 py-2.5 ";
+                  }
+
+                  if (isActive) {
+                    if (selectedStyle === "neobrutalism") {
+                      itemClass += "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none";
+                    } else if (selectedStyle === "claymorphism") {
+                      itemClass += "bg-white dark:bg-zinc-800 text-sakode-blue shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)] border border-slate-100/50 dark:border-zinc-700/50";
+                    } else if (selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass") {
+                      itemClass += "bg-white/20 dark:bg-white/10 text-zinc-900 dark:text-white border border-white/20 dark:border-white/15 backdrop-blur-xs";
+                    } else {
+                      itemClass += "bg-zinc-200/50 dark:bg-zinc-800/60 text-zinc-900 dark:text-white";
+                    }
+                  } else {
+                    itemClass += "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40";
+                    if (selectedStyle === "neobrutalism") {
+                      itemClass += " border-2 border-transparent rounded-none";
+                    }
+                  }
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={itemClass}
+                      title={item.label}
+                      onClick={() => {
+                        if (isMobile && onCloseMobile) {
+                          onCloseMobile();
+                        }
+                      }}
+                    >
+                      {renderIcon(item.icon)}
+                      {(!currentCollapsed || isMobile) && <span>{item.label}</span>}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
       </div>
 
-      {/* Logout button */}
-      <UI.Button
-        variant="secondary"
-        accentColor={selectedColor}
-        className="w-full text-xs! font-extrabold! py-2! cursor-pointer mt-auto"
-        onClick={handleLogout}
-      >
-        Keluar Akun
-      </UI.Button>
+      {/* Footer controls: Logout */}
+      <div className="flex flex-col gap-2 pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50 mt-auto">
+        {/* Logout button */}
+        {(!currentCollapsed || isMobile) ? (
+          <UI.Button
+            variant="secondary"
+            accentColor={selectedColor}
+            className="w-full text-xs! font-extrabold! py-2! cursor-pointer"
+            onClick={handleLogout}
+          >
+            Keluar Akun
+          </UI.Button>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center p-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer border border-transparent hover:border-red-200 dark:hover:border-red-900/30 transition-all"
+            title="Keluar Akun"
+            aria-label="Keluar Akun"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="w-4.5 h-4.5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+          </button>
+        )}
+      </div>
     </aside>
   );
 }

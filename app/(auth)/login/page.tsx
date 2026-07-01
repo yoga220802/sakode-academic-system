@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import * as UIStyles from "@/UI";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { useAuth } from "@/app/_components/AuthContext";
+import { UserRole } from "@/app/_types/auth";
 import { Icons } from "@/UI/shared/Icons";
 import { AestheticBackground } from "@/app/_components/AestheticBackground";
 
@@ -62,7 +63,7 @@ export default function LoginPage() {
 			});
 			// Mock redirect
 			setTimeout(() => {
-				let resolvedRole: "admin" | "mentor_lead" | "mentor" | "murid" = "murid";
+				let resolvedRole: UserRole = "murid";
 				const cleanedEmail = email.toLowerCase().trim();
 				if (cleanedEmail === "admin@sakode.com") {
 					resolvedRole = "admin";
@@ -70,6 +71,8 @@ export default function LoginPage() {
 					resolvedRole = "mentor_lead";
 				} else if (cleanedEmail === "udin@sakode.com") {
 					resolvedRole = "mentor";
+				} else if (cleanedEmail === "sudarsono@sekolah.sch.id") {
+					resolvedRole = "school_principal";
 				} else if (cleanedEmail === "panjul@gmail.com") {
 					resolvedRole = "murid";
 				}
@@ -234,6 +237,9 @@ export default function LoginPage() {
 									</UI.Button>
 									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("murid"); router.push("/dashboard"); }}>
 										Murid
+									</UI.Button>
+									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer col-span-2" onClick={() => { login("school_principal"); router.push("/dashboard"); }}>
+										Kepala Sekolah (Principal)
 									</UI.Button>
 								</div>
 							</div>

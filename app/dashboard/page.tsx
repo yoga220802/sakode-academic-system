@@ -8,6 +8,7 @@ import { StudentWidget } from "./_components/StudentWidget";
 import { MentorWidget } from "./_components/MentorWidget";
 import { MentorLeadWidget } from "./_components/MentorLeadWidget";
 import { AdminWidget } from "./_components/AdminWidget";
+import { SchoolPrincipalWidget } from "./_components/SchoolPrincipalWidget";
 import * as UIStyles from "@/UI";
 
 export default function DashboardPage() {
@@ -38,7 +39,7 @@ export default function DashboardPage() {
         <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-left">
           <div>
             <h2 className="text-lg font-black text-zinc-900 dark:text-white leading-none">
-              Dasbor {session.role === "admin" ? "Sistem Akademik" : session.role === "mentor_lead" ? "Mentor Lead" : session.role === "mentor" ? "Pembimbing" : "Siswa"}
+              Dasbor {session.role === "admin" ? "Sistem Akademik" : session.role === "mentor_lead" ? "Mentor Lead" : session.role === "mentor" ? "Pembimbing" : session.role === "school_principal" ? "Kepala Sekolah" : "Siswa"}
             </h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold mt-2">
               Masuk sebagai: <span className="font-black text-zinc-800 dark:text-zinc-200">{session.name} ({session.email})</span>
@@ -63,6 +64,7 @@ export default function DashboardPage() {
           {session.role === "admin" && <AdminWidget />}
           {session.role === "mentor_lead" && <MentorLeadWidget />}
           {session.role === "mentor" && <MentorWidget />}
+          {session.role === "school_principal" && <SchoolPrincipalWidget />}
           {session.role === "murid" && <StudentWidget />}
         </motion.div>
       </AnimatePresence>
