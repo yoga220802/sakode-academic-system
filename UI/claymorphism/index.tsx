@@ -262,13 +262,12 @@ export const Table: React.FC<{
             <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
             <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
             <td className="py-3 text-right">
-              <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
-                item.status === "Selesai"
-                  ? "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                  : `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)}`
-              }`}>
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
                 {item.status}
-              </span>
+              </Badge>
             </td>
           </tr>
         ))}
@@ -333,24 +332,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
-}> = ({ bars, accentColor = "pink", styleName = "claymorphism" }) => (
-  <div className="h-32 w-full flex items-end justify-between gap-2.5 pt-4">
+}> = ({ bars, accentColor = "pink" }) => (
+  <div className="h-32 w-full flex items-end justify-between gap-3 pt-4">
     {bars.map((bar, idx) => (
       <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-t-lg transition-all duration-300 ${bar.val} ${
-              styleName === "liquid-glass"
-                ? `bg-linear-to-t ${getGradientClass(accentColor)}`
-                : getBgClass(accentColor)
-            }`}
+            className={`w-full rounded-t-full border border-white/20 transition-all duration-300 shadow-[inset_-3px_-3px_6px_rgba(0,0,0,0.1),_inset_3px_3px_6px_rgba(255,255,255,0.4)] ${bar.val} ${getBgClass(accentColor)}`}
           />
-          <span className="absolute -top-6.25 left-1/2 translate-x-[-50%] text-[8px] bg-zinc-900 text-white rounded px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[9px] font-bold bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white border border-zinc-200/50 dark:border-zinc-700/50 rounded-lg px-2 py-0.5 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-semibold text-zinc-400 tracking-wider block">{bar.label}</span>
+        <span className="text-[9px] font-extrabold text-zinc-500 dark:text-zinc-400 tracking-wider block">{bar.label}</span>
       </div>
     ))}
   </div>

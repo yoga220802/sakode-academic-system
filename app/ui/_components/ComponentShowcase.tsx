@@ -7,6 +7,7 @@ import { showToast } from "./ToastContainer";
 import { Icons } from "@/UI/shared/Icons";
 import ModalPreview from "./ModalPreview";
 import * as UIStyles from "@/UI";
+import { useUIStyle } from "@/app/_components/UIStyleContext";
 import {
   getBgClass,
   getBgOpacity15Class,
@@ -47,15 +48,47 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Initialize selected color depending on the default theme accent
-  const [selectedColor, setSelectedColor] = useState<PaletteColorKey>(() => {
-    if (style === "claymorphism") return "pink";
-    if (style === "neobrutalism") return "yellow";
-    if (style === "glassmorphism") return "cyan";
-    if (style === "liquid-glass") return "orange";
-    if (style === "bento-grid") return "green";
-    return "pink";
-  });
+  const {
+    selectedStyle,
+    setSelectedStyle,
+    selectedColor,
+    setSelectedColor,
+    setPrimaryColorHex,
+    setSecondaryColorHex,
+    setAccentColorHex
+  } = useUIStyle();
+
+  useEffect(() => {
+    if (style && style !== selectedStyle) {
+      setSelectedStyle(style);
+      // Map the default accent color for style if not overridden manually yet
+      let defaultColor: PaletteColorKey = "blue";
+      if (style === "claymorphism") defaultColor = "pink";
+      else if (style === "neobrutalism") defaultColor = "yellow";
+      else if (style === "glassmorphism") defaultColor = "cyan";
+      else if (style === "liquid-glass") defaultColor = "orange";
+      else if (style === "bento-grid") defaultColor = "green";
+      
+      setSelectedColor(defaultColor);
+      
+      // Also update the hex values matching the preset
+      const foundPreset = PALETTE_COLORS.find(c => c.key === defaultColor);
+      if (foundPreset) {
+        setPrimaryColorHex(foundPreset.hex);
+        const secPreset = PALETTE_COLORS.find(c => c.key === foundPreset.secondary);
+        if (secPreset) {
+          setSecondaryColorHex(secPreset.hex);
+        }
+        let accentKey: PaletteColorKey = "green";
+        if (defaultColor === "green") accentKey = "blue";
+        else if (defaultColor === "cyan") accentKey = "green";
+        const accentPreset = PALETTE_COLORS.find(c => c.key === accentKey);
+        if (accentPreset) {
+          setAccentColorHex(accentPreset.hex);
+        }
+      }
+    }
+  }, [style, selectedStyle, setSelectedStyle, setSelectedColor, setPrimaryColorHex, setSecondaryColorHex, setAccentColorHex]);
 
   // State managers for interactive sections
   const [formName, setFormName] = useState("");
@@ -116,6 +149,38 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
     if (!mounted) return null;
     const isDark = resolvedTheme === "dark";
 
+    const getThemeBtnClass = (active: boolean) => {
+      if (active) {
+        if (style === "neobrutalism") {
+          return "bg-sakode-yellow text-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,1)] font-mono";
+        }
+        if (style === "claymorphism") {
+          return "bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.45)] border border-slate-200/50 dark:border-zinc-700/50 font-bold";
+        }
+        if (style === "glassmorphism") {
+          return "bg-white/20 dark:bg-white/10 text-zinc-900 dark:text-white border border-white/20 backdrop-blur-xs font-bold";
+        }
+        if (style === "liquid-glass") {
+          return "bg-white/25 dark:bg-white/15 text-zinc-900 dark:text-white border border-t-white/30 border-l-white/30 border-b-white/10 border-r-white/10 shadow-3xs font-bold";
+        }
+        if (style === "bento-grid") {
+          return "bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-white border border-zinc-200/40 dark:border-zinc-800/30 shadow-3xs font-bold";
+        }
+        if (style === "minimalism") {
+          return "border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white font-medium";
+        }
+        return "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs font-bold border border-zinc-200/50 dark:border-zinc-700/50";
+      } else {
+        if (style === "neobrutalism") {
+          return "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 font-mono";
+        }
+        if (style === "minimalism") {
+          return "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300 border-b border-transparent";
+        }
+        return "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300";
+      }
+    };
+
     return (
       <UI.Card accentColor={selectedColor} className="space-y-4 mb-8 relative z-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -175,15 +240,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                   setTheme("light");
                   showToast("success", "Mode Terang (Light Mode) Aktif");
                 }}
-                className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-black transition-all ${
-                  style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-md"
-                } ${
-                  !isDark
-                    ? style === "neobrutalism"
-                      ? "bg-zinc-900 text-white"
-                      : "bg-white text-zinc-955 shadow-md"
-                    : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
-                }`}
+                className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs transition-all ${getThemeBtnClass(!isDark)}`}
               >
                 ☀️ Terang
               </button>
@@ -194,15 +251,7 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
                   setTheme("dark");
                   showToast("success", "Mode Gelap (Dark Mode) Aktif");
                 }}
-                className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-black transition-all ${
-                  style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-md"
-                } ${
-                  isDark
-                    ? style === "neobrutalism"
-                      ? "bg-zinc-900 text-zinc-900 dark:text-zinc-955"
-                      : "bg-zinc-800 text-white shadow-md"
-                    : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
-                }`}
+                className={`flex items-center justify-center gap-1.5 py-2 px-3 text-xs transition-all ${getThemeBtnClass(isDark)}`}
               >
                 🌙 Gelap
               </button>
@@ -236,16 +285,18 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
     <UI.Card accentColor={selectedColor}>
       <div className="flex items-center justify-between mb-4">
         <UI.Heading className="mb-0!">2. Form Registrasi</UI.Heading>
-        <button
+        <UI.Button
           type="button"
+          variant="secondary"
+          accentColor={selectedColor}
           onClick={() => {
             setShowFormError(!showFormError);
             showToast("info", `Mode error form: ${!showFormError ? "Aktif" : "Nonaktif"}`);
           }}
-          className="text-xs font-bold px-2.5 py-1 rounded bg-zinc-150/80 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors"
+          className="text-xs! px-2.5! py-1! h-auto! w-fit! font-bold!"
         >
           {showFormError ? "Hapus State Error" : "Simulasi State Error"}
-        </button>
+        </UI.Button>
       </div>
 
       <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -346,24 +397,30 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
         Picu notifikasi toast mengambang di pojok kanan atas. Tampilannya akan menyesuaikan secara visual dengan tema gaya yang aktif saat ini.
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
+        <UI.Button
+          variant="primary"
+          accentColor="green"
           onClick={() => showToast("success", "Selamat! Akun belajar Anda telah berhasil dikonfigurasi.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white transition-colors cursor-pointer border border-transparent"
+          className="text-xs! py-2.5! px-4! h-auto! cursor-pointer"
         >
           Picu Success
-        </button>
-        <button
+        </UI.Button>
+        <UI.Button
+          variant="primary"
+          accentColor="pink"
           onClick={() => showToast("error", "Sesi login kedaluwarsa. Mohon autentikasi ulang akun Anda.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-rose-500 hover:bg-rose-600 text-white transition-colors cursor-pointer border border-transparent"
+          className="text-xs! py-2.5! px-4! h-auto! cursor-pointer"
         >
           Picu Error
-        </button>
-        <button
+        </UI.Button>
+        <UI.Button
+          variant="primary"
+          accentColor="blue"
           onClick={() => showToast("info", "Jadwal mentoring 1-on-1 dengan Mentor Rian akan dimulai dalam 10 menit.")}
-          className="text-xs font-bold py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white transition-colors cursor-pointer border border-transparent"
+          className="text-xs! py-2.5! px-4! h-auto! cursor-pointer"
         >
           Picu Info
-        </button>
+        </UI.Button>
       </div>
     </UI.Card>
   );
@@ -380,14 +437,14 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black">{counter}</span>
-            <button
+            <UI.Button
+              variant="primary"
+              accentColor={selectedColor}
               onClick={() => setCounter((prev) => prev + 1)}
-              className={`text-[10px] px-2 py-0.5 font-black ${getBgClass(selectedColor)} text-white flex items-center gap-0.5 ${
-                style === "neobrutalism" || style === "minimalism" ? "rounded-none" : "rounded-sm"
-              }`}
+              className="text-[9px]! px-2! py-0.5! h-auto! w-fit! font-black!"
             >
               + Tambah
-            </button>
+            </UI.Button>
           </div>
         </div>
 
@@ -473,12 +530,12 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
             </p>
 
             <div className="flex flex-wrap gap-1">
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300">
+              <UI.Badge variant="accent" accentColor="blue">
                 Next.js Expert
-              </span>
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
+              </UI.Badge>
+              <UI.Badge variant="success">
                 Active Mentor
-              </span>
+              </UI.Badge>
             </div>
           </div>
 

@@ -95,6 +95,17 @@ export function StyleSwitcherFAB() {
 		}
 	};
 
+	const sanitizeHex = (val: string) => {
+		let clean = val.replace(/[^#0-9A-Fa-f]/g, "");
+		if (clean && !clean.startsWith("#")) {
+			clean = "#" + clean;
+		}
+		if (clean.length > 7) {
+			clean = clean.slice(0, 7);
+		}
+		return clean;
+	};
+
 	return (
 		<div className="fixed inset-0 pointer-events-none z-50" ref={constraintsRef}>
 			<motion.div
@@ -135,6 +146,8 @@ export function StyleSwitcherFAB() {
 											key={st.slug}
 											type="button"
 											onClick={() => handleStyleSelect(st.slug)}
+											title={`Ganti gaya visual ke ${st.name}`}
+											aria-label={`Ganti gaya visual ke ${st.name}`}
 											className={`text-[10px] font-bold px-2 py-1.5 rounded-lg border transition-all text-center cursor-pointer ${
 												selectedStyle === st.slug
 													? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-zinc-900 dark:border-white shadow-xs"
@@ -164,7 +177,8 @@ export function StyleSwitcherFAB() {
 												borderColor: selectedColor === col.key ? (resolvedTheme === "dark" ? "#ffffff" : "#09090b") : "transparent",
 												borderWidth: selectedColor === col.key ? "2px" : "1px"
 											}}
-											title={col.name}
+											title={`Ganti tema warna ke ${col.name}`}
+											aria-label={`Ganti tema warna ke ${col.name}`}
 										>
 											{selectedColor === col.key && (
 												<span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-zinc-900" />
@@ -187,7 +201,7 @@ export function StyleSwitcherFAB() {
 											<input
 												type="text"
 												value={primaryColorHex}
-												onChange={(e) => setPrimaryColorHex(e.target.value)}
+												onChange={(e) => setPrimaryColorHex(sanitizeHex(e.target.value))}
 												className="w-18 px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-800 rounded-md text-[10px] uppercase font-mono bg-zinc-50/50 dark:bg-zinc-900/50 text-center"
 												maxLength={7}
 												title="Kode Hex Warna Primer"
@@ -199,12 +213,13 @@ export function StyleSwitcherFAB() {
 												className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-800 shadow-3xs cursor-pointer"
 												style={{ backgroundColor: primaryColorHex }}
 												title="Pilih Warna Primer"
+												aria-label="Pilih Warna Primer via color picker"
 											/>
 											<input
 												ref={primaryInputRef}
 												type="color"
 												value={primaryColorHex}
-												onChange={(e) => setPrimaryColorHex(e.target.value)}
+												onChange={(e) => setPrimaryColorHex(sanitizeHex(e.target.value))}
 												className="hidden"
 												title="Pilih Warna Primer via Picker"
 												aria-label="Pilih Warna Primer via Picker"
@@ -219,7 +234,7 @@ export function StyleSwitcherFAB() {
 											<input
 												type="text"
 												value={secondaryColorHex}
-												onChange={(e) => setSecondaryColorHex(e.target.value)}
+												onChange={(e) => setSecondaryColorHex(sanitizeHex(e.target.value))}
 												className="w-18 px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-800 rounded-md text-[10px] uppercase font-mono bg-zinc-50/50 dark:bg-zinc-900/50 text-center"
 												maxLength={7}
 												title="Kode Hex Warna Sekunder"
@@ -231,12 +246,13 @@ export function StyleSwitcherFAB() {
 												className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-800 shadow-3xs cursor-pointer"
 												style={{ backgroundColor: secondaryColorHex }}
 												title="Pilih Warna Sekunder"
+												aria-label="Pilih Warna Sekunder via color picker"
 											/>
 											<input
 												ref={secondaryInputRef}
 												type="color"
 												value={secondaryColorHex}
-												onChange={(e) => setSecondaryColorHex(e.target.value)}
+												onChange={(e) => setSecondaryColorHex(sanitizeHex(e.target.value))}
 												className="hidden"
 												title="Pilih Warna Sekunder via Picker"
 												aria-label="Pilih Warna Sekunder via Picker"
@@ -251,7 +267,7 @@ export function StyleSwitcherFAB() {
 											<input
 												type="text"
 												value={accentColorHex}
-												onChange={(e) => setAccentColorHex(e.target.value)}
+												onChange={(e) => setAccentColorHex(sanitizeHex(e.target.value))}
 												className="w-18 px-1.5 py-0.5 border border-zinc-200 dark:border-zinc-800 rounded-md text-[10px] uppercase font-mono bg-zinc-50/50 dark:bg-zinc-900/50 text-center"
 												maxLength={7}
 												title="Kode Hex Warna Aksen"
@@ -263,12 +279,13 @@ export function StyleSwitcherFAB() {
 												className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-800 shadow-3xs cursor-pointer"
 												style={{ backgroundColor: accentColorHex }}
 												title="Pilih Warna Aksen"
+												aria-label="Pilih Warna Aksen via color picker"
 											/>
 											<input
 												ref={accentInputRef}
 												type="color"
 												value={accentColorHex}
-												onChange={(e) => setAccentColorHex(e.target.value)}
+												onChange={(e) => setAccentColorHex(sanitizeHex(e.target.value))}
 												className="hidden"
 												title="Pilih Warna Aksen via Picker"
 												aria-label="Pilih Warna Aksen via Picker"
@@ -286,6 +303,9 @@ export function StyleSwitcherFAB() {
 					whileHover={{ scale: 1.05 }}
 					whileTap={{ scale: 0.95 }}
 					onClick={() => setIsOpen(!isOpen)}
+					title="Buka aesthetic configurator"
+					aria-label="Buka aesthetic configurator"
+					aria-expanded={isOpen}
 					className="h-12 w-12 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-lg hover:shadow-xl cursor-pointer border border-zinc-850 dark:border-zinc-200"
 				>
 					<svg

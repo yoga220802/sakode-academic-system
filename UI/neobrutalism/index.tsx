@@ -241,13 +241,12 @@ export const Table: React.FC<{
             <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
             <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
             <td className="py-3 text-right">
-              <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
-                item.status === "Selesai"
-                  ? "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                  : `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)}`
-              }`}>
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
                 {item.status}
-              </span>
+              </Badge>
             </td>
           </tr>
         ))}
@@ -312,24 +311,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
-}> = ({ bars, accentColor = "yellow", styleName = "neobrutalism" }) => (
-  <div className="h-32 w-full flex items-end justify-between gap-2.5 pt-4">
+}> = ({ bars, accentColor = "yellow" }) => (
+  <div className="h-32 w-full flex items-end justify-between gap-3.5 pt-4">
     {bars.map((bar, idx) => (
-      <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+      <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-t-lg transition-all duration-300 ${bar.val} ${
-              styleName === "liquid-glass"
-                ? `bg-linear-to-t ${getGradientClass(accentColor)}`
-                : getBgClass(accentColor)
-            }`}
+            className={`w-full border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none transition-all duration-300 ${bar.val} ${getBgClass(accentColor)}`}
           />
-          <span className="absolute -top-6.25 left-1/2 translate-x-[-50%] text-[8px] bg-zinc-900 text-white rounded px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8.5px] font-mono bg-zinc-900 dark:bg-zinc-800 text-white border border-zinc-900 dark:border-white rounded-none px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-semibold text-zinc-400 tracking-wider block">{bar.label}</span>
+        <span className="text-[9px] font-bold text-zinc-600 dark:text-zinc-400 font-mono tracking-wider block">{bar.label}</span>
       </div>
     ))}
   </div>
