@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import * as UIStyles from "@/UI";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { Icons } from "@/UI/shared/Icons";
+import { getTextClass } from "@/UI/shared/color-utils";
 import { AestheticBackground } from "@/app/_components/AestheticBackground";
 
 export default function RegisterPage() {
@@ -233,7 +234,7 @@ export default function RegisterPage() {
 										onClick={() => {
 											router.push("/login");
 										}}
-										className="text-sakode-pink hover:underline font-bold cursor-pointer ml-1"
+										className={`${getTextClass(selectedColor)} hover:underline font-bold cursor-pointer ml-1`}
 									>
 										Masuk
 									</span>

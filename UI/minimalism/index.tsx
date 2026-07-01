@@ -79,7 +79,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"
     if (variant === "primary") {
       btnClass = `bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-medium py-2.5 px-5 rounded-none transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0 border border-zinc-900 dark:border-zinc-100 ${getBorderHoverClass(accentColor)}`;
     } else {
-      btnClass = "bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-medium py-2.5 px-5 rounded-none hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0";
+      btnClass = `bg-transparent border border-zinc-200 dark:border-zinc-800 ${getTextClass(accentColor)} font-medium py-2.5 px-5 rounded-none hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0`;
     }
 
     return (

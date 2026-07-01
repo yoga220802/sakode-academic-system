@@ -86,9 +86,9 @@ export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"
     let btnClass = "";
     if (variant === "primary") {
       const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950 font-bold" : "text-white";
-      btnClass = `bg-gradient-to-r ${getGradientClass(accentColor)} ${textColor} rounded-xl font-bold py-2.5 px-5 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shrink-0`;
+      btnClass = `${getBgClass(accentColor)} ${textColor} rounded-xl font-bold py-2.5 px-5 shadow-md hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shrink-0`;
     } else {
-      btnClass = "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl font-bold py-2.5 px-5 hover:bg-zinc-50 dark:hover:bg-zinc-850 hover:shadow-xs active:scale-[0.98] transition-all shrink-0";
+      btnClass = `bg-white dark:bg-zinc-900 border ${getBorderClass(accentColor)} ${getTextClass(accentColor)} rounded-xl font-bold py-2.5 px-5 hover:bg-zinc-50 dark:hover:bg-zinc-850 hover:shadow-xs active:scale-[0.98] transition-all shrink-0`;
     }
 
     return (

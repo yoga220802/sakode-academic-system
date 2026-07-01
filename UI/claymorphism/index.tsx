@@ -98,7 +98,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"
       const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950 font-bold" : "text-white";
       btnClass = `${getBgClass(accentColor)} ${textColor} rounded-2xl font-bold py-2.5 px-5 shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.15),_inset_4px_4px_8px_rgba(255,255,255,0.35),_2px_4px_8px_rgba(0,0,0,0.1)] hover:scale-102 active:scale-98 transition-all shrink-0`;
     } else {
-      btnClass = "bg-indigo-50 dark:bg-zinc-700/30 hover:bg-indigo-100 dark:hover:bg-zinc-700/50 text-indigo-700 dark:text-indigo-300 rounded-2xl font-bold py-2.5 px-5 shadow-[inset_-3px_-3px_6px_rgba(0,0,0,0.05),_inset_3px_3px_6px_rgba(255,255,255,0.7),_2px_2px_6px_rgba(0,0,0,0.06)] hover:scale-102 active:scale-98 transition-all shrink-0";
+      btnClass = `bg-slate-50 dark:bg-zinc-700/30 hover:bg-slate-100 dark:hover:bg-zinc-700/50 ${getTextClass(accentColor)} rounded-2xl font-bold py-2.5 px-5 shadow-[inset_-3px_-3px_6px_rgba(0,0,0,0.05),_inset_3px_3px_6px_rgba(255,255,255,0.7),_2px_2px_6px_rgba(0,0,0,0.06)] hover:scale-102 active:scale-98 transition-all shrink-0`;
     }
 
     return (

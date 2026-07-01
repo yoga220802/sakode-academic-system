@@ -77,7 +77,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"
     if (variant === "primary") {
       btnClass = `${getBgClass(accentColor)} text-zinc-900 border-3 border-zinc-900 font-bold uppercase tracking-wider text-xs py-2.5 px-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 shrink-0`;
     } else {
-      btnClass = "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border-3 border-zinc-900 dark:border-white font-bold uppercase tracking-wider text-xs py-2.5 px-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 shrink-0";
+      btnClass = `bg-white dark:bg-zinc-800 ${getTextClass(accentColor)} dark:text-white border-3 border-zinc-900 dark:border-white font-bold uppercase tracking-wider text-xs py-2.5 px-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 shrink-0`;
     }
 
     return (
