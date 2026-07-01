@@ -297,12 +297,12 @@ export const Carousel: React.FC<{
           <span className="block text-xs font-extrabold text-zinc-900 dark:text-white">{activeReview.name}</span>
           <span className="text-[10px] text-zinc-400">{activeReview.role}</span>
         </div>
-        <div className="flex gap-0.5 text-amber-500">
-          <Icons.Star className="w-3 h-3 fill-current" />
-          <Icons.Star className="w-3 h-3 fill-current" />
-          <Icons.Star className="w-3 h-3 fill-current" />
-          <Icons.Star className="w-3 h-3 fill-current" />
-          <Icons.Star className="w-3 h-3 fill-current" />
+        <div className={`flex gap-0.5 ${getTextClass(accentColor)}`}>
+          <Icons.Star className="w-3 h-3 fill-none stroke-current stroke-[1.5px]" />
+          <Icons.Star className="w-3 h-3 fill-none stroke-current stroke-[1.5px]" />
+          <Icons.Star className="w-3 h-3 fill-none stroke-current stroke-[1.5px]" />
+          <Icons.Star className="w-3 h-3 fill-none stroke-current stroke-[1.5px]" />
+          <Icons.Star className="w-3 h-3 fill-none stroke-current stroke-[1.5px]" />
         </div>
       </div>
     </div>

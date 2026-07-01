@@ -540,8 +540,14 @@ export default function ComponentShowcase({ style }: ComponentShowcaseProps) {
           </div>
 
           <div className="flex items-center justify-between border-t border-zinc-200/50 dark:border-zinc-800/65 pt-4 mt-4">
-            <div className="flex items-center gap-0.5 text-xs text-amber-500">
-              <Icons.Star className="w-3.5 h-3.5 fill-current" />
+            <div className={`flex items-center gap-0.5 text-xs ${getTextClass(selectedColor)}`}>
+              <Icons.Star className={`w-3.5 h-3.5 ${
+                style === "neobrutalism"
+                  ? "fill-current stroke-zinc-900 dark:stroke-white stroke-[1.5px]"
+                  : style === "minimalism"
+                    ? "fill-none stroke-current stroke-[1.5px]"
+                    : "fill-current"
+              }`} />
               <span className="font-bold text-zinc-800 dark:text-zinc-200 ml-1">4.9</span>
               <span className="text-[10px] text-zinc-400">(120+ Review)</span>
             </div>
