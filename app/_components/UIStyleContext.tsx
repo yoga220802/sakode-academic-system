@@ -20,12 +20,12 @@ const UIStyleContext = createContext<UIStyleContextProps | undefined>(undefined)
 
 export const UIStyleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedStyle, setSelectedStyle] = useState("sakode-modern");
-  const [selectedColor, setSelectedColor] = useState<PaletteColorKey>("blue");
+  const [selectedColor, setSelectedColor] = useState<PaletteColorKey>("cyan");
   
-  // Custom colors (Initial defaults match Blue, Orange, Green)
-  const [primaryColorHex, setPrimaryColorHex] = useState("#54A5E4");
-  const [secondaryColorHex, setSecondaryColorHex] = useState("#F9723B");
-  const [accentColorHex, setAccentColorHex] = useState("#009670");
+  // Custom colors (Initial defaults match Cyan, Orange, Purple)
+  const [primaryColorHex, setPrimaryColorHex] = useState("#71CFFE");
+  const [secondaryColorHex, setSecondaryColorHex] = useState("#FEA071");
+  const [accentColorHex, setAccentColorHex] = useState("#BC71FE");
 
   // Synchronize CSS custom properties with selected colors
   useEffect(() => {
