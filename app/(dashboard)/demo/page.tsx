@@ -140,7 +140,7 @@ export default function DemoFixturePage() {
         <StatCard label="Total Siswa" value={`${students.length} Orang`} change="+2 minggu ini" trendUp={true} />
         <StatCard label="Filter Pencarian" value={`${filteredStudents.length} Hasil`} change="Berdasarkan pencarian & status" trendUp={true} />
         <StatCard label="Plotting Pending" value="1 Siswa" change="Butuh alokasi mentor" trendUp={false} accentColor="orange" />
-        <StatCard label="Lulus Review" value="2 Siswa" change="Sertifikasi selesai" trendUp={true} accentColor="cyan" />
+        <StatCard label="Lulus Review" value="2 Siswa" change="Sertifikasi selesai" trendUp={true} accentColor="green" />
       </div>
 
       {/* 4. Filter Toolbar */}
@@ -180,9 +180,9 @@ export default function DemoFixturePage() {
               <td className="p-4 text-zinc-500 font-semibold">{student.registrationDate}</td>
               <td className="p-4">
                 {student.referralCode ? (
-                  <span className="text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50">
+                  <UI.Badge variant="default">
                     {student.referralCode}
-                  </span>
+                  </UI.Badge>
                 ) : (
                   <span className="text-[9px] font-bold text-zinc-400">None</span>
                 )}
