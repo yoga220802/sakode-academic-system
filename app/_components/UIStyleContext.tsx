@@ -46,6 +46,27 @@ export const UIStyleProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [accentColorHex]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.document) {
+      const htmlEl = document.documentElement;
+      const styleClasses = [
+        "style-neobrutalism",
+        "style-claymorphism",
+        "style-glassmorphism",
+        "style-liquid-glass",
+        "style-minimalism",
+        "style-bento-grid",
+        "style-sakode-modern"
+      ];
+      htmlEl.classList.forEach((cls) => {
+        if (styleClasses.includes(cls)) {
+          htmlEl.classList.remove(cls);
+        }
+      });
+      htmlEl.classList.add(`style-${selectedStyle}`);
+    }
+  }, [selectedStyle]);
+
   return (
     <UIStyleContext.Provider value={{
       selectedStyle,

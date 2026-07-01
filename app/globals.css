@@ -47,3 +47,134 @@ h2, h3, h4, h5, h6, input, select, textarea, button {
   font-family: 'Nunito', sans-serif !important;
 }
 
+/* --- Style-Specific Scrollbars --- */
+
+/* 1. Neobrutalism Scrollbars */
+.style-neobrutalism ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.style-neobrutalism ::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 2px solid #09090b;
+}
+.dark .style-neobrutalism ::-webkit-scrollbar-track {
+  border-left: 2px solid #f4f4f5;
+}
+.style-neobrutalism ::-webkit-scrollbar-thumb {
+  background-color: var(--sakode-primary-color);
+  border: 2px solid #09090b;
+  border-radius: 0 !important;
+}
+.dark .style-neobrutalism ::-webkit-scrollbar-thumb {
+  border: 2px solid #f4f4f5;
+}
+.style-neobrutalism ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sakode-secondary-color);
+}
+
+/* 2. Claymorphism Scrollbars */
+.style-claymorphism ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.style-claymorphism ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+}
+.style-claymorphism ::-webkit-scrollbar-thumb {
+  background-color: var(--sakode-primary-color);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.4);
+}
+.style-claymorphism ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sakode-secondary-color);
+}
+
+/* 3. Glassmorphism & Liquid Glass Scrollbars */
+.style-glassmorphism ::-webkit-scrollbar,
+.style-liquid-glass ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.style-glassmorphism ::-webkit-scrollbar-track,
+.style-liquid-glass ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.style-glassmorphism ::-webkit-scrollbar-thumb,
+.style-liquid-glass ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.dark .style-glassmorphism ::-webkit-scrollbar-thumb,
+.dark .style-liquid-glass ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+}
+.style-glassmorphism ::-webkit-scrollbar-thumb:hover,
+.style-liquid-glass ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 4. Minimalism Scrollbars */
+.style-minimalism ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.style-minimalism ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.style-minimalism ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+.dark .style-minimalism ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+.style-minimalism ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+.dark .style-minimalism ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 5. Bento Grid Scrollbars */
+.style-bento-grid ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.style-bento-grid ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+.style-bento-grid ::-webkit-scrollbar-thumb {
+  background: var(--sakode-primary-color);
+  opacity: 0.8;
+  border-radius: 4px;
+}
+.style-bento-grid ::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+/* 6. Sakode Modern Scrollbars */
+.style-sakode-modern ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.style-sakode-modern ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 99px;
+}
+.style-sakode-modern ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--sakode-primary-color), var(--sakode-secondary-color));
+  border-radius: 99px;
+}
+.style-sakode-modern ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--sakode-secondary-color), var(--sakode-accent-color));
+}
+
