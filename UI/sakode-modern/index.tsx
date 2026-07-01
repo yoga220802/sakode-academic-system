@@ -218,17 +218,14 @@ export const Alert: React.FC<{
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
   const borderClass = isWarning
-    ? "border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/10 text-amber-850 dark:text-amber-300"
-    : "border-sky-500/20 bg-sky-500/5 dark:bg-sky-950/10 text-sky-850 dark:text-sky-300";
-
+    ? "border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200"
+    : "border-sky-200 dark:border-sky-800/40 bg-sky-50 dark:bg-sky-950/20 text-sky-900 dark:text-sky-200";
   return (
-    <div className={`flex items-start gap-3.5 p-4 rounded-2xl border ${borderClass} text-xs shadow-3xs`}>
-      <div className="w-7.5 h-7.5 rounded-full flex items-center justify-center shrink-0 bg-white dark:bg-zinc-850 shadow-2xs border border-zinc-200/50 dark:border-zinc-700/50">
-        {isWarning ? <Icons.AlertTriangle className="w-4 h-4 text-amber-650 dark:text-amber-450" /> : <Icons.Info className="w-4 h-4 text-sky-655 dark:text-sky-450" />}
-      </div>
-      <div className="flex-1 space-y-1">
-        <span className="font-extrabold text-sm block leading-none">{title}</span>
-        <div className="text-zinc-650 dark:text-zinc-400 leading-relaxed font-medium">{children}</div>
+    <div className={`flex items-start gap-3.5 p-4 rounded-xl border ${borderClass} text-xs shadow-3xs`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5 text-amber-500" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5 text-sky-500" />}
+      <div>
+        <span className="font-extrabold block mb-0.5">{title}</span>
+        <div className="leading-relaxed font-semibold opacity-95">{children}</div>
       </div>
     </div>
   );
@@ -239,30 +236,29 @@ export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
 }> = ({ schedules, accentColor = "pink" }) => (
-  <div className="overflow-x-auto p-1">
+  <div className="overflow-x-auto">
     <table className="w-full text-left text-xs border-collapse">
       <thead>
-        <tr className="bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200/55 dark:border-zinc-800 font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider rounded-xl">
-          <th className="py-3 px-4 rounded-l-xl">Kelas Kursus</th>
-          <th className="py-3 px-2">Tanggal Mentoring</th>
-          <th className="py-3 px-2">Mentor</th>
-          <th className="py-3 px-4 text-right rounded-r-xl">Status</th>
+        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-extrabold text-zinc-400 uppercase tracking-wider">
+          <th className="pb-3 pr-2">Kelas Kursus</th>
+          <th className="pb-3 pr-2">Tanggal Mentoring</th>
+          <th className="pb-3 pr-2">Mentor</th>
+          <th className="pb-3 text-right">Status</th>
         </tr>
       </thead>
       <tbody>
         {schedules.map((item, idx) => (
-          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 transition-colors">
-            <td className="py-3.5 px-4 font-bold text-zinc-900 dark:text-white pr-2">{item.course}</td>
-            <td className="py-3.5 px-2 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
-            <td className="py-3.5 px-2 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
-            <td className="py-3.5 px-4 text-right">
-              <span className={
-                item.status === "Selesai"
-                  ? "inline-block px-2.5 py-1 text-[10px] font-bold rounded-full bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-750"
-                  : `inline-block px-2.5 py-1 text-[10px] font-bold rounded-full ${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)} border border-current/10`
-              }>
+          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/20 dark:hover:bg-zinc-900/10">
+            <td className="py-3 font-extrabold text-zinc-900 dark:text-white pr-2">{item.course}</td>
+            <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
+            <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
+            <td className="py-3 text-right">
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
                 {item.status}
-              </span>
+              </Badge>
             </td>
           </tr>
         ))}
@@ -327,20 +323,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
 }> = ({ bars, accentColor = "pink" }) => (
-  <div className="h-36 w-full flex items-end justify-between gap-3 pt-6 px-1">
+  <div className="h-32 w-full flex items-end justify-between gap-2.5 pt-4">
     {bars.map((bar, idx) => (
-      <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+      <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-t-lg transition-all duration-300 ${bar.val} ${getBgClass(accentColor)} shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:scale-x-102 hover:opacity-90`}
+            className={`w-full rounded-t-lg transition-all duration-300 shadow-3xs ${bar.val} ${getBgClass(accentColor)}`}
           />
-          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-bold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-755 rounded-lg px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8.5px] font-black bg-zinc-900 text-white rounded px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-555 tracking-wider block">{bar.label}</span>
+        <span className="text-[9px] font-extrabold text-zinc-550 dark:text-zinc-450 block">{bar.label}</span>
       </div>
     ))}
   </div>

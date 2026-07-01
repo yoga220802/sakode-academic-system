@@ -211,18 +211,15 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const colorClass = isWarning
-    ? "bg-amber-100/40 dark:bg-amber-950/20 border-amber-500/20 dark:border-amber-500/10 text-amber-905 dark:text-amber-300"
-    : "bg-sky-100/40 dark:bg-sky-950/20 border-sky-500/20 dark:border-sky-500/10 text-sky-905 dark:text-sky-300";
-
+  const glassClass = isWarning
+    ? "bg-amber-500/10 border-amber-500/20 text-amber-900 dark:text-amber-200 backdrop-blur-md"
+    : "bg-sky-500/10 border-sky-500/20 text-sky-900 dark:text-sky-200 backdrop-blur-md";
   return (
-    <div className={`flex items-start gap-3.5 p-4 rounded-2xl border backdrop-blur-md shadow-sm ${colorClass} text-xs`}>
-      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border border-white/20 dark:border-white/10 backdrop-blur-xs shadow-xs ${isWarning ? "bg-amber-400/90 text-amber-950" : "bg-sky-400/90 text-sky-950"}`}>
-        {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0" /> : <Icons.Info className="w-4 h-4 shrink-0" />}
-      </div>
-      <div className="flex-1 space-y-1">
-        <span className="font-extrabold text-sm block leading-none">{title}</span>
-        <div className="text-zinc-600 dark:text-zinc-350 leading-relaxed font-medium">{children}</div>
+    <div className={`flex items-start gap-3.5 p-4 rounded-xl border ${glassClass} text-xs font-medium`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5 text-amber-500" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5 text-sky-500" />}
+      <div>
+        <span className="font-extrabold block mb-0.5">{title}</span>
+        <div className="leading-relaxed opacity-90">{children}</div>
       </div>
     </div>
   );
@@ -232,41 +229,37 @@ export const Alert: React.FC<{
 export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ schedules, accentColor = "cyan" }) => {
-  const isDarkText = accentColor === "yellow" || accentColor === "cyan";
-  return (
-    <div className="overflow-x-auto p-1">
-      <table className="w-full text-left text-xs border-collapse">
-        <thead>
-          <tr className="bg-white/20 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md shadow-xs rounded-xl font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-            <th className="py-3 px-4 rounded-l-xl">Kelas Kursus</th>
-            <th className="py-3 px-2">Tanggal Mentoring</th>
-            <th className="py-3 px-2">Mentor</th>
-            <th className="py-3 px-4 text-right rounded-r-xl">Status</th>
+}> = ({ schedules, accentColor = "cyan" }) => (
+  <div className="overflow-x-auto">
+    <table className="w-full text-left text-xs border-collapse">
+      <thead>
+        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-extrabold text-zinc-400 uppercase tracking-wider">
+          <th className="pb-3 pr-2">Kelas Kursus</th>
+          <th className="pb-3 pr-2">Tanggal Mentoring</th>
+          <th className="pb-3 pr-2">Mentor</th>
+          <th className="pb-3 text-right">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {schedules.map((item, idx) => (
+          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/20 dark:hover:bg-zinc-900/10">
+            <td className="py-3 font-extrabold text-zinc-900 dark:text-white pr-2">{item.course}</td>
+            <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
+            <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
+            <td className="py-3 text-right">
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
+                {item.status}
+              </Badge>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {schedules.map((item, idx) => (
-            <tr key={idx} className="border-b border-white/10 dark:border-white/5 hover:bg-white/10 dark:hover:bg-white/5 transition-colors">
-              <td className="py-3.5 px-4 font-extrabold text-zinc-900 dark:text-white">{item.course}</td>
-              <td className="py-3.5 px-2 text-zinc-500 dark:text-zinc-400 font-medium">{item.date}</td>
-              <td className="py-3.5 px-2 text-zinc-700 dark:text-zinc-355 font-semibold">{item.mentor}</td>
-              <td className="py-3.5 px-4 text-right">
-                <span className={
-                  item.status === "Selesai"
-                    ? "inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-white/20 text-zinc-600 dark:bg-white/5 dark:text-zinc-400 border border-white/20 dark:border-white/5 shadow-xs backdrop-blur-xs"
-                    : `inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-linear-to-br ${getGradientClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border border-white/30 dark:border-white/15 shadow-xs backdrop-blur-xs`
-                }>
-                  {item.status}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 // 14. Carousel Component
 export const Carousel: React.FC<{
@@ -325,20 +318,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
 }> = ({ bars, accentColor = "cyan" }) => (
-  <div className="h-36 w-full flex items-end justify-between gap-3 pt-6 px-1">
+  <div className="h-32 w-full flex items-end justify-between gap-3 pt-4">
     {bars.map((bar, idx) => (
-      <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+      <div key={idx} className="flex-1 flex flex-col items-center gap-2.5 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-t-xl border border-white/20 dark:border-white/10 transition-all duration-300 ${bar.val} bg-linear-to-t ${getGradientClass(accentColor)} opacity-75 group-hover:opacity-100 shadow-sm backdrop-blur-xs hover:scale-x-105`}
+            className={`w-full rounded-t-xl border border-white/10 backdrop-blur-xs transition-all duration-300 ${bar.val} ${getBgOpacity20Class(accentColor)}`}
           />
-          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-bold bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-white/20 dark:border-zinc-700/30 rounded-lg px-2 py-0.5 shadow-xs backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[9px] font-extrabold bg-white/30 dark:bg-black/40 text-zinc-900 dark:text-white border border-white/20 backdrop-blur-md rounded-md px-2 py-0.5 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-550 tracking-wider block">{bar.label}</span>
+        <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 tracking-wide block">{bar.label}</span>
       </div>
     ))}
   </div>

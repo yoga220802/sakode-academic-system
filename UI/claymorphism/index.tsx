@@ -12,7 +12,8 @@ import {
   getGradientClass,
   getGradientBgLightClass,
   getTextClass,
-  getBorderRadiusClass
+  getBorderRadiusClass,
+  getFocusRingClass
 } from "../shared/color-utils";
 
 // 1. Card Component
@@ -40,11 +41,11 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
 );
 
 // 4. Input Component
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "pink", ...props }, ref) => (
     <input
       ref={ref}
-      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 focus:ring-indigo-400 focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 ${
+      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 ${
         hasError ? "border-2 border-sakode-red focus:ring-sakode-red/30 dark:border-sakode-red" : ""
       } ${className}`}
       {...props}
@@ -54,11 +55,11 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 Input.displayName = "Input";
 
 // 5. Select Component
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "pink", children, ...props }, ref) => (
     <select
       ref={ref}
-      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 focus:ring-indigo-400 focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
+      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
         hasError ? "border-2 border-sakode-red focus:ring-sakode-red/30 dark:border-sakode-red" : ""
       } ${className}`}
       {...props}

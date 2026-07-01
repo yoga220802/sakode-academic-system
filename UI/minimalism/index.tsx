@@ -24,8 +24,8 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
   </label>
 );
 
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "orange", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white ${
@@ -37,8 +37,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 );
 Input.displayName = "Input";
 
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "orange", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -204,11 +204,16 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-l-2 border-l-amber-500" : "border-l-2 border-l-zinc-500";
+  const borderClass = isWarning
+    ? "border-amber-500/10 bg-amber-500/5 text-amber-850 dark:text-amber-200"
+    : "border-sky-500/10 bg-sky-500/5 text-sky-850 dark:text-sky-200";
   return (
-    <div className={`p-4 bg-zinc-50/70 dark:bg-zinc-900/30 text-xs border-y border-r border-zinc-200/50 dark:border-zinc-800/50 ${borderClass} rounded-none`}>
-      <span className="font-bold text-zinc-900 dark:text-white uppercase tracking-wider block mb-1">{title}</span>
-      <div className="text-zinc-650 dark:text-zinc-450 leading-relaxed font-medium">{children}</div>
+    <div className={`flex items-start gap-3.5 p-3.5 rounded-lg border ${borderClass} text-xs font-medium`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500/80" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5 text-sky-500/80" />}
+      <div>
+        <span className="font-bold block mb-0.5">{title}</span>
+        <div className="leading-relaxed opacity-90">{children}</div>
+      </div>
     </div>
   );
 };
@@ -221,27 +226,26 @@ export const Table: React.FC<{
   <div className="overflow-x-auto">
     <table className="w-full text-left text-xs border-collapse">
       <thead>
-        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">
-          <th className="pb-3 pr-2 font-semibold">Kelas Kursus</th>
-          <th className="pb-3 pr-2 font-semibold">Tanggal Mentoring</th>
-          <th className="pb-3 pr-2 font-semibold">Mentor</th>
-          <th className="pb-3 text-right font-semibold">Status</th>
+        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-extrabold text-zinc-400 uppercase tracking-wider">
+          <th className="pb-3 pr-2">Kelas Kursus</th>
+          <th className="pb-3 pr-2">Tanggal Mentoring</th>
+          <th className="pb-3 pr-2">Mentor</th>
+          <th className="pb-3 text-right">Status</th>
         </tr>
       </thead>
       <tbody>
         {schedules.map((item, idx) => (
-          <tr key={idx} className="border-b border-zinc-100 dark:border-zinc-850/50 hover:bg-zinc-50/30 dark:hover:bg-zinc-900/5 transition-colors">
-            <td className="py-3.5 font-bold text-zinc-800 dark:text-white pr-2">{item.course}</td>
-            <td className="py-3.5 text-zinc-500 dark:text-zinc-450 pr-2">{item.date}</td>
-            <td className="py-3.5 text-zinc-550 dark:text-zinc-400 pr-2">{item.mentor}</td>
-            <td className="py-3.5 text-right">
-              <span className={
-                item.status === "Selesai"
-                  ? "inline-block text-[9px] font-semibold uppercase tracking-wider text-zinc-400"
-                  : `inline-block text-[9px] font-semibold uppercase tracking-wider ${getTextClass(accentColor)}`
-              }>
+          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/20 dark:hover:bg-zinc-900/10">
+            <td className="py-3 font-extrabold text-zinc-900 dark:text-white pr-2">{item.course}</td>
+            <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
+            <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
+            <td className="py-3 text-right">
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
                 {item.status}
-              </span>
+              </Badge>
             </td>
           </tr>
         ))}
@@ -307,20 +311,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
 }> = ({ bars, accentColor = "pink" }) => (
-  <div className="h-36 w-full flex items-end justify-between gap-4 pt-6 px-1">
+  <div className="h-32 w-full flex items-end justify-between gap-3 pt-4 border-b border-zinc-100 dark:border-zinc-900">
     {bars.map((bar, idx) => (
-      <div key={idx} className="flex-1 flex flex-col items-center gap-2.5 h-full justify-end">
+      <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-none transition-all duration-200 ${bar.val} ${getBgClass(accentColor)} hover:opacity-85`}
+            className={`w-full rounded-none transition-all duration-300 ${bar.val} ${getBgOpacity25Class(accentColor)}`}
           />
-          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-semibold bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-350 border border-zinc-200 dark:border-zinc-700/50 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 rounded-sm px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-semibold text-zinc-400 dark:text-zinc-555 tracking-wider block uppercase">{bar.label}</span>
+        <span className="text-[9px] font-medium text-zinc-400 block">{bar.label}</span>
       </div>
     ))}
   </div>
