@@ -12,7 +12,8 @@ import {
   getGradientClass,
   getGradientBgLightClass,
   getTextClass,
-  getBorderRadiusClass
+  getBorderRadiusClass,
+  getFocusRingClass
 } from "../shared/color-utils";
 
 // 1. Card Component
@@ -40,11 +41,11 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
 );
 
 // 4. Input Component
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "pink", ...props }, ref) => (
     <input
       ref={ref}
-      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 focus:ring-indigo-400 focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 ${
+      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 ${
         hasError ? "border-2 border-sakode-red focus:ring-sakode-red/30 dark:border-sakode-red" : ""
       } ${className}`}
       {...props}
@@ -54,11 +55,11 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 Input.displayName = "Input";
 
 // 5. Select Component
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "pink", children, ...props }, ref) => (
     <select
       ref={ref}
-      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 focus:ring-indigo-400 focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
+      className={`w-full bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl py-2.5 px-4 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),_inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.4),_inset_-3px_-3px_6px_rgba(255,255,255,0.05)] border-0 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-slate-800 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
         hasError ? "border-2 border-sakode-red focus:ring-sakode-red/30 dark:border-sakode-red" : ""
       } ${className}`}
       {...props}
@@ -179,17 +180,17 @@ export const Badge: React.FC<{
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
 }> = ({ children, accentColor = "pink", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-500/10";
+  let badgeClass = "bg-slate-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.05),_inset_1px_1px_2px_rgba(255,255,255,0.4)]";
   if (variant === "accent") {
-    badgeClass = `${getBgClass(accentColor)} text-white`;
+    badgeClass = `${getBgClass(accentColor)} text-white shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.1),_inset_1px_1px_2px_rgba(255,255,255,0.3)]`;
   } else if (variant === "success") {
-    badgeClass = "bg-emerald-150 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 border border-emerald-500/20";
+    badgeClass = "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-350 border-emerald-100/50 dark:border-emerald-900/50 shadow-[inset_-1px_-1px_2px_rgba(16,185,129,0.05),_inset_1px_1px_2px_rgba(255,255,255,0.4)]";
   } else if (variant === "warning") {
-    badgeClass = "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-500/20";
+    badgeClass = "bg-amber-50 text-amber-800 dark:bg-amber-950/20 dark:text-amber-350 border-amber-100/50 dark:border-amber-900/50 shadow-[inset_-1px_-1px_2px_rgba(245,158,11,0.05),_inset_1px_1px_2px_rgba(255,255,255,0.4)]";
   }
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClass}`}>
+    <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border ${badgeClass}`}>
       {children}
     </span>
   );
@@ -225,13 +226,15 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-amber-500/20 bg-amber-100/40 dark:bg-amber-950/15 text-amber-800 dark:text-amber-300" : "border-sky-500/20 bg-sky-100/40 dark:bg-sky-950/15 text-sky-800 dark:text-sky-300";
+  const clayClass = isWarning
+    ? "bg-amber-50 dark:bg-amber-950/20 border-amber-200/30 dark:border-amber-900/30 text-amber-800 dark:text-amber-200 shadow-[inset_-2px_-2px_4px_rgba(245,158,11,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.4)]"
+    : "bg-sky-50 dark:bg-sky-950/20 border-sky-200/30 dark:border-sky-900/30 text-sky-800 dark:text-sky-200 shadow-[inset_-2px_-2px_4px_rgba(14,165,233,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.4)]";
   return (
-    <div className={`flex items-start gap-3 p-3 rounded-xl border ${borderClass} text-xs`}>
-      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5" />}
+    <div className={`flex items-start gap-3.5 p-4 rounded-2xl border ${clayClass} text-xs font-semibold`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5 text-sky-600 dark:text-sky-400" />}
       <div>
-        <span className="font-extrabold block">{title}</span>
-        {children}
+        <span className="font-black block mb-0.5">{title}</span>
+        <div className="leading-relaxed opacity-95">{children}</div>
       </div>
     </div>
   );

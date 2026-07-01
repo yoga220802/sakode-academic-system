@@ -24,8 +24,8 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
   </label>
 );
 
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "yellow", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white font-mono py-2.5 px-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] dark:shadow-[3px_3px_0px_0px_rgba(250,250,250,1)] focus:outline-hidden focus:translate-x-[-1px] focus:translate-y-[-1px] focus:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] transition-all text-zinc-900 dark:text-white ${
@@ -37,8 +37,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 );
 Input.displayName = "Input";
 
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "yellow", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white font-mono py-2.5 px-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] dark:shadow-[3px_3px_0px_0px_rgba(250,250,250,1)] focus:outline-hidden focus:translate-x-[-1px] focus:translate-y-[-1px] focus:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] transition-all text-zinc-900 dark:text-white appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -159,17 +159,17 @@ export const Badge: React.FC<{
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
 }> = ({ children, accentColor = "yellow", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-500/10";
+  let badgeClass = "bg-white text-zinc-900 border-zinc-900 dark:bg-zinc-800 dark:text-white dark:border-white";
   if (variant === "accent") {
-    badgeClass = `${getBgClass(accentColor)} text-white`;
+    badgeClass = `${getBgClass(accentColor)} text-zinc-900 border-zinc-900`;
   } else if (variant === "success") {
-    badgeClass = "bg-emerald-150 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 border border-emerald-500/20";
+    badgeClass = "bg-sakode-green text-zinc-900 border-zinc-900";
   } else if (variant === "warning") {
-    badgeClass = "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-500/20";
+    badgeClass = "bg-sakode-orange text-zinc-900 border-zinc-900";
   }
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClass}`}>
+    <span className={`text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 border border-zinc-900 dark:border-white rounded-none shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,1)] font-mono ${badgeClass}`}>
       {children}
     </span>
   );
@@ -205,13 +205,15 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-amber-500/20 bg-amber-100/40 dark:bg-amber-950/15 text-amber-800 dark:text-amber-300" : "border-sky-500/20 bg-sky-100/40 dark:bg-sky-950/15 text-sky-800 dark:text-sky-300";
+  const bgClass = isWarning
+    ? "bg-sakode-yellow text-zinc-900 border-zinc-900 dark:border-white shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_rgba(255,255,255,1)]"
+    : "bg-sakode-cyan text-zinc-900 border-zinc-900 dark:border-white shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_rgba(255,255,255,1)]";
   return (
-    <div className={`flex items-start gap-3 p-3 rounded-xl border ${borderClass} text-xs`}>
-      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5" />}
+    <div className={`flex items-start gap-3.5 p-4 border-2 ${bgClass} text-xs font-mono rounded-none`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5" />}
       <div>
-        <span className="font-extrabold block">{title}</span>
-        {children}
+        <span className="font-black block uppercase tracking-wider mb-1">{title}</span>
+        <div className="font-bold leading-relaxed">{children}</div>
       </div>
     </div>
   );

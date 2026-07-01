@@ -169,18 +169,18 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "pink", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-500/10";
+}> = ({ children, accentColor = "blue", variant = "default" }) => {
+  let badgeClass = "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200/50 dark:border-zinc-700/50";
   if (variant === "accent") {
     badgeClass = `${getBgClass(accentColor)} text-white`;
   } else if (variant === "success") {
-    badgeClass = "bg-emerald-150 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 border border-emerald-500/20";
+    badgeClass = "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-355 border border-emerald-200/50 dark:border-emerald-800/40";
   } else if (variant === "warning") {
-    badgeClass = "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-500/20";
+    badgeClass = "bg-amber-50 text-amber-800 dark:bg-amber-950/20 dark:text-amber-355 border border-amber-200/50 dark:border-amber-800/40";
   }
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClass}`}>
+    <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full ${badgeClass}`}>
       {children}
     </span>
   );
@@ -216,13 +216,15 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-amber-500/20 bg-amber-100/40 dark:bg-amber-950/15 text-amber-800 dark:text-amber-300" : "border-sky-500/20 bg-sky-100/40 dark:bg-sky-950/15 text-sky-800 dark:text-sky-300";
+  const borderClass = isWarning
+    ? "border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200"
+    : "border-sky-200 dark:border-sky-800/40 bg-sky-50 dark:bg-sky-950/20 text-sky-900 dark:text-sky-200";
   return (
-    <div className={`flex items-start gap-3 p-3 rounded-xl border ${borderClass} text-xs`}>
-      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5" />}
+    <div className={`flex items-start gap-3.5 p-4 rounded-xl border ${borderClass} text-xs shadow-3xs`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5 text-amber-500" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5 text-sky-500" />}
       <div>
-        <span className="font-extrabold block">{title}</span>
-        {children}
+        <span className="font-extrabold block mb-0.5">{title}</span>
+        <div className="leading-relaxed font-semibold opacity-95">{children}</div>
       </div>
     </div>
   );

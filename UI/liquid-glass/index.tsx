@@ -233,18 +233,19 @@ export const Badge: React.FC<{
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
 }> = ({ children, accentColor = "orange", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-500/10";
+  let badgeClass = "bg-white/15 dark:bg-white/5 border-t-white/30 border-l-white/30 border-b-white/10 border-r-white/10 text-zinc-700 dark:text-zinc-300";
   if (variant === "accent") {
-    badgeClass = `${getBgClass(accentColor)} text-white`;
+    badgeClass = `${getBgOpacity20Class(accentColor)} border-t-white/30 border-l-white/30 border-b-white/10 border-r-white/10 text-zinc-900 dark:text-white`;
   } else if (variant === "success") {
-    badgeClass = "bg-emerald-150 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 border border-emerald-500/20";
+    badgeClass = "bg-emerald-500/15 border-t-emerald-400/30 border-l-emerald-400/30 border-b-emerald-600/10 border-r-emerald-600/10 text-emerald-800 dark:text-emerald-300";
   } else if (variant === "warning") {
-    badgeClass = "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-500/20";
+    badgeClass = "bg-amber-500/15 border-t-amber-400/30 border-l-amber-400/30 border-b-amber-600/10 border-r-amber-600/10 text-amber-800 dark:text-amber-300";
   }
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClass}`}>
-      {children}
+    <span className={`relative text-[9px] font-black uppercase tracking-wider px-2 py-0.5 border rounded-md shadow-3xs overflow-hidden backdrop-blur-md ${badgeClass}`}>
+      <span className="absolute top-0 left-0 w-8 h-8 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.4)_0%,transparent_60%)] pointer-events-none rounded-tl-md z-0" />
+      <span className="relative z-10">{children}</span>
     </span>
   );
 };
@@ -279,13 +280,18 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-amber-500/20 bg-amber-100/40 dark:bg-amber-950/15 text-amber-800 dark:text-amber-300" : "border-sky-500/20 bg-sky-100/40 dark:bg-sky-950/15 text-sky-800 dark:text-sky-300";
+  const bgClass = isWarning
+    ? "bg-amber-500/15 text-amber-900 dark:text-amber-250 border-t-amber-400/40 border-l-amber-400/40 border-b-amber-600/15 border-r-amber-600/15"
+    : "bg-sky-500/15 text-sky-900 dark:text-sky-250 border-t-sky-400/40 border-l-sky-400/40 border-b-sky-600/15 border-r-sky-600/15";
   return (
-    <div className={`flex items-start gap-3 p-3 rounded-xl border ${borderClass} text-xs`}>
-      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5" />}
-      <div>
-        <span className="font-extrabold block">{title}</span>
-        {children}
+    <div className={`relative flex items-start gap-3.5 p-4 rounded-xl border backdrop-blur-xl ${bgClass} text-xs overflow-hidden shadow-sm`}>
+      {/* Specular corner highlight */}
+      <div className="absolute top-0 left-0 w-16 h-16 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.3)_0%,transparent_70%)] pointer-events-none rounded-tl-xl z-0" />
+      
+      {isWarning ? <Icons.AlertTriangle className="w-4.5 h-4.5 shrink-0 mt-0.5 text-amber-500 relative z-10" /> : <Icons.Info className="w-4.5 h-4.5 shrink-0 mt-0.5 text-sky-500 relative z-10" />}
+      <div className="relative z-10">
+        <span className="font-black block mb-0.5">{title}</span>
+        <div className="leading-relaxed font-semibold opacity-95">{children}</div>
       </div>
     </div>
   );

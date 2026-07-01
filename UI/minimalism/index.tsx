@@ -24,8 +24,8 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
   </label>
 );
 
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "orange", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white ${
@@ -37,8 +37,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 );
 Input.displayName = "Input";
 
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "orange", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -160,18 +160,18 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "pink", variant = "default" }) => {
-  let badgeClass = "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-500/10";
+}> = ({ children, accentColor = "orange", variant = "default" }) => {
+  let badgeClass = "bg-zinc-100 text-zinc-650 dark:bg-zinc-900 dark:text-zinc-400";
   if (variant === "accent") {
-    badgeClass = `${getBgClass(accentColor)} text-white`;
+    badgeClass = `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)}`;
   } else if (variant === "success") {
-    badgeClass = "bg-emerald-150 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-350 border border-emerald-500/20";
+    badgeClass = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
   } else if (variant === "warning") {
-    badgeClass = "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-500/20";
+    badgeClass = "bg-amber-500/10 text-amber-600 dark:text-amber-400";
   }
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClass}`}>
+    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-sm ${badgeClass}`}>
       {children}
     </span>
   );
@@ -207,13 +207,15 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-amber-500/20 bg-amber-100/40 dark:bg-amber-950/15 text-amber-800 dark:text-amber-300" : "border-sky-500/20 bg-sky-100/40 dark:bg-sky-950/15 text-sky-800 dark:text-sky-300";
+  const borderClass = isWarning
+    ? "border-amber-500/10 bg-amber-500/5 text-amber-850 dark:text-amber-200"
+    : "border-sky-500/10 bg-sky-500/5 text-sky-850 dark:text-sky-200";
   return (
-    <div className={`flex items-start gap-3 p-3 rounded-xl border ${borderClass} text-xs`}>
-      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5" />}
+    <div className={`flex items-start gap-3.5 p-3.5 rounded-lg border ${borderClass} text-xs font-medium`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500/80" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5 text-sky-500/80" />}
       <div>
-        <span className="font-extrabold block">{title}</span>
-        {children}
+        <span className="font-bold block mb-0.5">{title}</span>
+        <div className="leading-relaxed opacity-90">{children}</div>
       </div>
     </div>
   );
