@@ -71,6 +71,26 @@ export function WelcomePage() {
 	// Resolve style namespace
 	const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
+	const getComingSoonContainerClass = () => {
+		const baseClass = "inline-flex items-center gap-2 px-3.5 py-1.5 transition-all text-xs sm:text-sm font-bold tracking-wider text-sakode-blue mb-6";
+		switch (selectedStyle) {
+			case "claymorphism":
+				return `${baseClass} rounded-full bg-slate-50/90 dark:bg-zinc-900/80 border border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)]`;
+			case "neobrutalism":
+				return `${baseClass} bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none font-mono`;
+			case "glassmorphism":
+			case "liquid-glass":
+				return `${baseClass} bg-white/10 dark:bg-zinc-900/20 border border-white/20 dark:border-white/10 backdrop-blur-xs rounded-full`;
+			case "bento-grid":
+				return `${baseClass} bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-3xs rounded-full`;
+			case "minimalism":
+				return `${baseClass} bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/20 dark:border-zinc-800/20 rounded-md text-[10px] sm:text-xs font-bold tracking-widest`;
+			case "sakode-modern":
+			default:
+				return `${baseClass} bg-zinc-100/80 dark:bg-zinc-800/80 border border-zinc-200/50 dark:border-zinc-700/50 rounded-full shadow-3xs`;
+		}
+	};
+
 	// Helper to extract clean color key from textClass
 	const getAccentKey = (textClass: string): PaletteColorKey => {
 		if (textClass.includes("blue")) return "blue";
@@ -243,7 +263,8 @@ export function WelcomePage() {
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.2, duration: 0.8 }}
-						className='inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 text-xs sm:text-sm font-bold tracking-wider text-sakode-blue mb-6 shadow-xs'>
+						className={getComingSoonContainerClass()}
+					>
 						<span className='relative flex h-2 w-2'>
 							<span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-sakode-blue opacity-75'></span>
 							<span className='relative inline-flex rounded-full h-2 w-2 bg-sakode-blue'></span>

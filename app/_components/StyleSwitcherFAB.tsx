@@ -113,7 +113,7 @@ export function StyleSwitcherFAB() {
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: 15 }}
 							transition={{ type: "spring", stiffness: 300, damping: 25 }}
-							className="bg-white/95 dark:bg-zinc-955/90 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4.5 shadow-xl w-76 flex flex-col gap-4.5 select-none mb-1 text-left"
+							className="bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4.5 shadow-xl w-76 flex flex-col gap-4.5 select-none mb-1 text-left"
 						>
 							<div className="flex flex-col">
 								<span className="text-[10px] font-black text-zinc-400 dark:text-zinc-555 uppercase tracking-widest leading-none mb-1">

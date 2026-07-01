@@ -5,7 +5,7 @@ import { PaletteColorKey, getBgClass, getGradientClass, getShadow20Class, getLiq
 
 export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor = "orange", children, ...props }) => (
   <div
-    className={`bg-white/80 dark:bg-zinc-955/60 backdrop-blur-xl border border-zinc-200/80 dark:border-white/15 rounded-2xl p-6 shadow-2xl ${getLiquidGlassShadow(accentColor)} relative z-10 text-zinc-800 dark:text-white/90 ${className}`}
+    className={`bg-white/80 dark:bg-zinc-950/60 backdrop-blur-xl border border-zinc-200/80 dark:border-white/15 rounded-2xl p-6 shadow-2xl ${getLiquidGlassShadow(accentColor)} relative z-10 text-zinc-800 dark:text-white/90 ${className}`}
     {...props}
   >
     {children}

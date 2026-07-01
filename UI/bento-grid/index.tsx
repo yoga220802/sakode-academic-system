@@ -41,7 +41,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
   ({ className = "", hasError, accentColor = "green", children, ...props }, ref) => (
     <select
       ref={ref}
-      className={`w-full bg-zinc-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2.5 px-4 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-zinc-900 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
+      className={`w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2.5 px-4 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-zinc-900 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
         hasError ? "border-sakode-red focus:ring-sakode-red/30 dark:border-sakode-red" : ""
       } ${className}`}
       {...props}
@@ -75,7 +75,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"
   ({ className = "", children, variant = "primary", accentColor = "green", isLoading, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
-      const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955 font-bold" : "text-white";
+      const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950 font-bold" : "text-white";
       btnClass = `${getBgClass(accentColor)} hover:opacity-95 ${textColor} rounded-lg font-medium py-2.5 px-5 shadow-sm transition-all shrink-0`;
     } else {
       btnClass = "bg-transparent border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-lg font-medium py-2.5 px-5 transition-colors shrink-0";

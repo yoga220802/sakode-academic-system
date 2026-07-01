@@ -15,8 +15,10 @@ export function AestheticBackground({ mode }: AestheticBackgroundProps) {
     if (!isGlassBg) return null;
     return (
       <>
-        <div className="absolute top-[10%] left-[10%] h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(84,165,228,0.08)_0%,transparent_70%)] blur-[40px] pointer-events-none z-0" />
-        <div className="absolute bottom-[10%] right-[10%] h-90 w-90 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.04)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(0,150,112,0.07)_0%,transparent_70%)] blur-[50px] pointer-events-none z-0" />
+        <div className="absolute top-[-10%] left-[20%] w-96 h-96 rounded-full bg-sakode-pink/15 dark:bg-sakode-pink/20 blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-[-10%] right-[10%] w-96 h-96 rounded-full bg-sakode-orange/15 dark:bg-sakode-orange/15 blur-3xl pointer-events-none z-0" />
+        <div className="absolute top-[40%] left-[-10%] w-80 h-80 rounded-full bg-sakode-cyan/15 dark:bg-sakode-cyan/15 blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-[25%] left-[30%] w-80 h-80 rounded-full bg-sakode-yellow/10 dark:bg-sakode-yellow/10 blur-3xl pointer-events-none z-0" />
       </>
     );
   }

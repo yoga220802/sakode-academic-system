@@ -23,7 +23,7 @@ export function SchoolPrincipalWidget() {
     const baseClass = "flex flex-col gap-1 p-3.5 transition-all text-left";
     switch (selectedStyle) {
       case "claymorphism":
-        return `${baseClass} rounded-2xl bg-slate-50 dark:bg-zinc-850 border border-slate-200/20 dark:border-zinc-700/20 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)]`;
+        return `${baseClass} rounded-2xl bg-slate-50 dark:bg-zinc-800 border border-slate-200/20 dark:border-zinc-700/20 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)]`;
       case "neobrutalism":
         return `${baseClass} bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none font-mono`;
       case "glassmorphism":
@@ -35,7 +35,7 @@ export function SchoolPrincipalWidget() {
         return `${baseClass} bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/20 dark:border-zinc-800/20 rounded-lg`;
       case "sakode-modern":
       default:
-        return `${baseClass} bg-zinc-150/40 dark:bg-zinc-800/30 border border-zinc-200/40 dark:border-zinc-850/50 rounded-xl`;
+        return `${baseClass} bg-zinc-150/40 dark:bg-zinc-800/30 border border-zinc-200/40 dark:border-zinc-800/50 rounded-xl`;
     }
   };
 
@@ -126,10 +126,10 @@ export function SchoolPrincipalWidget() {
           <div className="flex flex-col gap-2">
             {recentActivities.map((act, idx) => (
               <div key={idx} className={getLogItemClass()}>
-                <p className="text-xs text-zinc-700 dark:text-zinc-200 font-semibold leading-relaxed">
+                <p className="text-xs text-zinc-850 dark:text-zinc-100 font-semibold leading-relaxed">
                   {act.desc}
                 </p>
-                <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 mt-1">
+                <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 mt-1">
                   {act.time}
                 </span>
               </div>
