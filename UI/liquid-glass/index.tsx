@@ -55,6 +55,8 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor
         rotateY,
         transformStyle: "preserve-3d",
         perspective: 1000,
+        backfaceVisibility: "hidden",
+        WebkitFontSmoothing: "antialiased",
       }}
       className={`relative p-6 text-zinc-800 dark:text-white/90 transition-shadow duration-300 ${className}`}
       {...(props as any)}
@@ -77,8 +79,8 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor
         />
       )}
       
-      {/* Content wrapper popped out slightly to create 3D depth */}
-      <div style={{ transform: "translateZ(15px)" }} className="relative z-10">
+      {/* Content wrapper popped out slightly to create 3D depth with sharp rendering */}
+      <div style={{ transform: "translate3d(0, 0, 0.01px)", backfaceVisibility: "hidden" }} className="relative z-10">
         {children}
       </div>
     </motion.div>
