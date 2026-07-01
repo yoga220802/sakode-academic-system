@@ -62,34 +62,34 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Manajemen Pendaftaran",
             items: [
-              { label: "Review Pendaftaran", href: "/dashboard/registration-review", icon: "ClipboardCheck" },
-              { label: "Program & Paket", href: "/dashboard/programs", icon: "BookOpen" },
-              { label: "Manajemen Trial", href: "/dashboard/trials", icon: "Sparkles" }
+              { label: "Review Pendaftaran", href: "/registration-review", icon: "ClipboardCheck" },
+              { label: "Program & Paket", href: "/programs", icon: "BookOpen" },
+              { label: "Manajemen Trial", href: "/trials", icon: "Sparkles" }
             ]
           },
           {
             groupName: "Sumber Daya & Jadwal",
             items: [
-              { label: "Direktori Pengguna", href: "/dashboard/users", icon: "Users" },
-              { label: "Direktori Mentor", href: "/dashboard/mentors", icon: "UserCheck" },
-              { label: "Plotting Mentor", href: "/dashboard/plotting", icon: "Compass" },
-              { label: "Jadwal Mentoring", href: "/dashboard/schedules-admin", icon: "Calendar" }
+              { label: "Direktori Pengguna", href: "/users", icon: "Users" },
+              { label: "Direktori Mentor", href: "/mentors", icon: "UserCheck" },
+              { label: "Plotting Mentor", href: "/plotting", icon: "Compass" },
+              { label: "Jadwal Mentoring", href: "/schedules-admin", icon: "Calendar" }
             ]
           },
           {
             groupName: "Program Akuisisi",
-            items: [{ label: "Program Referral", href: "/dashboard/referrals", icon: "Gift" }]
+            items: [{ label: "Program Referral", href: "/referrals", icon: "Gift" }]
           },
           {
             groupName: "Ekstrakurikuler",
             items: [
-              { label: "Organisasi Ekskul", href: "/dashboard/extracurriculars-admin", icon: "AcademicCap" },
-              { label: "Keanggotaan Kepsek", href: "/dashboard/principal-membership", icon: "ShieldCheck" }
+              { label: "Organisasi Ekskul", href: "/extracurriculars-admin", icon: "AcademicCap" },
+              { label: "Keanggotaan Kepsek", href: "/principal-membership", icon: "ShieldCheck" }
             ]
           },
           {
             groupName: "Sistem & Keamanan",
-            items: [{ label: "Sistem Log", href: "/dashboard/logs", icon: "Terminal" }]
+            items: [{ label: "Sistem Log", href: "/logs", icon: "Terminal" }]
           }
         ];
       case "mentor_lead":
@@ -101,13 +101,13 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Plotting & Penjadwalan",
             items: [
-              { label: "Antrean Plotting", href: "/dashboard/plotting-queue", icon: "Compass" },
-              { label: "Kelola Jadwal Sesi", href: "/dashboard/schedules-lead", icon: "Calendar" }
+              { label: "Antrean Plotting", href: "/plotting-queue", icon: "Compass" },
+              { label: "Kelola Jadwal Sesi", href: "/schedules-lead", icon: "Calendar" }
             ]
           },
           {
             groupName: "Evaluasi Akademik",
-            items: [{ label: "Penilaian Bimbingan", href: "/dashboard/grading", icon: "Award" }]
+            items: [{ label: "Penilaian Bimbingan", href: "/grading", icon: "Award" }]
           }
         ];
       case "mentor":
@@ -119,13 +119,13 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Bimbingan Aktif",
             items: [
-              { label: "Siswa Bimbingan", href: "/dashboard/my-students", icon: "Users" },
-              { label: "Jadwal Mengajar", href: "/dashboard/schedules", icon: "Calendar" }
+              { label: "Siswa Bimbingan", href: "/my-students", icon: "Users" },
+              { label: "Jadwal Mengajar", href: "/schedules", icon: "Calendar" }
             ]
           },
           {
             groupName: "Evaluasi",
-            items: [{ label: "Penilaian Bimbingan", href: "/dashboard/grading", icon: "Award" }]
+            items: [{ label: "Penilaian Bimbingan", href: "/grading", icon: "Award" }]
           }
         ];
       case "school_principal":
@@ -137,8 +137,8 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Laporan Sekolah",
             items: [
-              { label: "Organisasi Terkait", href: "/dashboard/principal-org", icon: "Users" },
-              { label: "Laporan & Roster Ekskul", href: "/dashboard/principal-reports", icon: "DocumentReport" }
+              { label: "Organisasi Terkait", href: "/principal-org", icon: "Users" },
+              { label: "Laporan & Roster Ekskul", href: "/principal-reports", icon: "DocumentReport" }
             ]
           }
         ];
@@ -152,22 +152,22 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Akademik & Kelas",
             items: [
-              { label: "Kelas Aktif Saya", href: "/dashboard/my-classes", icon: "BookOpen" },
-              { label: "Modul Belajar IT", href: "/dashboard/modules", icon: "Clipboard" },
-              { label: "Mentor & Jadwal Sesi", href: "/dashboard/my-mentor-schedule", icon: "Calendar" }
+              { label: "Kelas Aktif Saya", href: "/my-classes", icon: "BookOpen" },
+              { label: "Modul Belajar IT", href: "/modules", icon: "Clipboard" },
+              { label: "Mentor & Jadwal Sesi", href: "/my-mentor-schedule", icon: "Calendar" }
             ]
           },
           {
             groupName: "Pendaftaran & Minat",
             items: [
-              { label: "Booking Trial Gratis", href: "/dashboard/trial-registration", icon: "Sparkles" },
-              { label: "Pendaftaran Ekskul", href: "/dashboard/extracurricular-registration", icon: "AcademicCap" },
-              { label: "Status Pendaftaran", href: "/dashboard/enrollment-status", icon: "DocumentText" }
+              { label: "Booking Trial Gratis", href: "/trial-registration", icon: "Sparkles" },
+              { label: "Pendaftaran Ekskul", href: "/extracurricular-registration", icon: "AcademicCap" },
+              { label: "Status Pendaftaran", href: "/enrollment-status", icon: "DocumentText" }
             ]
           },
           {
             groupName: "Portofolio Saya",
-            items: [{ label: "Portofolio & Sertifikat", href: "/dashboard/portfolio", icon: "Briefcase" }]
+            items: [{ label: "Portofolio & Sertifikat", href: "/portfolio", icon: "Briefcase" }]
           }
         ];
     }

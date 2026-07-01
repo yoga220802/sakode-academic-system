@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/app/_components/AuthContext";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
-import { StudentWidget } from "./_components/StudentWidget";
-import { MentorWidget } from "./_components/MentorWidget";
-import { MentorLeadWidget } from "./_components/MentorLeadWidget";
-import { AdminWidget } from "./_components/AdminWidget";
-import { SchoolPrincipalWidget } from "./_components/SchoolPrincipalWidget";
+import { StudentWidget } from "../_components/StudentWidget";
+import { MentorWidget } from "../_components/MentorWidget";
+import { MentorLeadWidget } from "../_components/MentorLeadWidget";
+import { AdminWidget } from "../_components/AdminWidget";
+import { SchoolPrincipalWidget } from "../_components/SchoolPrincipalWidget";
 import * as UIStyles from "@/UI";
 
 export default function DashboardPage() {
@@ -45,9 +45,9 @@ export default function DashboardPage() {
               Masuk sebagai: <span className="font-black text-zinc-800 dark:text-zinc-200">{session.name} ({session.email})</span>
             </p>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm border border-zinc-800/20 dark:border-zinc-200/20">
-            Role: {session.role.replace("_", " ")}
-          </span>
+          <UI.Badge variant="accent" accentColor={selectedColor}>
+            Role: {session.role === "school_principal" ? "Kepala Sekolah" : session.role.replace("_", " ")}
+          </UI.Badge>
         </div>
       </UI.Card>
 

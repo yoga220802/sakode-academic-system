@@ -79,6 +79,46 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
     return role.replace("_", " ");
   };
 
+  const getIconButtonClass = () => {
+    const baseClass = "p-2 cursor-pointer transition-all active:scale-95 shrink-0 flex items-center justify-center";
+    switch (selectedStyle) {
+      case "claymorphism":
+        return `${baseClass} bg-slate-50 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)] rounded-xl`;
+      case "neobrutalism":
+        return `${baseClass} bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none text-zinc-900 dark:text-white`;
+      case "glassmorphism":
+      case "liquid-glass":
+        return `${baseClass} bg-white/10 dark:bg-zinc-900/20 border border-white/20 dark:border-white/10 backdrop-blur-xs text-zinc-800 dark:text-zinc-250 rounded-xl`;
+      case "bento-grid":
+        return `${baseClass} bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-3xs text-zinc-700 dark:text-zinc-300 rounded-xl`;
+      case "minimalism":
+        return `${baseClass} bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/40 dark:border-zinc-800/40 text-zinc-650 dark:text-zinc-350 rounded-lg`;
+      case "sakode-modern":
+      default:
+        return `${baseClass} bg-zinc-100/80 hover:bg-zinc-200/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/80 border border-zinc-200/50 dark:border-zinc-700/50 text-zinc-850 dark:text-zinc-200 shadow-3xs rounded-xl`;
+    }
+  };
+
+  const getProfileCardClass = () => {
+    const baseClass = "flex items-center gap-2 px-2.5 py-1.5 select-none";
+    switch (selectedStyle) {
+      case "claymorphism":
+        return `${baseClass} bg-slate-50 dark:bg-zinc-800 border border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)] rounded-2xl`;
+      case "neobrutalism":
+        return `${baseClass} bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none font-mono`;
+      case "glassmorphism":
+      case "liquid-glass":
+        return `${baseClass} bg-white/10 dark:bg-zinc-900/20 border border-white/20 dark:border-white/10 backdrop-blur-xs rounded-xl`;
+      case "bento-grid":
+        return `${baseClass} bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-3xs rounded-xl`;
+      case "minimalism":
+        return `${baseClass} bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/20 dark:border-zinc-800/20 rounded-lg`;
+      case "sakode-modern":
+      default:
+        return `${baseClass} bg-zinc-100/60 dark:bg-zinc-800/40 border border-zinc-200/40 dark:border-zinc-850/50 rounded-xl`;
+    }
+  };
+
   return (
     <header className={`flex items-center justify-between z-25 relative ${getHeaderContainerClass()}`}>
       {/* Left: Mobile Toggle, Desktop Collapse Toggle & Dynamic Title */}
@@ -86,7 +126,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
         {/* Mobile Hamburger Menu button */}
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 mr-3 rounded-xl border border-zinc-200/50 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-3xs cursor-pointer transition-all active:scale-95 shrink-0"
+          className={`md:hidden mr-3 ${getIconButtonClass()}`}
           aria-label="Buka Menu Navigasi"
           title="Buka Menu Navigasi"
         >
@@ -98,7 +138,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
         {/* Desktop Collapse Sidebar button next to page title */}
         <button
           onClick={onToggleCollapse}
-          className="hidden md:flex p-2 mr-3 rounded-xl border border-zinc-200/50 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-3xs cursor-pointer transition-all active:scale-95 shrink-0"
+          className={`hidden md:flex mr-3 ${getIconButtonClass()}`}
           aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
@@ -129,7 +169,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
         {/* Theme Toggle Button */}
         <button
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          className="p-2 rounded-xl border border-zinc-200/50 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-3xs cursor-pointer transition-all active:scale-95"
+          className={getIconButtonClass()}
           aria-label="Toggle Light/Dark Theme"
           title="Ubah Tema"
         >
@@ -145,7 +185,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
         </button>
 
         {/* Profile Card */}
-        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100/60 dark:bg-zinc-800/40 border border-zinc-200/40 dark:border-zinc-850/50 select-none">
+        <div className={getProfileCardClass()}>
           <div className="w-5.5 h-5.5 rounded-full bg-sakode-blue flex items-center justify-center text-[9px] font-black text-white uppercase shadow-3xs shrink-0">
             {session.name.substring(0, 2)}
           </div>

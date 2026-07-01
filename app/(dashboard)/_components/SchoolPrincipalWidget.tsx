@@ -19,6 +19,26 @@ export function SchoolPrincipalWidget() {
     { desc: "Plotting pembimbing baru untuk IT Club selesai dilakukan", time: "1 hari yang lalu" }
   ];
 
+  const getLogItemClass = () => {
+    const baseClass = "flex flex-col gap-1 p-3.5 transition-all text-left";
+    switch (selectedStyle) {
+      case "claymorphism":
+        return `${baseClass} rounded-2xl bg-slate-50 dark:bg-zinc-850 border border-slate-200/20 dark:border-zinc-700/20 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3),_1px_2px_4px_rgba(0,0,0,0.05)]`;
+      case "neobrutalism":
+        return `${baseClass} bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none font-mono`;
+      case "glassmorphism":
+      case "liquid-glass":
+        return `${baseClass} bg-white/10 dark:bg-zinc-900/20 border border-white/20 dark:border-white/10 backdrop-blur-xs rounded-xl`;
+      case "bento-grid":
+        return `${baseClass} bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-3xs rounded-xl`;
+      case "minimalism":
+        return `${baseClass} bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/20 dark:border-zinc-800/20 rounded-lg`;
+      case "sakode-modern":
+      default:
+        return `${baseClass} bg-zinc-150/40 dark:bg-zinc-800/30 border border-zinc-200/40 dark:border-zinc-850/50 rounded-xl`;
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full text-left font-sans">
       {/* Scope Alert Notice */}
@@ -103,20 +123,18 @@ export function SchoolPrincipalWidget() {
           <UI.Heading className="text-xs font-black text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
             Aktivitas Terkini Organisasi
           </UI.Heading>
-          <UI.Card accentColor="green">
-            <div className="p-4.5 flex flex-col gap-3.5">
-              {recentActivities.map((act, idx) => (
-                <div key={idx} className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800 last:border-b-0 pb-2.5 last:pb-0">
-                  <p className="text-xs text-zinc-700 dark:text-zinc-200 font-semibold leading-relaxed">
-                    {act.desc}
-                  </p>
-                  <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500">
-                    {act.time}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </UI.Card>
+          <div className="flex flex-col gap-2">
+            {recentActivities.map((act, idx) => (
+              <div key={idx} className={getLogItemClass()}>
+                <p className="text-xs text-zinc-700 dark:text-zinc-200 font-semibold leading-relaxed">
+                  {act.desc}
+                </p>
+                <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 mt-1">
+                  {act.time}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

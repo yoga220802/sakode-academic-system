@@ -15,7 +15,7 @@ export default function PlaceholderPage({ params }: PageProps) {
   const { selectedStyle, selectedColor } = useUIStyle();
   const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
-  const path = "/" + ["dashboard", ...resolvedParams.placeholder].join("/");
+  const path = "/" + resolvedParams.placeholder.join("/");
 
   return (
     <div className="w-full py-12 flex flex-col items-center justify-center text-center">
