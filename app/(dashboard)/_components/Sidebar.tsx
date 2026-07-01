@@ -186,7 +186,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
     const transitionClass = "transition-all duration-300 flex flex-col justify-between h-full";
     switch (selectedStyle) {
       case "claymorphism":
-        return `${baseWidth} bg-slate-50 dark:bg-zinc-900 border-r border-slate-200/20 dark:border-zinc-800/20 shadow-[5px_0_15px_rgba(0,0,0,0.03)] p-4 rounded-r-3xl ${transitionClass}`;
+        return `${baseWidth} bg-slate-50 dark:bg-zinc-900 border-r border-slate-200/20 dark:border-zinc-800/20 shadow-[5px_0_15px_rgba(0,0,0,0.03)] p-4 rounded-br-3xl ${transitionClass}`;
       case "neobrutalism":
         return `${baseWidth} bg-white dark:bg-zinc-900 border-r-3 border-zinc-900 dark:border-white p-4 font-mono ${transitionClass}`;
       case "glassmorphism":

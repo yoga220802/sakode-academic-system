@@ -58,7 +58,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
   const getHeaderContainerClass = () => {
     switch (selectedStyle) {
       case "claymorphism":
-        return "bg-slate-50 dark:bg-zinc-900 border-b border-slate-200/20 dark:border-zinc-800/20 shadow-[0_5px_15px_rgba(0,0,0,0.02)] px-4 md:px-6 py-4 rounded-b-3xl mb-6";
+        return "bg-slate-50 dark:bg-zinc-900 border-b border-slate-200/20 dark:border-zinc-800/20 shadow-[0_5px_15px_rgba(0,0,0,0.02)] px-4 md:px-6 py-4 mb-6";
       case "neobrutalism":
         return "bg-white dark:bg-zinc-900 border-b-3 border-zinc-900 dark:border-white px-4 md:px-6 py-4 font-mono mb-6";
       case "glassmorphism":
