@@ -73,8 +73,8 @@ export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentCo
   </button>
 );
 
-export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean }>(
-  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, ...props }, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean; isGradient?: boolean }>(
+  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, isGradient, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
       btnClass = `bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-medium py-2.5 px-5 rounded-none transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0 border border-zinc-900 dark:border-zinc-100 ${getBorderHoverClass(accentColor)}`;

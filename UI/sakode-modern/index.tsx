@@ -81,12 +81,16 @@ export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentCo
   </button>
 );
 
-export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean }>(
-  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, ...props }, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean; isGradient?: boolean }>(
+  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, isGradient, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
       const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950 font-bold" : "text-white";
-      btnClass = `${getBgClass(accentColor)} ${textColor} rounded-xl font-bold py-2.5 px-5 shadow-md hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shrink-0`;
+      if (isGradient) {
+        btnClass = `bg-gradient-to-r ${getGradientClass(accentColor)} ${textColor} rounded-xl font-bold py-2.5 px-5 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shrink-0`;
+      } else {
+        btnClass = `${getBgClass(accentColor)} ${textColor} rounded-xl font-bold py-2.5 px-5 shadow-md hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shrink-0`;
+      }
     } else {
       btnClass = `bg-white dark:bg-zinc-900 border ${getBorderClass(accentColor)} ${getTextClass(accentColor)} rounded-xl font-bold py-2.5 px-5 hover:bg-zinc-50 dark:hover:bg-zinc-850 hover:shadow-xs active:scale-[0.98] transition-all shrink-0`;
     }

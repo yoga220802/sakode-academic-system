@@ -218,6 +218,7 @@ export function WelcomePage() {
 							<UI.Button
 								variant="primary"
 								accentColor={selectedColor}
+								isGradient
 								className="text-xs! py-2! px-3.5! rounded-xl! h-auto! font-extrabold! cursor-pointer"
 							>
 								Masuk Ke Akun

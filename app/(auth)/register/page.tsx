@@ -219,6 +219,7 @@ export default function RegisterPage() {
 										variant="primary"
 										accentColor={selectedColor}
 										isLoading={isLoading}
+										isGradient
 										className="w-full cursor-pointer"
 									>
 										Mulai Belajar Sekarang
