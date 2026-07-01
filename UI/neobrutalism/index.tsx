@@ -25,7 +25,7 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
 );
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
-  ({ className = "", hasError, accentColor = "yellow", ...props }, ref) => (
+  ({ className = "", hasError, accentColor = "blue", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white font-mono py-2.5 px-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] dark:shadow-[3px_3px_0px_0px_rgba(250,250,250,1)] focus:outline-hidden focus:translate-x-[-1px] focus:translate-y-[-1px] focus:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] transition-all text-zinc-900 dark:text-white ${
@@ -38,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 Input.displayName = "Input";
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
-  ({ className = "", hasError, accentColor = "yellow", children, ...props }, ref) => (
+  ({ className = "", hasError, accentColor = "blue", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white font-mono py-2.5 px-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] dark:shadow-[3px_3px_0px_0px_rgba(250,250,250,1)] focus:outline-hidden focus:translate-x-[-1px] focus:translate-y-[-1px] focus:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] transition-all text-zinc-900 dark:text-white appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -52,7 +52,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
 );
 Select.displayName = "Select";
 
-export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "yellow", ...props }) => (
+export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "blue", ...props }) => (
   <button
     type="button"
     role="switch"
@@ -72,7 +72,7 @@ export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentCo
 );
 
 export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean }>(
-  ({ className = "", children, variant = "primary", accentColor = "yellow", isLoading, ...props }, ref) => {
+  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
       btnClass = `${getBgClass(accentColor)} text-zinc-900 border-3 border-zinc-900 font-bold uppercase tracking-wider text-xs py-2.5 px-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 shrink-0`;
@@ -137,7 +137,7 @@ export const Accordion: React.FC<{
 export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ steps, accentColor = "yellow" }) => {
+}> = ({ steps, accentColor = "blue" }) => {
   const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-black" : "text-white";
   return (
     <div className="relative pl-8 border-l-2 border-zinc-900 dark:border-white space-y-6">
@@ -161,7 +161,7 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "yellow", variant = "default" }) => {
+}> = ({ children, accentColor = "blue", variant = "default" }) => {
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100",
@@ -182,7 +182,7 @@ export const AvatarGroup: React.FC<{
   initials: string[];
   extraCount: number;
   accentColor?: PaletteColorKey;
-}> = ({ initials, extraCount, accentColor = "yellow" }) => {
+}> = ({ initials, extraCount, accentColor = "blue" }) => {
   const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-black" : "text-white";
   return (
     <div className="flex items-center gap-3">
@@ -228,7 +228,7 @@ export const Alert: React.FC<{
 export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ schedules, accentColor = "yellow" }) => (
+}> = ({ schedules, accentColor = "blue" }) => (
   <div className="overflow-x-auto">
     <table className="w-full text-left text-xs border-collapse">
       <thead>
@@ -267,7 +267,7 @@ export const Carousel: React.FC<{
   onPrev: () => void;
   onNext: () => void;
   accentColor?: PaletteColorKey;
-}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "yellow" }) => {
+}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "blue" }) => {
   const activeReview = testimonials[activeIndex];
   return (
     <div className="min-h-24 flex flex-col justify-between">
@@ -316,7 +316,7 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ bars, accentColor = "yellow" }) => (
+}> = ({ bars, accentColor = "blue" }) => (
   <div className="h-32 w-full flex items-end justify-between gap-3.5 pt-4">
     {bars.map((bar, idx) => (
       <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
@@ -338,7 +338,7 @@ export const Chart: React.FC<{
 export const Breadcrumbs: React.FC<{
   items: { label: string; active?: boolean }[];
   accentColor?: PaletteColorKey;
-}> = ({ items, accentColor = "yellow" }) => (
+}> = ({ items, accentColor = "blue" }) => (
   <nav className="flex text-xs font-semibold text-zinc-400 gap-1.5 flex-wrap items-center">
     {items.map((item, idx) => (
       <React.Fragment key={idx}>
@@ -359,7 +359,7 @@ export const Dropdown: React.FC<{
   items: { label: string; onClick: () => void }[];
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isOpen, onToggle, triggerText, items, accentColor = "yellow", styleName = "neobrutalism" }) => (
+}> = ({ isOpen, onToggle, triggerText, items, accentColor = "blue", styleName = "neobrutalism" }) => (
   <div className="relative inline-block text-left z-20">
     <Button
       variant="secondary"
@@ -399,7 +399,7 @@ export const UploadZone: React.FC<{
   onRemoveFile?: (index: number) => void;
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "yellow", styleName = "neobrutalism" }) => (
+}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "blue", styleName = "neobrutalism" }) => (
   <div>
     <div
       onDragOver={onDragOver}
