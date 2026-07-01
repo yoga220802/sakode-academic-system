@@ -93,7 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Dynamic Route Content Panel */}
         <main className="flex-1 overflow-y-auto px-4 md:px-6 pb-20 md:pb-8">
-          <div className="max-w-6xl mx-auto w-full">
+          <div className="max-w-7xl xl:max-w-screen-2xl mx-auto w-full">
             {children}
           </div>
         </main>

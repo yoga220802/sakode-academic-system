@@ -94,7 +94,7 @@ export default function DemoFixturePage() {
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-7xl mx-auto flex flex-col gap-6 w-full text-left">
+    <div className="p-4 md:p-6 max-w-7xl xl:max-w-screen-2xl mx-auto flex flex-col gap-6 w-full text-left">
       {/* 1. Read-only scope notice */}
       <ReadOnlyNotice organizationName="Sakode Academy Developer Sandbox" />
 
