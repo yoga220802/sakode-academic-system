@@ -30,6 +30,13 @@
   --font-sans: 'Nunito', system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-kalam: 'Kalam', cursive;
+  --text-xs: 0.875rem; /* 14px */
+  --text-sm: 1rem;     /* 16px */
+  --text-base: 1.125rem; /* 18px */
+  --text-lg: 1.25rem;  /* 20px */
+  --text-xl: 1.5rem;   /* 24px */
+  --text-2xl: 1.875rem; /* 30px */
+  --text-3xl: 2.25rem; /* 36px */
 }
 
 body {
@@ -176,5 +183,18 @@ h2, h3, h4, h5, h6, input, select, textarea, button {
 }
 .style-sakode-modern ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, var(--sakode-secondary-color), var(--sakode-accent-color));
+}
+
+/* --- Minimum Font Size Safety Overrides (14px) --- */
+.text-\[8px\], 
+.text-\[8\.5px\], 
+.text-\[9px\], 
+.text-\[9\.5px\], 
+.text-\[10px\], 
+.text-\[10\.5px\],
+.text-\[11px\], 
+.text-\[11\.5px\],
+.text-\[12px\] {
+  font-size: 14px !important;
 }
 
