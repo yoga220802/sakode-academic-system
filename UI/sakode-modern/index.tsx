@@ -176,16 +176,17 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "blue", variant = "default" }) => {
+  className?: string;
+}> = ({ children, accentColor = "blue", variant = "default", className = "" }) => {
   const badgeColors = {
     default: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 border-zinc-200/50 dark:border-zinc-700/50",
-    accent: `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)} border-${accentColor}-500/20`,
-    success: "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border-emerald-500/20",
-    warning: "bg-amber-500/10 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border-amber-500/20",
+    accent: `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)} border-transparent`,
+    success: "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-955/20 dark:text-emerald-400 border-emerald-500/20",
+    warning: "bg-amber-500/10 text-amber-700 dark:bg-amber-955/20 dark:text-amber-400 border-amber-500/20",
   };
 
   return (
-    <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border shadow-3xs ${badgeColors[variant]}`}>
+    <span className={`ui-badge text-[10px] font-black px-2.5 py-1 rounded-full border ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );

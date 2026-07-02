@@ -3,7 +3,7 @@
 import React from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
-import { PaletteColorKey, getBgClass } from "@/UI/shared/color-utils";
+import { PaletteColorKey, getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 
 export function StudentWidget() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -23,44 +23,50 @@ export function StudentWidget() {
     <div className="flex flex-col gap-6 w-full text-left">
       {/* Dynamic Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <UI.Card accentColor="blue">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ 1 modul tersisa
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              2
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Kelas Berjalan
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              2 Kelas
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              1 modul tersisa minggu ini
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="orange">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Kehadiran 100%
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              18
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Sesi Mentoring Selesai
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              18 Sesi
-            </span>
-            <span className="text-[9px] font-bold text-zinc-455 dark:text-zinc-555 mt-1.5">
-              Tingkat kehadiran 100%
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="green">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Poin Aktivitas (XP)
-            </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Peringkat #4
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
               1,240 XP
             </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Peringkat #4 di kelas Anda
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
+              Poin Aktivitas (XP)
             </span>
           </div>
         </UI.Card>

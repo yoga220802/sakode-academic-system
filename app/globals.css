@@ -378,3 +378,8 @@ button {
 .text-\[13\.5px\] {
   font-size: 14px !important;
 }
+
+/* Badge font-size specific override */
+.ui-badge {
+  font-size: 11px !important;
+}

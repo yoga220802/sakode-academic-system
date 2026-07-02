@@ -241,17 +241,17 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "blue", variant = "default" }) => {
-  const isDarkText = accentColor === "yellow" || accentColor === "cyan";
+  className?: string;
+}> = ({ children, accentColor = "blue", variant = "default", className = "" }) => {
   const badgeColors = {
     default: "bg-white/25 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 border-white/20 dark:border-white/10",
-    accent: `bg-linear-to-br ${getGradientClass(accentColor)} ${isDarkText ? "text-zinc-955 font-extrabold" : "text-white font-bold"} border-white/40 dark:border-white/20 shadow-md`,
+    accent: `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)} border-white/20 dark:border-white/10`,
     success: "bg-emerald-500/25 text-emerald-800 dark:bg-emerald-955/20 dark:text-emerald-350 border-emerald-500/30 dark:border-emerald-500/15 shadow-xs",
     warning: "bg-amber-500/25 text-amber-800 dark:bg-amber-955/20 dark:text-amber-350 border-amber-500/30 dark:border-amber-500/15 shadow-xs",
   };
 
   return (
-    <span className={`text-[10px] font-extrabold px-3.5 py-1 rounded-full border backdrop-blur-md ${badgeColors[variant]}`}>
+    <span className={`ui-badge text-[10px] font-extrabold px-3.5 py-1 rounded-full border backdrop-blur-md ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );

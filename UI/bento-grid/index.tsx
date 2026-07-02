@@ -162,17 +162,18 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "blue", variant = "default" }) => {
+  className?: string;
+}> = ({ children, accentColor = "blue", variant = "default", className = "" }) => {
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-zinc-100 text-zinc-800 dark:bg-zinc-850 dark:text-zinc-300 border-zinc-200/80 dark:border-zinc-700/50",
-    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955 font-extrabold" : "text-white font-bold"} border-zinc-900/10 dark:border-white/10`,
+    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border-zinc-900/10 dark:border-white/10`,
     success: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30",
-    warning: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+    warning: "bg-amber-50 text-amber-700 dark:bg-amber-955/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
   };
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border shadow-3xs ${badgeColors[variant]}`}>
+    <span className={`ui-badge text-[10px] font-bold px-2.5 py-1 rounded-lg border shadow-3xs ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );

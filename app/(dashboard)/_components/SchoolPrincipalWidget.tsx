@@ -3,9 +3,10 @@
 import React from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
+import { PaletteColorKey, getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 
 export function SchoolPrincipalWidget() {
-  const { selectedStyle } = useUIStyle();
+  const { selectedStyle, selectedColor } = useUIStyle();
   const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
   const extracurricularStats = [
@@ -48,44 +49,50 @@ export function SchoolPrincipalWidget() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <UI.Card accentColor="blue">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ 3 Program IT
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              105
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Total Siswa Terdaftar
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              105 Siswa
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Tersebar di 3 program IT
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="orange">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Kuota 100%
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              3
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Ekstrakurikuler Aktif
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              3 Cabang
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              100% tingkat kepatuhan kuota
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="green">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Juli 2026
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              42
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Sesi Mentoring Berjalan
-            </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              42 Sesi
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Bulan Juli 2026
             </span>
           </div>
         </UI.Card>
