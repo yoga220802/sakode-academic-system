@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: "Sistem Akademik Sakode Academy",
   description:
     "Portal pembelajaran kursus IT terintegrasi yang dirancang untuk memfasilitasi pendaftaran peserta, kelas trial, modul belajar, serta manajemen dan penjadwalan mentor secara cerdas.",
