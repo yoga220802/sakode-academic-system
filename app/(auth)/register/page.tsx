@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as UIStyles from "@/UI";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
@@ -11,12 +11,16 @@ import { Icons } from "@/UI/shared/Icons";
 import { getTextClass } from "@/UI/shared/color-utils";
 import { AestheticBackground } from "@/app/_components/AestheticBackground";
 
-export default function RegisterPage() {
+function RegisterForm() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { selectedStyle, selectedColor } = useUIStyle();
 	const { resolvedTheme, setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
 	
+	// Query parameters for acquisition context
+	const program = searchParams.get("program") || "";
+	const ref = searchParams.get("ref") || "";
+
 	// Form state
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -24,38 +28,85 @@ export default function RegisterPage() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [agreeTerms, setAgreeTerms] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	
+	// Error states
+	const [nameError, setNameError] = useState("");
+	const [emailError, setEmailError] = useState("");
+	const [passwordError, setPasswordError] = useState("");
+	const [agreeError, setAgreeError] = useState(false);
 	const [alertMsg, setAlertMsg] = useState<{ type: "warning" | "info"; title: string; desc: string } | null>(null);
-
-	useEffect(() => {
-		let active = true;
-		requestAnimationFrame(() => {
-			if (active) {
-				setMounted(true);
-			}
-		});
-		return () => {
-			active = false;
-		};
-	}, []);
 
 	const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
-	const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		if (!name || !email || !password) {
-			setAlertMsg({
-				type: "warning",
-				title: "Validasi Gagal",
-				desc: "Semua field input wajib diisi.",
-			});
-			return;
+	// Helper to resolve human-readable program names from stable slugs
+	const getProgramDisplayName = (slug: string) => {
+		switch (slug) {
+			case "react-nextjs-professional":
+				return "React & Next.js Professional";
+			case "typescript-data-structures":
+				return "TypeScript & Data Structures";
+			case "backend-go-docker":
+				return "Backend Dev Go/Docker";
+			case "fullstack-product-engineer":
+				return "Fullstack Product Engineer";
+			default:
+				return slug.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+		}
+	};
+
+	// Password strength evaluations
+	const hasMinLength = password.length >= 6;
+	const hasNumber = /\d/.test(password);
+	const hasUppercase = /[A-Z]/.test(password);
+
+	const validateForm = () => {
+		let isValid = true;
+		setNameError("");
+		setEmailError("");
+		setPasswordError("");
+		setAgreeError(false);
+
+		// Name validation
+		if (!name.trim()) {
+			setNameError("Nama lengkap wajib diisi");
+			isValid = false;
 		}
 
+		// Email validation
+		const cleanedEmail = email.trim();
+		if (!cleanedEmail) {
+			setEmailError("Email wajib diisi");
+			isValid = false;
+		} else if (!/\S+@\S+\.\S+/.test(cleanedEmail)) {
+			setEmailError("Format email tidak valid");
+			isValid = false;
+		}
+
+		// Password validation
+		if (!password) {
+			setPasswordError("Kata sandi wajib diisi");
+			isValid = false;
+		} else if (!hasMinLength || !hasNumber || !hasUppercase) {
+			setPasswordError("Kata sandi belum memenuhi kriteria keamanan");
+			isValid = false;
+		}
+
+		// Terms validation
 		if (!agreeTerms) {
+			setAgreeError(true);
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
+	const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (!validateForm()) {
 			setAlertMsg({
 				type: "warning",
-				title: "Persetujuan Wajib",
-				desc: "Anda harus menyetujui syarat & ketentuan Sakode.",
+				title: "Pendaftaran Gagal",
+				desc: "Silakan lengkapi seluruh kolom formulir sesuai panduan.",
 			});
 			return;
 		}
@@ -65,21 +116,28 @@ export default function RegisterPage() {
 
 		setTimeout(() => {
 			setIsLoading(false);
+			
+			// Show success message and redirect
+			const hasAcquisitionContext = !!(program || ref);
+			
 			setAlertMsg({
 				type: "info",
 				title: "Registrasi Berhasil!",
-				desc: "Akun Anda berhasil didaftarkan. Mengalihkan ke login...",
+				desc: hasAcquisitionContext
+					? "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman pemilihan paket..."
+					: "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman login...",
 			});
-			// Mock redirect to login
+
 			setTimeout(() => {
-				router.push("/login");
-			}, 1500);
+				if (hasAcquisitionContext) {
+					// Route to enrollment flow (FE-SLICE-007) and preserve query context
+					router.push(`/register/enroll?program=${program}&ref=${ref}`);
+				} else {
+					router.push("/login");
+				}
+			}, 1800);
 		}, 1500);
 	};
-
-	if (!mounted) return null;
-
-	const isGlassBg = selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass";
 
 	return (
 		<div className='relative min-h-screen w-full flex flex-col justify-between items-center bg-background text-foreground overflow-hidden font-sans transition-colors duration-300'>
@@ -90,7 +148,12 @@ export default function RegisterPage() {
 
 			{/* Navbar Header */}
 			<header className='w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-900/50 z-20 relative'>
-				<button onClick={() => router.push("/")} aria-label="Kembali ke Beranda" className="bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center cursor-pointer">
+				<button 
+					onClick={() => !isLoading && router.push("/")} 
+					disabled={isLoading}
+					aria-label="Kembali ke Beranda" 
+					className={`bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center ${isLoading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+				>
 					<Image
 						src='/assets/logo/sakode.svg'
 						alt='Sakode Academy Logo'
@@ -109,7 +172,7 @@ export default function RegisterPage() {
 						aria-label='Toggle Light/Dark Theme'>
 						{resolvedTheme === "dark" ? (
 							<Icons.Sun className="w-4 h-4" />
-) : (
+						) : (
 							<Icons.Moon className="w-4 h-4" />
 						)}
 					</button>
@@ -126,7 +189,7 @@ export default function RegisterPage() {
 				>
 					<UI.Card accentColor={selectedColor}>
 						<div className="p-2 sm:p-6 flex flex-col gap-6">
-							{/* Form Title & Switcher */}
+							{/* Form Title */}
 							<div className="text-center">
 								<UI.Heading className="text-2xl! font-extrabold! mb-1! text-zinc-900 dark:text-white font-sans">
 									Daftar Akun Baru
@@ -135,6 +198,36 @@ export default function RegisterPage() {
 									Buat akun gratis untuk memulai perjalanan coding Anda
 								</p>
 							</div>
+
+							{/* Acquisition Summary Context (Preserved Context Indicator) */}
+							{(program || ref) && (
+								<div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/35 border border-zinc-200/50 dark:border-zinc-800/80 flex flex-col gap-2.5 text-xs">
+									<div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 dark:text-zinc-550 uppercase tracking-widest">
+										<Icons.Sparkles className="w-3.5 h-3.5 text-sakode-yellow" />
+										Konteks Pembelian Terdeteksi
+									</div>
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-zinc-650 dark:text-zinc-450 font-semibold">
+										{program && (
+											<div className="flex items-center gap-2 p-2 bg-white dark:bg-zinc-900 border border-zinc-200/40 dark:border-zinc-800/40 rounded-xl">
+												<Icons.Briefcase className="w-4 h-4 text-zinc-450 shrink-0" />
+												<div className="min-w-0">
+													<span className="block text-[8.5px] uppercase tracking-wider text-zinc-400">Program</span>
+													<span className="font-extrabold text-zinc-800 dark:text-zinc-200 block truncate">{getProgramDisplayName(program)}</span>
+												</div>
+											</div>
+										)}
+										{ref && (
+											<div className="flex items-center gap-2 p-2 bg-white dark:bg-zinc-900 border border-zinc-200/40 dark:border-zinc-800/40 rounded-xl">
+												<Icons.Gift className="w-4 h-4 text-zinc-450 shrink-0" />
+												<div className="min-w-0">
+													<span className="block text-[8.5px] uppercase tracking-wider text-zinc-400">Referral</span>
+													<span className="font-extrabold text-zinc-800 dark:text-zinc-200 block truncate">{ref}</span>
+												</div>
+											</div>
+										)}
+									</div>
+								</div>
+							)}
 
 							{/* Feedback Message */}
 							<AnimatePresence mode="wait">
@@ -159,11 +252,20 @@ export default function RegisterPage() {
 									<UI.Input
 										id="name-input"
 										type="text"
-										placeholder="John Doe"
+										placeholder="Contoh: John Doe"
 										value={name}
-										onChange={(e) => setName(e.target.value)}
+										onChange={(e) => {
+											setName(e.target.value);
+											if (nameError) setNameError("");
+										}}
+										hasError={!!nameError}
 										disabled={isLoading}
 									/>
+									{nameError && (
+										<span className="text-[10.5px] font-bold text-rose-500 mt-1 block">
+											⚠️ {nameError}
+										</span>
+									)}
 								</div>
 
 								<div>
@@ -173,9 +275,18 @@ export default function RegisterPage() {
 										type="email"
 										placeholder="nama@domain.com"
 										value={email}
-										onChange={(e) => setEmail(e.target.value)}
+										onChange={(e) => {
+											setEmail(e.target.value);
+											if (emailError) setEmailError("");
+										}}
+										hasError={!!emailError}
 										disabled={isLoading}
 									/>
+									{emailError && (
+										<span className="text-[10.5px] font-bold text-rose-500 mt-1 block">
+											⚠️ {emailError}
+										</span>
+									)}
 								</div>
 
 								<div>
@@ -186,14 +297,19 @@ export default function RegisterPage() {
 											type={showPassword ? "text" : "password"}
 											placeholder="••••••••"
 											value={password}
-											onChange={(e) => setPassword(e.target.value)}
+											onChange={(e) => {
+												setPassword(e.target.value);
+												if (passwordError) setPasswordError("");
+											}}
+											hasError={!!passwordError}
 											disabled={isLoading}
 											className="pr-12"
 										/>
 										<button
 											type="button"
-											onClick={() => setShowPassword(!showPassword)}
-											className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-555 hover:text-zinc-650 dark:hover:text-zinc-350 transition-colors focus:outline-hidden cursor-pointer"
+											onClick={() => !isLoading && setShowPassword(!showPassword)}
+											disabled={isLoading}
+											className={`absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-555 hover:text-zinc-650 dark:hover:text-zinc-350 transition-colors focus:outline-hidden ${isLoading ? "cursor-not-allowed opacity-55" : "cursor-pointer"}`}
 											tabIndex={-1}
 										>
 											{showPassword ? (
@@ -203,13 +319,49 @@ export default function RegisterPage() {
 											)}
 										</button>
 									</div>
+
+									{/* Interactive Password Guidance Checklist */}
+									<div className="p-3 mt-2 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/30 dark:border-zinc-850/30 flex flex-col gap-1.5">
+										<span className="text-[9px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+											Persyaratan Sandi Keamanan
+										</span>
+										<div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 mt-0.5">
+											<span className={`text-[10.5px] font-bold flex items-center gap-1 ${hasMinLength ? "text-emerald-500 dark:text-emerald-400" : "text-zinc-400"}`}>
+												<span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] border ${hasMinLength ? "bg-emerald-500/10 border-emerald-500" : "border-zinc-300 dark:border-zinc-800"}`}>
+													{hasMinLength ? "✓" : "•"}
+												</span>
+												6+ Karakter
+											</span>
+											<span className={`text-[10.5px] font-bold flex items-center gap-1 ${hasNumber ? "text-emerald-500 dark:text-emerald-400" : "text-zinc-400"}`}>
+												<span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] border ${hasNumber ? "bg-emerald-500/10 border-emerald-500" : "border-zinc-300 dark:border-zinc-800"}`}>
+													{hasNumber ? "✓" : "•"}
+												</span>
+												Ada Angka
+											</span>
+											<span className={`text-[10.5px] font-bold flex items-center gap-1 ${hasUppercase ? "text-emerald-500 dark:text-emerald-400" : "text-zinc-400"}`}>
+												<span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] border ${hasUppercase ? "bg-emerald-500/10 border-emerald-500" : "border-zinc-300 dark:border-zinc-800"}`}>
+													{hasUppercase ? "✓" : "•"}
+												</span>
+												Huruf Kapital
+											</span>
+										</div>
+									</div>
+									{passwordError && (
+										<span className="text-[10.5px] font-bold text-rose-500 mt-2.5 block">
+											⚠️ {passwordError}
+										</span>
+									)}
 								</div>
 
 								{/* Terms check */}
-								<div className="flex items-center gap-2 mt-1">
-									<UI.Toggle checked={agreeTerms} onChange={() => setAgreeTerms(!agreeTerms)} accentColor={selectedColor} />
-									<span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-										Saya menyetujui syarat dan ketentuan yang berlaku.
+								<div className="flex items-start gap-2.5 mt-2">
+									<UI.Toggle 
+										checked={agreeTerms} 
+										onChange={() => !isLoading && setAgreeTerms(!agreeTerms)} 
+										accentColor={selectedColor} 
+									/>
+									<span className={`text-xs font-semibold select-none mt-0.5 ${agreeError ? "text-rose-500 font-bold" : "text-zinc-500 dark:text-zinc-400"}`}>
+										Saya menyetujui <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Syarat & Ketentuan</span> serta <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Kebijakan Privasi</span> Sakode Academy.
 									</span>
 								</div>
 
@@ -231,14 +383,15 @@ export default function RegisterPage() {
 							<div className="text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 border-t border-zinc-150/40 dark:border-zinc-800/40 pt-4">
 								<span>
 									Sudah punya akun?{" "}
-									<span
+									<button
+										disabled={isLoading}
 										onClick={() => {
 											router.push("/login");
 										}}
-										className={`${getTextClass(selectedColor)} hover:underline font-bold cursor-pointer ml-1`}
+										className={`${getTextClass(selectedColor)} hover:underline font-bold ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ml-1 bg-transparent border-0`}
 									>
 										Masuk
-									</span>
+									</button>
 								</span>
 							</div>
 						</div>
@@ -267,5 +420,18 @@ export default function RegisterPage() {
 				</div>
 			</footer>
 		</div>
+	);
+}
+
+export default function RegisterPage() {
+	return (
+		<Suspense fallback={
+			<div className="py-16 flex flex-col items-center justify-center gap-3 w-full min-h-screen bg-background">
+				<div className="w-8 h-8 rounded-full border-2 border-sakode-blue border-t-transparent animate-spin" />
+				<span className="text-xs font-bold text-zinc-500">Memuat formulir...</span>
+			</div>
+		}>
+			<RegisterForm />
+		</Suspense>
 	);
 }
