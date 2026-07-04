@@ -3,6 +3,7 @@
 import React from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
+import { PaletteColorKey, getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 
 export function StudentWidget() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -22,44 +23,50 @@ export function StudentWidget() {
     <div className="flex flex-col gap-6 w-full text-left">
       {/* Dynamic Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <UI.Card accentColor="blue">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ 1 modul tersisa
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              2
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Kelas Berjalan
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              2 Kelas
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              1 modul tersisa minggu ini
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="orange">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Kehadiran 100%
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              18
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Sesi Mentoring Selesai
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              18 Sesi
-            </span>
-            <span className="text-[9px] font-bold text-zinc-455 dark:text-zinc-555 mt-1.5">
-              Tingkat kehadiran 100%
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="green">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Poin Aktivitas (XP)
-            </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Peringkat #4
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
               1,240 XP
             </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Peringkat #4 di kelas Anda
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
+              Poin Aktivitas (XP)
             </span>
           </div>
         </UI.Card>
@@ -95,12 +102,44 @@ export function StudentWidget() {
                     <span>Progres Kurikulum</span>
                     <span>{cls.progress}%</span>
                   </div>
-                  <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${idx === 0 ? "bg-sakode-blue" : "bg-sakode-orange"}`}
-                      style={{ width: `${cls.progress}%` }}
-                    />
-                  </div>
+                  {(() => {
+                    const colorKey = (idx === 0 ? "blue" : "orange") as PaletteColorKey;
+                    let trackClass = "w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden";
+                    let barClass = `${getBgClass(colorKey)} h-full rounded-full`;
+
+                    switch (selectedStyle) {
+                      case "neobrutalism":
+                        trackClass = "w-full bg-white dark:bg-zinc-800 border-2 border-zinc-900 dark:border-white rounded-none h-3.5 overflow-hidden";
+                        barClass = `${getBgClass(colorKey)} border-r-2 border-zinc-900 dark:border-white h-full rounded-none`;
+                        break;
+                      case "claymorphism":
+                        trackClass = "w-full bg-slate-100/80 dark:bg-zinc-900/50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.08)] rounded-full h-2.5 overflow-hidden border border-white/10";
+                        barClass = `${getBgClass(colorKey)} shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.2),_inset_2px_2px_4px_rgba(255,255,255,0.4)] h-full rounded-full`;
+                        break;
+                      case "glassmorphism":
+                      case "liquid-glass":
+                        trackClass = "w-full bg-white/10 dark:bg-zinc-900/25 border border-white/15 dark:border-white/5 rounded-full h-2 overflow-hidden";
+                        barClass = `${getBgClass(colorKey)} opacity-85 h-full rounded-full`;
+                        break;
+                      case "minimalism":
+                        trackClass = "w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-none h-1.5 overflow-hidden";
+                        barClass = `${getBgClass(colorKey)} h-full rounded-none`;
+                        break;
+                      case "bento-grid":
+                        trackClass = "w-full bg-zinc-100/80 dark:bg-zinc-800/40 rounded-lg h-2 overflow-hidden border border-zinc-200/20";
+                        barClass = `${getBgClass(colorKey)} h-full rounded-lg`;
+                        break;
+                    }
+
+                    return (
+                      <div className={trackClass}>
+                        <div 
+                          className={barClass}
+                          style={{ width: `${cls.progress}%` }}
+                        />
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </UI.Card>

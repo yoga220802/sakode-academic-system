@@ -10,6 +10,7 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { useAuth } from "@/app/_components/AuthContext";
 import { UserRole } from "@/app/_types/auth";
 import { Icons } from "@/UI/shared/Icons";
+import { getTextClass } from "@/UI/shared/color-utils";
 import { AestheticBackground } from "@/app/_components/AestheticBackground";
 
 export default function LoginPage() {
@@ -213,6 +214,7 @@ export default function LoginPage() {
 										variant="primary"
 										accentColor={selectedColor}
 										isLoading={isLoading}
+										isGradient
 										className="w-full cursor-pointer"
 									>
 										Masuk ke Akun
@@ -252,7 +254,7 @@ export default function LoginPage() {
 										onClick={() => {
 											router.push("/register");
 										}}
-										className="text-sakode-pink hover:underline font-bold cursor-pointer ml-1"
+										className={`${getTextClass(selectedColor)} hover:underline font-bold cursor-pointer ml-1`}
 									>
 										Daftar Gratis
 									</span>

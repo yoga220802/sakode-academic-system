@@ -25,7 +25,7 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
 );
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
-  ({ className = "", hasError, accentColor = "green", ...props }, ref) => (
+  ({ className = "", hasError, accentColor = "blue", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2.5 px-4 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-zinc-900 dark:text-zinc-100 ${
@@ -38,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 Input.displayName = "Input";
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
-  ({ className = "", hasError, accentColor = "green", children, ...props }, ref) => (
+  ({ className = "", hasError, accentColor = "blue", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2.5 px-4 focus:ring-2 ${getFocusRingClass(accentColor)} focus:outline-hidden transition-all text-zinc-900 dark:text-zinc-100 appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -52,7 +52,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
 );
 Select.displayName = "Select";
 
-export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "green", ...props }) => (
+export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "blue", ...props }) => (
   <button
     type="button"
     role="switch"
@@ -71,14 +71,14 @@ export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentCo
   </button>
 );
 
-export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean }>(
-  ({ className = "", children, variant = "primary", accentColor = "green", isLoading, ...props }, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean; isGradient?: boolean }>(
+  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, isGradient, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
       const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950 font-bold" : "text-white";
       btnClass = `${getBgClass(accentColor)} hover:opacity-95 ${textColor} rounded-lg font-medium py-2.5 px-5 shadow-sm transition-all shrink-0`;
     } else {
-      btnClass = "bg-transparent border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-lg font-medium py-2.5 px-5 transition-colors shrink-0";
+      btnClass = `bg-transparent border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 ${getTextClass(accentColor)} rounded-lg font-medium py-2.5 px-5 transition-colors shrink-0`;
     }
 
     return (
@@ -138,7 +138,7 @@ export const Accordion: React.FC<{
 export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ steps, accentColor = "green" }) => {
+}> = ({ steps, accentColor = "blue" }) => {
   const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950" : "text-white";
   return (
     <div className="relative pl-7 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
@@ -162,17 +162,18 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "green", variant = "default" }) => {
+  className?: string;
+}> = ({ children, accentColor = "blue", variant = "default", className = "" }) => {
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-zinc-100 text-zinc-800 dark:bg-zinc-850 dark:text-zinc-300 border-zinc-200/80 dark:border-zinc-700/50",
-    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955 font-extrabold" : "text-white font-bold"} border-zinc-900/10 dark:border-white/10`,
+    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border-zinc-900/10 dark:border-white/10`,
     success: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30",
-    warning: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+    warning: "bg-amber-50 text-amber-700 dark:bg-amber-955/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
   };
 
   return (
-    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border shadow-3xs ${badgeColors[variant]}`}>
+    <span className={`ui-badge text-[10px] font-bold px-2.5 py-1 rounded-lg border shadow-3xs ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );
@@ -183,7 +184,7 @@ export const AvatarGroup: React.FC<{
   initials: string[];
   extraCount: number;
   accentColor?: PaletteColorKey;
-}> = ({ initials, extraCount, accentColor = "green" }) => {
+}> = ({ initials, extraCount, accentColor = "blue" }) => {
   const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-950" : "text-white";
   return (
     <div className="flex items-center gap-3">
@@ -229,7 +230,7 @@ export const Alert: React.FC<{
 export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ schedules, accentColor = "green" }) => (
+}> = ({ schedules, accentColor = "blue" }) => (
   <div className="overflow-x-auto">
     <table className="w-full text-left text-xs border-collapse">
       <thead>
@@ -268,7 +269,7 @@ export const Carousel: React.FC<{
   onPrev: () => void;
   onNext: () => void;
   accentColor?: PaletteColorKey;
-}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "green" }) => {
+}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "blue" }) => {
   const activeReview = testimonials[activeIndex];
   return (
     <div className="min-h-24 flex flex-col justify-between">
@@ -318,7 +319,7 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ bars, accentColor = "green" }) => (
+}> = ({ bars, accentColor = "blue" }) => (
   <div className="h-32 w-full flex items-end justify-between gap-3 pt-4">
     {bars.map((bar, idx) => (
       <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
@@ -340,7 +341,7 @@ export const Chart: React.FC<{
 export const Breadcrumbs: React.FC<{
   items: { label: string; active?: boolean }[];
   accentColor?: PaletteColorKey;
-}> = ({ items, accentColor = "green" }) => (
+}> = ({ items, accentColor = "blue" }) => (
   <nav className="flex text-xs font-semibold text-zinc-400 gap-1.5 flex-wrap items-center">
     {items.map((item, idx) => (
       <React.Fragment key={idx}>
@@ -361,7 +362,7 @@ export const Dropdown: React.FC<{
   items: { label: string; onClick: () => void }[];
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isOpen, onToggle, triggerText, items, accentColor = "green", styleName = "bento-grid" }) => (
+}> = ({ isOpen, onToggle, triggerText, items, accentColor = "blue", styleName = "bento-grid" }) => (
   <div className="relative inline-block text-left z-20">
     <Button
       variant="secondary"
@@ -401,7 +402,7 @@ export const UploadZone: React.FC<{
   onRemoveFile?: (index: number) => void;
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "green", styleName = "bento-grid" }) => (
+}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "blue", styleName = "bento-grid" }) => (
   <div>
     <div
       onDragOver={onDragOver}

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useUIStyle } from "./UIStyleContext";
-import { PALETTE_COLORS, PaletteColorKey } from "@/UI/shared/color-utils";
+import { PALETTE_COLORS, PaletteColorKey, getComplementary, getSplitComplementary } from "@/UI/shared/color-utils";
 
 export function StyleSwitcherFAB() {
 	const {
@@ -64,23 +64,16 @@ export function StyleSwitcherFAB() {
 		setSelectedColor(key);
 		const foundPreset = PALETTE_COLORS.find(c => c.key === key);
 		if (foundPreset) {
-			setPrimaryColorHex(foundPreset.hex);
+			const primaryHex = foundPreset.hex;
+			setPrimaryColorHex(primaryHex);
 			
-			const secPreset = PALETTE_COLORS.find(c => c.key === foundPreset.secondary);
-			if (secPreset) {
-				setSecondaryColorHex(secPreset.hex);
-			}
-
-			let accentKey: PaletteColorKey = "green";
-			if (key === "green") {
-				accentKey = "blue";
-			} else if (key === "cyan") {
-				accentKey = "green";
-			}
-			const accentPreset = PALETTE_COLORS.find(c => c.key === accentKey);
-			if (accentPreset) {
-				setAccentColorHex(accentPreset.hex);
-			}
+			// Calculate complementary for secondary
+			const compHex = getComplementary(primaryHex);
+			setSecondaryColorHex(compHex);
+			
+			// Calculate split-complementary for accent
+			const splitCompHex = getSplitComplementary(primaryHex);
+			setAccentColorHex(splitCompHex);
 		}
 	};
 
@@ -93,6 +86,13 @@ export function StyleSwitcherFAB() {
 				router.push(`/ui/${slug}`);
 			}
 		}
+	};
+
+	const handleResetToDefault = () => {
+		setSelectedColor("cyan");
+		setPrimaryColorHex("#71CFFE");
+		setSecondaryColorHex("#FEA071");
+		setAccentColorHex("#BC71FE");
 	};
 
 	const sanitizeHex = (val: string) => {
@@ -163,7 +163,7 @@ export function StyleSwitcherFAB() {
 							{/* Presets Color Palette Selector */}
 							<div className="flex flex-col gap-2">
 								<label className="text-[10px] font-extrabold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">
-									Preset Warna Aksen Halaman
+									Preset Warna Primary Halaman
 								</label>
 								<div className="flex items-center gap-2 flex-wrap">
 									{PALETTE_COLORS.map((col) => (
@@ -191,7 +191,7 @@ export function StyleSwitcherFAB() {
 							{/* Custom Branding Colors Editor */}
 							<div className="flex flex-col gap-2.5 pt-2.5 border-t border-zinc-150/40 dark:border-zinc-800/40">
 								<label className="text-[10px] font-extrabold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">
-									Kustom Warna Branding (Hex)
+									Kustomisasi Warna Primary (Hex)
 								</label>
 								<div className="flex flex-col gap-2">
 									{/* Primary Color Control */}
@@ -292,6 +292,15 @@ export function StyleSwitcherFAB() {
 											/>
 										</div>
 									</div>
+
+									{/* Back to Default Button */}
+									<button
+										type="button"
+										onClick={handleResetToDefault}
+										className="w-full mt-2.5 py-1.5 px-3 rounded-lg border border-zinc-200 dark:border-zinc-800 text-[10px] font-black uppercase tracking-wider text-zinc-600 dark:text-zinc-455 bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900/50 dark:hover:bg-zinc-900/80 transition-all cursor-pointer hover:shadow-2xs active:scale-97 text-center"
+									>
+										Kembali ke Default
+									</button>
 								</div>
 							</div>
 						</motion.div>

@@ -4,6 +4,7 @@ import React from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
+import { PaletteColorKey, getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 
 export function AdminWidget() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -22,10 +23,10 @@ export function AdminWidget() {
   ];
 
   const metrics = [
-    { label: "Siswa Aktif", value: "348 Siswa", change: "+12 minggu ini", trendUp: true },
-    { label: "Plotting Pending", value: "8 Siswa", change: "Butuh alokasi segera", trendUp: false },
-    { label: "Sesi Hari Ini", value: "14 Sesi", change: "10 selesai, 4 berjalan", trendUp: true },
-    { label: "Referral Aktif", value: "24 Code", change: "+4 baru dibuat", trendUp: true }
+    { label: "Siswa Aktif", value: "348", change: "+12 minggu ini", trendUp: true },
+    { label: "Plotting Pending", value: "8", change: "Butuh alokasi segera", trendUp: false },
+    { label: "Sesi Hari Ini", value: "14", change: "10 selesai, 4 berjalan", trendUp: true },
+    { label: "Referral Aktif", value: "24", change: "+4 baru dibuat", trendUp: true }
   ];
 
   const pendingRegistrations = [
@@ -58,16 +59,18 @@ export function AdminWidget() {
       {/* Top dashboard metric summary grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {metrics.map((m, idx) => (
-          <UI.Card key={idx} accentColor={idx === 0 ? "blue" : idx === 1 ? "orange" : idx === 2 ? "green" : "pink"}>
-            <div className="p-4 flex flex-col gap-1">
-              <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-                {m.label}
-              </span>
-              <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
+          <UI.Card key={idx} accentColor={selectedColor}>
+            <div className="p-4 flex flex-col gap-1 text-left">
+              <div className="w-fit">
+                <UI.Badge variant="accent" accentColor={selectedColor}>
+                  {m.trendUp ? "↑" : "↓"} {m.change}
+                </UI.Badge>
+              </div>
+              <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
                 {m.value}
               </span>
-              <span className={`text-[9px] font-bold mt-1.5 ${m.trendUp ? "text-emerald-500" : "text-zinc-450 dark:text-zinc-500"}`}>
-                {m.change}
+              <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
+                {m.label}
               </span>
             </div>
           </UI.Card>
@@ -98,7 +101,7 @@ export function AdminWidget() {
                       )}
                     </div>
                     <div>
-                      <h4 className="text-xs font-black text-zinc-850 dark:text-zinc-100">
+                      <h4 className="text-xs font-black text-zinc-850 dark:text-zinc-100 font-sans">
                         {action.title}
                       </h4>
                       <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold mt-0.5">
@@ -115,61 +118,66 @@ export function AdminWidget() {
           </div>
         </div>
 
-        {/* System Audit logs */}
+        {/* Right: Aksi Cepat Admin */}
         <div className="flex flex-col gap-3">
           <UI.Heading className="text-xs font-black text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-            Log Aktivitas Sistem Terakhir
+            Aksi Cepat Admin
           </UI.Heading>
-          <div className="flex flex-col gap-2">
-            {systemLogs.map((log, idx) => (
-              <div key={idx} className={getLogItemClass()}>
-                <div className="flex flex-col text-left">
-                  <span className="text-[10px] font-extrabold text-zinc-850 dark:text-zinc-100 leading-tight">
-                    {log.action}
-                  </span>
-                  <span className="text-[8px] font-bold text-zinc-500 dark:text-zinc-400 mt-1">
-                    Oleh: {log.actor}
-                  </span>
+          <div className="flex flex-col gap-3">
+            {quickActions.map((act, idx) => (
+              <UI.Card key={idx} accentColor={selectedColor}>
+                <div className="p-4 flex items-center justify-between gap-4 text-left">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-150/40 dark:bg-zinc-800/40 flex items-center justify-center text-zinc-700 dark:text-zinc-350 shrink-0">
+                      {act.icon === "UserPlus" && <Icons.UserPlus className="w-4.5 h-4.5" />}
+                      {act.icon === "BookPlus" && <Icons.BookPlus className="w-4.5 h-4.5" />}
+                      {act.icon === "Settings" && <Icons.Settings className="w-4.5 h-4.5" />}
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-black text-zinc-850 dark:text-zinc-100">
+                        {act.title}
+                      </h3>
+                      <p className="text-[9px] text-zinc-450 dark:text-zinc-500 font-bold mt-0.5">
+                        {act.desc}
+                      </p>
+                    </div>
+                  </div>
+                  <UI.Button variant="primary" accentColor={selectedColor} className="text-[9px]! py-1.5! px-3! h-auto! font-black! cursor-pointer">
+                    Buka
+                  </UI.Button>
                 </div>
-                <span className="text-[9px] font-mono font-bold text-zinc-500 dark:text-zinc-400">
-                  {log.time}
-                </span>
-              </div>
+              </UI.Card>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Quick action grid */}
+      {/* Bottom: Log Aktivitas Sistem Terakhir */}
       <div className="flex flex-col gap-3">
         <UI.Heading className="text-xs font-black text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-          Aksi Cepat Admin
+          Log Aktivitas Sistem Terakhir
         </UI.Heading>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {quickActions.map((act, idx) => (
-            <UI.Card key={idx} accentColor={idx === 0 ? "blue" : idx === 1 ? "orange" : "green"}>
-              <div className="p-4 flex flex-col justify-between h-full gap-3 text-left">
-                <div className="flex flex-col gap-1.5">
-                  {/* Render matching dynamic svg icon */}
-                  <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-800 dark:text-zinc-200">
-                    {act.icon === "UserPlus" && <Icons.UserPlus className="w-4.5 h-4.5" />}
-                    {act.icon === "BookPlus" && <Icons.BookPlus className="w-4.5 h-4.5" />}
-                    {act.icon === "Settings" && <Icons.Settings className="w-4.5 h-4.5" />}
-                  </div>
-                  <h3 className="text-xs font-black text-zinc-850 dark:text-zinc-100 mt-1 leading-tight">
-                    {act.title}
-                  </h3>
-                  <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-bold leading-normal">
-                    {act.desc}
-                  </p>
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-2.5">
+            {systemLogs.map((log, idx) => (
+              <div 
+                key={idx} 
+                className={`flex flex-col sm:flex-row sm:items-center sm:justify-between p-3.5 gap-2 transition-all ${getLogItemClass()}`}
+              >
+                <div className="flex items-center gap-2.5 text-left">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+                  <span className="text-[11px] font-extrabold text-zinc-850 dark:text-zinc-100">
+                    {log.action}
+                  </span>
                 </div>
-                <UI.Button variant="primary" accentColor={selectedColor} className="text-[9px]! py-1.5! px-3! h-auto! font-black! cursor-pointer">
-                  Buka
-                </UI.Button>
+                <div className="flex items-center justify-between sm:justify-end gap-6 text-[10px] text-zinc-450 dark:text-zinc-500 font-bold">
+                  <span>Aktor: {log.actor}</span>
+                  <span className="font-mono text-[9px]">{log.time}</span>
+                </div>
               </div>
-            </UI.Card>
-          ))}
-        </div>
+            ))}
+          </div>
+        </UI.Card>
       </div>
     </div>
   );

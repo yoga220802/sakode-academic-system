@@ -3,6 +3,7 @@
 import React from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
+import { PaletteColorKey, getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 
 export function MentorWidget() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -22,44 +23,50 @@ export function MentorWidget() {
     <div className="flex flex-col gap-6 w-full text-left">
       {/* Mentor Statistics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <UI.Card accentColor="blue">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ +12 jam minggu ini
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              128
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Total Jam Mengajar
             </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              128 Jam
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              +12 jam dari minggu lalu
-            </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="orange">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-              Penilaian Kepuasan Murid
-            </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ 45 Feedback
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
               4.92 / 5.00
             </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Berdasarkan 45 feedback murid
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
+              Penilaian Kepuasan Murid
             </span>
           </div>
         </UI.Card>
 
-        <UI.Card accentColor="green">
-          <div className="p-4 flex flex-col gap-1">
-            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <UI.Card accentColor={selectedColor}>
+          <div className="p-4 flex flex-col gap-1 text-left">
+            <div className="w-fit">
+              <UI.Badge variant="accent" accentColor={selectedColor}>
+                ↑ Wajib dinilai 24j
+              </UI.Badge>
+            </div>
+            <span className="text-3xl font-black text-zinc-800 dark:text-zinc-100 mt-2 leading-none">
+              2
+            </span>
+            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mt-1.5">
               Tugas Belum Dinilai
-            </span>
-            <span className="text-2xl font-black text-zinc-800 dark:text-zinc-100">
-              2 Tugas
-            </span>
-            <span className="text-[9px] font-bold text-zinc-450 dark:text-zinc-555 mt-1.5">
-              Wajib dinilai dalam 24 jam
             </span>
           </div>
         </UI.Card>
