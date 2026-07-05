@@ -237,6 +237,18 @@ export default function RegistrationReviewPage() {
 		}
 	}, [toastMessage]);
 
+	// Read initial student selection from URL search parameter (for redirect from dashboard widget)
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const params = new URLSearchParams(window.location.search);
+			const idParam = params.get("id");
+			if (idParam) {
+				// eslint-disable-next-line react-hooks/set-state-in-effect
+				setSelectedItemId(idParam);
+			}
+		}
+	}, []);
+
 	// Derived selected item
 	const selectedItem = useMemo(() => {
 		if (!selectedItemId) return null;
