@@ -218,7 +218,7 @@ export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
 }> = ({ steps, accentColor = "blue" }) => {
-  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-900" : "text-white";
   return (
     <div className="relative pl-7 border-l-2 border-white/15 dark:border-white/5 space-y-7">
       {steps.map((item, idx) => (
@@ -246,8 +246,8 @@ export const Badge: React.FC<{
   const badgeColors = {
     default: "bg-white/25 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 border-white/20 dark:border-white/10",
     accent: `${getBgOpacity15Class(accentColor)} ${getTextClass(accentColor)} border-white/20 dark:border-white/10`,
-    success: "bg-emerald-500/25 text-emerald-800 dark:bg-emerald-955/20 dark:text-emerald-350 border-emerald-500/30 dark:border-emerald-500/15 shadow-xs",
-    warning: "bg-amber-500/25 text-amber-800 dark:bg-amber-955/20 dark:text-amber-350 border-amber-500/30 dark:border-amber-500/15 shadow-xs",
+    success: "bg-emerald-500/25 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-300 border-emerald-500/30 dark:border-emerald-500/15 shadow-xs",
+    warning: "bg-amber-500/25 text-amber-800 dark:bg-amber-950/20 dark:text-amber-300 border-amber-500/30 dark:border-amber-500/15 shadow-xs",
   };
 
   return (
@@ -263,7 +263,7 @@ export const AvatarGroup: React.FC<{
   extraCount: number;
   accentColor?: PaletteColorKey;
 }> = ({ initials, extraCount, accentColor = "blue" }) => {
-  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-900" : "text-white";
   return (
     <div className="flex items-center gap-3">
       <div className="flex -space-x-2.5 overflow-hidden p-0.5">

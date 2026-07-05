@@ -138,7 +138,7 @@ export const Accordion: React.FC<{
             </span>
           </button>
           {isOpen && (
-            <div className="p-4.5 text-xs leading-relaxed text-zinc-550 dark:text-zinc-400 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-955/20">
+            <div className="p-4.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-950/20">
               {item.a}
             </div>
           )}
