@@ -175,14 +175,14 @@ export function AdminWidget() {
               </div>
 
               {/* Bar Layout */}
-              <div className="flex items-end justify-between h-48 pt-6 px-2 border-b border-zinc-150 dark:border-zinc-800/80">
+              <div className="flex justify-between items-end h-48 pt-6 px-2 border-b border-zinc-150 dark:border-zinc-800/80">
                 {chartData.map((d, index) => {
                   const percentHeight = (d.count / 370) * 100;
                   return (
-                    <div key={index} className="flex flex-col items-center flex-1 group">
-                      <div className="relative w-8 sm:w-10 flex flex-col justify-end h-full">
+                    <div key={index} className="flex flex-col items-center justify-end h-full flex-1 group">
+                      <div className="relative w-8 sm:w-10 h-32 flex flex-col justify-end">
                         {/* Tooltip */}
-                        <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-medium px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xs">
+                        <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-medium px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xs z-20">
                           {d.count} Siswa
                         </div>
                         
@@ -192,7 +192,7 @@ export function AdminWidget() {
                           style={{ height: `${percentHeight}%` }} 
                         />
                       </div>
-                      <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-555 mt-2 block select-none">
+                      <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-550 mt-2 block select-none">
                         {d.month}
                       </span>
                     </div>
