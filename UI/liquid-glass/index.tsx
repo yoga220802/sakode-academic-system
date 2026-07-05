@@ -63,7 +63,7 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor
     >
       {/* Liquid Glass Background layer with directional borders */}
       <div 
-        className={`absolute inset-0 z-0 bg-white/75 dark:bg-zinc-950/50 backdrop-blur-2xl rounded-2xl shadow-2xl ${getLiquidGlassShadow(accentColor)} border-t border-l border-t-white/35 border-l-white/35 border-b border-r border-b-white/10 border-r-white/10`}
+        className={`absolute inset-0 z-0 bg-white/75 dark:bg-zinc-950/50 backdrop-blur-2xl rounded-2xl shadow-md ${getLiquidGlassShadow(accentColor)} border-t border-l border-t-white/35 border-l-white/35 border-b border-r border-b-white/10 border-r-white/10`}
       />
 
       {/* Specular Corner Shine (Water Drop highlight effect) */}

@@ -15,7 +15,7 @@ import {
 
 export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
-    className={`bg-white/90 dark:bg-zinc-950/50 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/80 rounded-3xl p-6 shadow-lg dark:shadow-2xl relative z-10 text-zinc-800 dark:text-zinc-100 ${className}`}
+    className={`bg-white/90 dark:bg-zinc-950/50 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl relative z-10 text-zinc-800 dark:text-zinc-100 ${className}`}
     {...props}
   >
     {children}
@@ -186,7 +186,7 @@ export const Badge: React.FC<{
   };
 
   return (
-    <span className={`ui-badge text-[10px] font-black px-2.5 py-1 rounded-full border ${badgeColors[variant]} ${className}`}>
+    <span className={`ui-badge text-[10px] font-normal px-2.5 py-1 rounded-full border ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );
