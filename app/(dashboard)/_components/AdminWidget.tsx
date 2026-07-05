@@ -30,7 +30,7 @@ export function AdminWidget() {
 
   const quickActions = [
     { title: "Tambah Referral", icon: "Gift", desc: "Daftarkan data referral secara manual" },
-    { title: "Buat Kelas Baru", icon: "BookPlus", desc: "Buat jadwal kurikulum bootcamp baru" },
+    { title: "Buat Kelas IT Baru", icon: "BookPlus", desc: "Buat jadwal kurikulum bootcamp baru" },
     { title: "Kelola Mentor", icon: "Users", desc: "Alokasi mentor ke kelas aktif" },
     { title: "Konfigurasi Sistem", icon: "Settings", desc: "Pengaturan email & integrasi server" }
   ];
@@ -118,7 +118,7 @@ export function AdminWidget() {
                 <span className="text-2xl font-bold text-zinc-900 dark:text-white leading-none">
                   {m.value}
                 </span>
-                <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-550 uppercase tracking-wider block mt-1.5">
+                <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-350 uppercase tracking-wider block mt-1.5">
                   {m.label}
                 </span>
               </div>
@@ -129,7 +129,7 @@ export function AdminWidget() {
 
       {/* Aksi Cepat Admin Section */}
       <div className="flex flex-col gap-3">
-        <UI.Heading className="text-xs font-semibold text-zinc-500 uppercase tracking-wider pl-1">
+        <UI.Heading className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider pl-1">
           Aksi Cepat Admin
         </UI.Heading>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -140,14 +140,14 @@ export function AdminWidget() {
                   {renderIcon(act.icon as keyof typeof Icons, `w-4.5 h-4.5 ${getTextClass(selectedColor)}`)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-xs font-semibold text-zinc-800 dark:text-zinc-150 truncate">
+                  <h3 className="text-xs font-semibold text-zinc-850 dark:text-zinc-200 truncate">
                     {act.title}
                   </h3>
-                  <p className="text-[9.5px] text-zinc-450 dark:text-zinc-550 mt-0.5 block truncate leading-normal font-medium">
+                  <p className="text-[9.5px] text-zinc-450 dark:text-zinc-400 mt-0.5 block truncate leading-normal font-medium">
                     {act.desc}
                   </p>
                 </div>
-                <Icons.ArrowRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-650 shrink-0 ml-auto" />
+                <Icons.ArrowRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 ml-auto" />
               </div>
             </UI.Card>
           ))}
@@ -166,7 +166,7 @@ export function AdminWidget() {
           <UI.Card accentColor={selectedColor}>
             <div className="p-6 flex flex-col gap-6">
               {/* Chart Header */}
-              <div className="flex items-center justify-between text-xs font-medium text-zinc-550 dark:text-zinc-400">
+              <div className="flex items-center justify-between text-xs font-medium text-zinc-550 dark:text-zinc-350">
                 <span className="flex items-center gap-1.5">
                   <span className={`w-2.5 h-2.5 rounded-full ${getBgClass(selectedColor)}`} />
                   Total Siswa Terdaftar
@@ -192,7 +192,7 @@ export function AdminWidget() {
                           style={{ height: `${percentHeight}%` }} 
                         />
                       </div>
-                      <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-550 mt-2 block select-none">
+                      <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-400 mt-2 block select-none">
                         {d.month}
                       </span>
                     </div>
@@ -200,7 +200,7 @@ export function AdminWidget() {
                 })}
               </div>
 
-              <div className="flex items-center justify-between text-[10px] font-bold text-zinc-400 dark:text-zinc-555 uppercase tracking-wider pl-1">
+              <div className="flex items-center justify-between text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider pl-1">
                 <span>Total Semester 1</span>
                 <span>Peningkatan Rata-Rata: +21%</span>
               </div>
@@ -246,7 +246,7 @@ export function AdminWidget() {
                     >
                       Review
                     </UI.Button>
-                    <span className="text-xs text-zinc-450 dark:text-zinc-500 font-normal">
+                    <span className="text-xs text-zinc-450 dark:text-zinc-400 font-normal">
                       {ticket.dateOnly}
                     </span>
                   </div>
@@ -283,12 +283,12 @@ export function AdminWidget() {
                     <span className="text-zinc-800 dark:text-zinc-200 font-semibold text-[11px] block">
                       {log.action}
                     </span>
-                    <span className="text-[9.5px] text-zinc-450 dark:text-zinc-500 font-normal block">
+                    <span className="text-[9.5px] text-zinc-450 dark:text-zinc-400 font-normal block">
                       Kategori: {log.module}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between sm:justify-end gap-6 text-[10px] text-zinc-455 dark:text-zinc-500">
+                <div className="flex items-center justify-between sm:justify-end gap-6 text-[10px] text-zinc-455 dark:text-zinc-400">
                   <span>Aktor: {log.actor}</span>
                   <span className="font-mono text-[9px]">{log.time}</span>
                 </div>
@@ -310,7 +310,7 @@ export function AdminWidget() {
             >
               <div className="p-6 flex flex-col gap-4">
                 <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-zinc-350">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-zinc-200">
                     Review Pendaftaran Siswa
                   </h3>
                   <button 
@@ -324,15 +324,15 @@ export function AdminWidget() {
 
                 <div className="flex flex-col gap-2">
                   <div className="text-xs">
-                    <span className="text-[9.5px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block">Calon Siswa</span>
+                    <span className="text-[9.5px] text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block">Calon Siswa</span>
                     <span className="font-semibold text-zinc-800 dark:text-white text-sm">{activeTicket.title}</span>
                   </div>
                   <div className="text-xs mt-2">
-                    <span className="text-[9.5px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider block">Keterangan Program</span>
-                    <span className="font-semibold text-zinc-700 dark:text-zinc-350">{activeTicket.desc}</span>
+                    <span className="text-[9.5px] text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block">Keterangan Program</span>
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-200">{activeTicket.desc}</span>
                   </div>
                   <div className="text-xs mt-2 border-t border-dashed border-zinc-150 dark:border-zinc-800 pt-3">
-                    <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block font-normal leading-relaxed">
+                    <span className="text-[9px] text-zinc-400 dark:text-zinc-400 block font-normal leading-relaxed">
                       Pendaftaran diajukan pada {activeTicket.date}. Sebagai admin, Anda dapat menyetujui tiket ini untuk membuat grup mentoring secara otomatis.
                     </span>
                   </div>
