@@ -78,7 +78,10 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           },
           {
             groupName: "Program Akuisisi",
-            items: [{ label: "Program Referral", href: "/referrals", icon: "Gift" }]
+            items: [
+              { label: "Program Referral", href: "/referrals", icon: "Gift" },
+              { label: "Akun Referral", href: "/referrals/accounts", icon: "Users" }
+            ]
           },
           {
             groupName: "Ekstrakurikuler",
@@ -276,7 +279,11 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
               {/* Group Items */}
               <div className="flex flex-col gap-1">
                 {group.items.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
+                  const isActive = pathname === item.href || (
+                    item.href !== "/dashboard" && 
+                    item.href !== "/referrals" && 
+                    pathname?.startsWith(item.href)
+                  );
                   
                   // Dynamic item styling
                   let itemClass = "relative flex items-center rounded-xl text-xs transition-all cursor-pointer ";
