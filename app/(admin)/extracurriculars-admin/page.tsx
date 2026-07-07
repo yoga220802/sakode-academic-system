@@ -16,14 +16,6 @@ import {
   DEFAULT_ORGANIZATIONS,
   DEFAULT_REGISTRATIONS
 } from "./_services/extracurricular-mock";
-import { getStoredMentors } from "../mentors/_services/mentor-mock";
-import { Mentor } from "../mentors/_types/mentor";
-import SearchableSelect from "./_components/SearchableSelect";
-
-interface ApiRegion {
-  id: string;
-  name: string;
-}
 
 export default function ExtracurricularsAdminPage() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -33,13 +25,6 @@ export default function ExtracurricularsAdminPage() {
   // 1. Data States
   const [organizations, setOrganizations] = useState<ExtracurricularOrganization[]>([]);
   const [registrations, setRegistrations] = useState<ExtracurricularRegistration[]>([]);
-  const [mentors, setMentors] = useState<Mentor[]>([]);
-
-  // Hierarchical Region States (for Add Form)
-  const [apiProvinces, setApiProvinces] = useState<ApiRegion[]>([]);
-  const [apiRegencies, setApiRegencies] = useState<ApiRegion[]>([]);
-  const [apiDistricts, setApiDistricts] = useState<ApiRegion[]>([]);
-  const [apiVillages, setApiVillages] = useState<ApiRegion[]>([]);
 
   // 2. Navigation & Tabs
   const [activeTab, setActiveTab] = useState<"schools" | "reviews">("schools");
@@ -48,27 +33,9 @@ export default function ExtracurricularsAdminPage() {
   const [statusFilter, setStatusFilter] = useState("all");
 
   // 3. Modals State
-  const [isAddSchoolOpen, setIsAddSchoolOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
 
   // 4. Form States
-  const [schoolForm, setSchoolForm] = useState({
-    name: "",
-    picName: "",
-    picEmail: "",
-    picPhone: "",
-    provinsi: "",
-    kabupaten: "",
-    kecamatan: "",
-    kelurahan: "",
-    rtRw: "",
-    streetAddress: "",
-    status: "active" as "active" | "inactive",
-    mentorId: "",
-    mouFileName: "",
-    mouSignedDate: "2026-07-07"
-  });
-
   const [rejectingRegId, setRejectingRegId] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
 
@@ -76,32 +43,10 @@ export default function ExtracurricularsAdminPage() {
   const [toastMessage, setToastMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [simulationState, setSimulationState] = useState<"default" | "loading" | "empty" | "error">("default");
 
-  // Simulated File Upload State
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [uploadedFileName, setUploadedFileName] = useState<string>("");
-
   // Load from local storage and mock service
   useEffect(() => {
     setOrganizations(getStoredOrganizations());
     setRegistrations(getStoredRegistrations());
-    setMentors(getStoredMentors());
-  }, []);
-
-  // Fetch initial provinces on mount
-  useEffect(() => {
-    fetch("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json")
-      .then((res) => res.json())
-      .then((data) => setApiProvinces(data))
-      .catch(() => {
-        // Fallback offline provinces
-        setApiProvinces([
-          { id: "34", name: "DAERAH ISTIMEWA YOGYAKARTA" },
-          { id: "31", name: "DKI JAKARTA" },
-          { id: "32", name: "JAWA BARAT" },
-          { id: "33", name: "JAWA TENGAH" },
-          { id: "35", name: "JAWA TIMUR" }
-        ]);
-      });
   }, []);
 
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -115,82 +60,6 @@ export default function ExtracurricularsAdminPage() {
     setRegistrations(DEFAULT_REGISTRATIONS);
     saveStoredRegistrations(DEFAULT_REGISTRATIONS);
     showToast("Data ekskul dan dokumen kemitraan berhasil di-reset.");
-  };
-
-  // Province change handler: resets nested options and fetches regencies
-  const handleProvinceChange = (prov: ApiRegion) => {
-    setSchoolForm((prev) => ({
-      ...prev,
-      provinsi: prov.name,
-      kabupaten: "",
-      kecamatan: "",
-      kelurahan: ""
-    }));
-    setApiRegencies([]);
-    setApiDistricts([]);
-    setApiVillages([]);
-
-    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${prov.id}.json`)
-      .then((res) => res.json())
-      .then((data) => setApiRegencies(data))
-      .catch(() => {
-        if (prov.id === "34") {
-          setApiRegencies([{ id: "3471", name: "KOTA YOGYAKARTA" }, { id: "3404", name: "KABUPATEN SLEMAN" }]);
-        } else if (prov.id === "31") {
-          setApiRegencies([{ id: "3174", name: "KOTA JAKARTA SELATAN" }, { id: "3171", name: "KOTA JAKARTA PUSAT" }]);
-        }
-      });
-  };
-
-  // Regency change handler: resets nested options and fetches districts (kecamatan)
-  const handleRegencyChange = (reg: ApiRegion) => {
-    setSchoolForm((prev) => ({
-      ...prev,
-      kabupaten: reg.name,
-      kecamatan: "",
-      kelurahan: ""
-    }));
-    setApiDistricts([]);
-    setApiVillages([]);
-
-    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/districts/${reg.id}.json`)
-      .then((res) => res.json())
-      .then((data) => setApiDistricts(data))
-      .catch(() => {
-        if (reg.id === "3471") {
-          setApiDistricts([{ id: "347101", name: "Danurejan" }, { id: "347102", name: "Gedongtengen" }]);
-        } else if (reg.id === "3174") {
-          setApiDistricts([{ id: "317401", name: "Tebet" }, { id: "317402", name: "Kebayoran Baru" }]);
-        }
-      });
-  };
-
-  // District change handler: resets nested options and fetches villages (kelurahan)
-  const handleDistrictChange = (dist: ApiRegion) => {
-    setSchoolForm((prev) => ({
-      ...prev,
-      kecamatan: dist.name,
-      kelurahan: ""
-    }));
-    setApiVillages([]);
-
-    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/villages/${dist.id}.json`)
-      .then((res) => res.json())
-      .then((data) => setApiVillages(data))
-      .catch(() => {
-        if (dist.id === "347101") {
-          setApiVillages([{ id: "34710101", name: "Bausasran" }, { id: "34710102", name: "Tegal Panggung" }]);
-        } else if (dist.id === "317401") {
-          setApiVillages([{ id: "31740101", name: "Tebet Barat" }, { id: "31740102", name: "Tebet Timur" }]);
-        }
-      });
-  };
-
-  const handleVillageChange = (vil: ApiRegion) => {
-    setSchoolForm((prev) => ({
-      ...prev,
-      kelurahan: vil.name
-    }));
   };
 
   // Compile unique kecamatan list dynamically from registered schools
@@ -238,108 +107,6 @@ export default function ExtracurricularsAdminPage() {
       totalStudents: organizations.reduce((acc, curr) => acc + (curr.members?.length || 0), 0)
     };
   }, [organizations, registrations, simulationState]);
-
-  // Pre-select first SAKODE mentor
-  useEffect(() => {
-    if (mentors.length > 0 && !schoolForm.mentorId) {
-      setSchoolForm((prev) => ({ ...prev, mentorId: mentors[0].id }));
-    }
-  }, [mentors, schoolForm.mentorId]);
-
-  // Simulate MoU Document file selection and upload progress
-  const handleSimulateFileUpload = () => {
-    if (!schoolForm.name) {
-      setFormError("Mohon masukkan Nama Sekolah terlebih dahulu untuk generate nama file MoU.");
-      return;
-    }
-
-    const cleanSchoolName = schoolForm.name.replace(/\s+/g, "_");
-    const targetName = `MoU_${cleanSchoolName}_Signed.pdf`;
-    
-    setUploadProgress(0);
-    setFormError(null);
-
-    // Simulate progress bar micro-animation
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 20;
-      setUploadProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setUploadedFileName(targetName);
-          setSchoolForm((prev) => ({ ...prev, mouFileName: targetName }));
-          setUploadProgress(null);
-          showToast("Berkas MoU berhasil diunggah.");
-        }, 300);
-      }
-    }, 150);
-  };
-
-  // Add School submit handler
-  const handleAddSchoolSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !schoolForm.name ||
-      !schoolForm.picName ||
-      !schoolForm.picEmail ||
-      !schoolForm.picPhone ||
-      !schoolForm.provinsi ||
-      !schoolForm.kabupaten ||
-      !schoolForm.kecamatan ||
-      !schoolForm.kelurahan ||
-      !schoolForm.rtRw ||
-      !schoolForm.streetAddress
-    ) {
-      setFormError("Mohon lengkapi seluruh profil Guru Pendamping, Sekolah, dan Alamat Lengkap.");
-      return;
-    }
-
-    if (!schoolForm.mouFileName) {
-      setFormError("Wajib mengunggah dokumen MoU kerja sama sekolah.");
-      return;
-    }
-
-    const isDuplicate = organizations.some((o) => o.name.toLowerCase() === schoolForm.name.toLowerCase());
-    if (isDuplicate) {
-      setFormError("Sekolah / Organisasi dengan nama ini sudah terdaftar.");
-      return;
-    }
-
-    const mentor = mentors.find((m) => m.id === schoolForm.mentorId);
-    if (!mentor) {
-      setFormError("Mentor SAKODE tidak ditemukan.");
-      return;
-    }
-
-    const newId = `ORG-${Math.floor(104 + Math.random() * 900)}`;
-    const newOrg: ExtracurricularOrganization = {
-      id: newId,
-      name: schoolForm.name,
-      picName: schoolForm.picName,
-      picEmail: schoolForm.picEmail,
-      picPhone: schoolForm.picPhone,
-      provinsi: schoolForm.provinsi,
-      kabupaten: schoolForm.kabupaten,
-      kecamatan: schoolForm.kecamatan,
-      kelurahan: schoolForm.kelurahan,
-      rtRw: schoolForm.rtRw,
-      streetAddress: schoolForm.streetAddress,
-      status: schoolForm.status,
-      mentorId: mentor.id,
-      mentorName: mentor.name,
-      mouFileName: schoolForm.mouFileName,
-      mouSignedDate: schoolForm.mouSignedDate,
-      members: []
-    };
-
-    const updated = [newOrg, ...organizations];
-    setOrganizations(updated);
-    saveStoredOrganizations(updated);
-    setIsAddSchoolOpen(false);
-    setUploadedFileName("");
-    showToast(`Sukses mendaftarkan ekskul ${schoolForm.name} di Kecamatan ${schoolForm.kecamatan}.`);
-  };
 
   // Toggle School Partnership status (Active / Inactive)
   const handleToggleSchoolStatus = (org: ExtracurricularOrganization) => {
@@ -530,27 +297,7 @@ export default function ExtracurricularsAdminPage() {
         {/* Quick Action Trigger panel */}
         <div className="flex gap-2 w-full sm:w-auto">
           <UI.Button
-            onClick={() => {
-              setSchoolForm({
-                name: "",
-                picName: "",
-                picEmail: "",
-                picPhone: "",
-                provinsi: "",
-                kabupaten: "",
-                kecamatan: "",
-                kelurahan: "",
-                rtRw: "",
-                streetAddress: "",
-                status: "active",
-                mentorId: mentors.length > 0 ? mentors[0].id : "",
-                mouFileName: "",
-                mouSignedDate: "2026-07-07"
-              });
-              setUploadedFileName("");
-              setFormError(null);
-              setIsAddSchoolOpen(true);
-            }}
+            onClick={() => router.push("/extracurriculars-admin/new")}
             variant="primary"
             accentColor={selectedColor}
             className="font-bold! text-xs! py-2.5! px-4! w-full sm:w-auto cursor-pointer flex items-center justify-center gap-1.5 shadow-3xs"
@@ -601,7 +348,7 @@ export default function ExtracurricularsAdminPage() {
           className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
             simulationState === "error"
               ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
-              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+              : "text-zinc-500 dark:text-zinc-450 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
           API Error
@@ -789,7 +536,7 @@ export default function ExtracurricularsAdminPage() {
                         <Icons.User className="w-3 h-3 text-zinc-450" />
                         {org.picName}
                       </span>
-                      <span className="text-[10px] text-zinc-450 pl-4 mt-0.5">{org.picEmail}</span>
+                      <span className="text-[10px] text-zinc-455 pl-4 mt-0.5">{org.picEmail}</span>
                     </div>
                   </td>
                   <td className="p-4 text-left font-bold text-sakode-blue dark:text-sky-400">
@@ -810,7 +557,7 @@ export default function ExtracurricularsAdminPage() {
                       className={`inline-block px-2 py-0.5 rounded text-[10px] font-black select-none transition-all ${
                         org.status === "active"
                           ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-                          : "bg-zinc-100 text-zinc-450 hover:bg-zinc-200"
+                          : "bg-zinc-100 text-zinc-455 hover:bg-zinc-200"
                       }`}
                       title="Klik untuk ubah status"
                     >
@@ -907,275 +654,7 @@ export default function ExtracurricularsAdminPage() {
         </div>
       )}
 
-      {/* 4. ADD PARTNERSHIP SCHOOL & DISPATCH PRINCIPAL MODAL */}
-      <AnimatePresence>
-        {isAddSchoolOpen && (
-          <div className="fixed inset-0 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-2xl relative my-8"
-            >
-              <UI.Card accentColor={selectedColor}>
-                {/* Scrollable Container with max-height to prevent block content */}
-                <div className="max-h-[85vh] overflow-y-auto pr-3 text-left">
-                  <form onSubmit={handleAddSchoolSubmit} className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
-                        <Icons.Plus className="w-4 h-4" />
-                        Daftarkan Ekskul Sekolah Baru
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => setIsAddSchoolOpen(false)}
-                        className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
-                        title="Tutup"
-                      >
-                        <Icons.X className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {formError && (
-                      <UI.Alert title="Gagal Mendaftar Kemitraan" type="warning">
-                        {formError}
-                      </UI.Alert>
-                    )}
-
-                    {/* School basic details & mentor selection */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      
-                      <div className="col-span-1 md:col-span-2">
-                        <UI.Label>Nama Sekolah / Institusi Mitra</UI.Label>
-                        <UI.Input
-                          type="text"
-                          placeholder="contoh: SMA Labschool Jakarta"
-                          value={schoolForm.name}
-                          onChange={(e) => setSchoolForm({ ...schoolForm, name: e.target.value })}
-                          accentColor={selectedColor}
-                          className="text-xs!"
-                        />
-                      </div>
-                      
-                      <div>
-                        <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
-                        <UI.Select
-                          value={schoolForm.mentorId}
-                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
-                          accentColor={selectedColor}
-                          className="text-xs!"
-                        >
-                          {mentors.map((m) => (
-                            <option key={m.id} value={m.id}>
-                              {m.name} ({m.skills.slice(0, 2).join(", ")})
-                            </option>
-                          ))}
-                        </UI.Select>
-                      </div>
-
-                      <div>
-                        <UI.Label>Status Awal</UI.Label>
-                        <UI.Select
-                          value={schoolForm.status}
-                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, status: e.target.value as "active" | "inactive" })}
-                          accentColor={selectedColor}
-                          className="text-xs!"
-                        >
-                          <option value="active">Aktif</option>
-                          <option value="inactive">Nonaktif</option>
-                        </UI.Select>
-                      </div>
-
-                    </div>
-
-                    {/* Hierarchical Regional Addresses Dropdowns from Public API */}
-                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
-                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">
-                        Alamat Lengkap Administrasi Wilayah
-                      </span>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        
-                        <SearchableSelect
-                          label="Provinsi"
-                          placeholder="Cari provinsi..."
-                          options={apiProvinces}
-                          value={schoolForm.provinsi}
-                          onChange={handleProvinceChange}
-                        />
-
-                        <SearchableSelect
-                          label="Kota / Kabupaten"
-                          placeholder="Pilih provinsi dahulu..."
-                          options={apiRegencies}
-                          value={schoolForm.kabupaten}
-                          onChange={handleRegencyChange}
-                          disabled={!schoolForm.provinsi}
-                        />
-
-                        <SearchableSelect
-                          label="Kecamatan"
-                          placeholder="Pilih kota/kabupaten dahulu..."
-                          options={apiDistricts}
-                          value={schoolForm.kecamatan}
-                          onChange={handleDistrictChange}
-                          disabled={!schoolForm.kabupaten}
-                        />
-
-                        <SearchableSelect
-                          label="Desa / Kelurahan"
-                          placeholder="Pilih kecamatan dahulu..."
-                          options={apiVillages}
-                          value={schoolForm.kelurahan}
-                          onChange={handleVillageChange}
-                          disabled={!schoolForm.kecamatan}
-                        />
-
-                        <div>
-                          <UI.Label>RT / RW</UI.Label>
-                          <UI.Input
-                            type="text"
-                            placeholder="contoh: RT 03 / RW 05"
-                            value={schoolForm.rtRw}
-                            onChange={(e) => setSchoolForm({ ...schoolForm, rtRw: e.target.value })}
-                            accentColor={selectedColor}
-                            className="text-xs!"
-                          />
-                        </div>
-
-                        <div>
-                          <UI.Label>Alamat Jalan / Gedung</UI.Label>
-                          <UI.Input
-                            type="text"
-                            placeholder="Nama jalan, nomor gedung, atau dusun..."
-                            value={schoolForm.streetAddress}
-                            onChange={(e) => setSchoolForm({ ...schoolForm, streetAddress: e.target.value })}
-                            accentColor={selectedColor}
-                            className="text-xs!"
-                          />
-                        </div>
-
-                      </div>
-                    </div>
-
-                    {/* Guru Pendamping Account Registry Section */}
-                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
-                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">
-                        Akun Kepala Sekolah / Guru Pendamping
-                      </span>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="col-span-1 md:col-span-2">
-                          <UI.Label>Nama Lengkap Guru</UI.Label>
-                          <UI.Input
-                            type="text"
-                            placeholder="Nama lengkap & gelar akademik..."
-                            value={schoolForm.picName}
-                            onChange={(e) => setSchoolForm({ ...schoolForm, picName: e.target.value })}
-                            accentColor={selectedColor}
-                            className="text-xs!"
-                          />
-                        </div>
-                        <div>
-                          <UI.Label>Email Akun Guru</UI.Label>
-                          <UI.Input
-                            type="email"
-                            placeholder="guru@school.sch.id"
-                            value={schoolForm.picEmail}
-                            onChange={(e) => setSchoolForm({ ...schoolForm, picEmail: e.target.value })}
-                            accentColor={selectedColor}
-                            className="text-xs!"
-                          />
-                        </div>
-                        <div>
-                          <UI.Label>No WhatsApp Guru</UI.Label>
-                          <UI.Input
-                            type="text"
-                            placeholder="+62 8xx-xxxx-xxxx"
-                            value={schoolForm.picPhone}
-                            onChange={(e) => setSchoolForm({ ...schoolForm, picPhone: e.target.value })}
-                            accentColor={selectedColor}
-                            className="text-xs!"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* MoU File Upload simulator info */}
-                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block col-span-1 md:col-span-2">
-                        Dokumen Kerja Sama (MoU)
-                      </span>
-                      
-                      {/* Simulated File upload input area */}
-                      <div className="col-span-1 md:col-span-2">
-                        <div
-                          onClick={handleSimulateFileUpload}
-                          className="border-2 border-dashed border-zinc-200/80 dark:border-zinc-800 hover:border-sakode-blue dark:hover:border-sky-400 bg-zinc-50 dark:bg-zinc-950/20 p-5 rounded-2xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2"
-                        >
-                          {uploadProgress !== null ? (
-                            <div className="w-full space-y-2">
-                              <Icons.Loader className="w-6 h-6 text-sakode-blue dark:text-sky-400 mx-auto animate-spin" />
-                              <span className="text-[10px] font-bold text-zinc-400">Mengunggah MoU... {uploadProgress}%</span>
-                              <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                                <div className="bg-sakode-blue dark:bg-sky-400 h-full" style={{ width: `${uploadProgress}%` }} />
-                              </div>
-                            </div>
-                          ) : uploadedFileName ? (
-                            <>
-                              <Icons.Check className="w-6 h-6 text-emerald-500" />
-                              <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">{uploadedFileName}</span>
-                              <span className="text-[9px] text-zinc-400">Klik lagi untuk mengganti berkas</span>
-                            </>
-                          ) : (
-                            <>
-                              <Icons.BookOpen className="w-6 h-6 text-zinc-400" />
-                              <span className="text-xs font-bold text-zinc-650 dark:text-zinc-300">Pilih Berkas MoU (PDF)</span>
-                              <span className="text-[9.5px] text-zinc-400">Klik untuk mensimulasikan upload berkas kerja sama</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="col-span-1 md:col-span-2">
-                        <UI.Label>Tanggal Tanda Tangan MoU</UI.Label>
-                        <UI.Input
-                          type="date"
-                          value={schoolForm.mouSignedDate}
-                          onChange={(e) => setSchoolForm({ ...schoolForm, mouSignedDate: e.target.value })}
-                          accentColor={selectedColor}
-                          className="text-xs!"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Submit buttons */}
-                    <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
-                      <UI.Button
-                        type="button"
-                        onClick={() => setIsAddSchoolOpen(false)}
-                        variant="secondary"
-                        accentColor={selectedColor}
-                        className="text-xs! py-2! font-bold! cursor-pointer"
-                      >
-                        Batal
-                      </UI.Button>
-                      <UI.Button
-                        type="submit"
-                        variant="primary"
-                        accentColor={selectedColor}
-                        className="text-xs! py-2! px-5! font-bold! cursor-pointer"
-                      >
-                        Buat Ekskul
-                      </UI.Button>
-                    </div>
-                  </form>
-                </div>
-              </UI.Card>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* 6. REJECT ENROLLMENT DIALOG */}
+      {/* REJECT ENROLLMENT DIALOG */}
       <AnimatePresence>
         {isRejectOpen && (
           <div className="fixed inset-0 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
