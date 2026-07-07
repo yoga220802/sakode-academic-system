@@ -65,6 +65,11 @@ export default function ProgramsPage() {
     status: "draft" | "published";
     isFeatured: boolean;
     modules: Omit<ModuleViewModel, "id">[];
+    hasGroupOption: boolean;
+    minGroupSize: string;
+    maxGroupSize: string;
+    pricePerParticipant: string;
+    trialPrice: string;
   }>({
     name: "",
     slug: "",
@@ -74,6 +79,11 @@ export default function ProgramsPage() {
     status: "draft",
     isFeatured: false,
     modules: [],
+    hasGroupOption: false,
+    minGroupSize: "2",
+    maxGroupSize: "5",
+    pricePerParticipant: "250000",
+    trialPrice: "150000",
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -177,6 +187,11 @@ export default function ProgramsPage() {
       modules: [
         { title: "Modul 1: Pengenalan", description: "Pengenalan materi dasar dan setup tools.", durationHours: 4, order: 1 }
       ],
+      hasGroupOption: false,
+      minGroupSize: "2",
+      maxGroupSize: "5",
+      pricePerParticipant: "250000",
+      trialPrice: "150000",
     });
     setFormErrors({});
     setIsAddModalOpen(true);
@@ -210,6 +225,11 @@ export default function ProgramsPage() {
       status: formData.status,
       isFeatured: formData.isFeatured,
       modules: programModules,
+      hasGroupOption: formData.hasGroupOption,
+      minGroupSize: parseInt(formData.minGroupSize) || 2,
+      maxGroupSize: parseInt(formData.maxGroupSize) || 5,
+      pricePerParticipant: formData.pricePerParticipant !== "" ? parseFloat(formData.pricePerParticipant) : null,
+      trialPrice: formData.trialPrice !== "" ? parseFloat(formData.trialPrice) : null,
     };
 
     await ProgramMockService.saveProgram(newProgram);
@@ -642,7 +662,7 @@ export default function ProgramsPage() {
                   </div>
 
                   {/* Pricing grid & settings */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-start">
                     <div>
                       <UI.Label>Harga Katalog</UI.Label>
                       <UI.Input
@@ -655,8 +675,19 @@ export default function ProgramsPage() {
                         className="text-xs!"
                       />
                       {formErrors.price && (
-                        <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-tight">{formErrors.price}</p>
+                        <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-tight">{formErrors.price}</p>
                       )}
+                    </div>
+                    <div>
+                      <UI.Label>Harga Trial</UI.Label>
+                      <UI.Input
+                        type="text"
+                        placeholder="contoh: 150000"
+                        value={formData.trialPrice}
+                        onChange={(e) => setFormData({ ...formData, trialPrice: e.target.value })}
+                        accentColor={selectedColor}
+                        className="text-xs!"
+                      />
                     </div>
                     <div>
                       <UI.Label>Mata Uang</UI.Label>
@@ -708,8 +739,59 @@ export default function ProgramsPage() {
                     />
                     <div className="flex flex-col text-left">
                       <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">Rekomendasikan Program</span>
-                      <span className="text-[10px] text-zinc-450 dark:text-zinc-550 font-semibold leading-normal">Tampilkan label &ldquo;Unggulan&rdquo; pada catalog landing page untuk menarik perhatian calon murid.</span>
+                      <span className="text-[10px] text-zinc-455 dark:text-zinc-550 font-semibold leading-normal">Tampilkan label &ldquo;Unggulan&rdquo; pada catalog landing page untuk menarik perhatian calon murid.</span>
                     </div>
+                  </div>
+
+                  {/* Group learning configs */}
+                  <div className="border-t border-zinc-150 dark:border-zinc-800 pt-4 flex flex-col gap-3">
+                    <div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-900/40 p-3 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40">
+                      <UI.Toggle
+                        checked={formData.hasGroupOption}
+                        onChange={() => setFormData({ ...formData, hasGroupOption: !formData.hasGroupOption })}
+                        accentColor={selectedColor}
+                        aria-label="Tawarkan pilihan belajar kelompok"
+                      />
+                      <div className="flex flex-col text-left">
+                        <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">Tawarkan Pilihan Belajar Kelompok</span>
+                        <span className="text-[10px] text-zinc-450 dark:text-zinc-500 font-semibold leading-normal">Aktifkan jika modul program ini dapat diambil secara berkelompok (offline/tatap muka).</span>
+                      </div>
+                    </div>
+
+                    {formData.hasGroupOption && (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pl-1">
+                        <div>
+                          <UI.Label>Min Peserta Kelompok</UI.Label>
+                          <UI.Input
+                            type="number"
+                            value={formData.minGroupSize}
+                            onChange={(e) => setFormData({ ...formData, minGroupSize: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                        <div>
+                          <UI.Label>Maks Peserta Kelompok</UI.Label>
+                          <UI.Input
+                            type="number"
+                            value={formData.maxGroupSize}
+                            onChange={(e) => setFormData({ ...formData, maxGroupSize: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                        <div>
+                          <UI.Label>Harga Satuan Per Anak</UI.Label>
+                          <UI.Input
+                            type="text"
+                            value={formData.pricePerParticipant}
+                            onChange={(e) => setFormData({ ...formData, pricePerParticipant: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Modules Outline Inline Form Editor */}
@@ -789,7 +871,7 @@ export default function ProgramsPage() {
                                   className="text-xs! py-2! px-3!"
                                 />
                                 {formErrors[`module-${idx}-title`] && (
-                                  <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-none">{formErrors[`module-${idx}-title`]}</p>
+                                  <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-none">{formErrors[`module-${idx}-title`]}</p>
                                 )}
                               </div>
                               <div className="sm:col-span-4">
@@ -807,7 +889,7 @@ export default function ProgramsPage() {
                                   className="text-xs! py-2! px-3!"
                                 />
                                 {formErrors[`module-${idx}-duration`] && (
-                                  <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-none">{formErrors[`module-${idx}-duration`]}</p>
+                                  <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-none">{formErrors[`module-${idx}-duration`]}</p>
                                 )}
                               </div>
                             </div>

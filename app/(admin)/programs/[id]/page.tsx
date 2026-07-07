@@ -72,6 +72,11 @@ export default function ProgramDetailPage() {
     status: "draft" | "published";
     isFeatured: boolean;
     modules: Omit<ModuleViewModel, "id">[];
+    hasGroupOption: boolean;
+    minGroupSize: string;
+    maxGroupSize: string;
+    pricePerParticipant: string;
+    trialPrice: string;
   }>({
     name: "",
     slug: "",
@@ -81,6 +86,11 @@ export default function ProgramDetailPage() {
     status: "draft",
     isFeatured: false,
     modules: [],
+    hasGroupOption: false,
+    minGroupSize: "2",
+    maxGroupSize: "5",
+    pricePerParticipant: "250000",
+    trialPrice: "150000",
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -199,6 +209,11 @@ export default function ProgramDetailPage() {
           durationHours: m.durationHours,
           order: m.order,
         })),
+      hasGroupOption: program.hasGroupOption || false,
+      minGroupSize: (program.minGroupSize || 2).toString(),
+      maxGroupSize: (program.maxGroupSize || 5).toString(),
+      pricePerParticipant: program.pricePerParticipant !== null && program.pricePerParticipant !== undefined ? program.pricePerParticipant.toString() : "250000",
+      trialPrice: program.trialPrice !== null && program.trialPrice !== undefined ? program.trialPrice.toString() : "150000",
     });
     setFormErrors({});
     setIsEditModalOpen(true);
@@ -233,6 +248,11 @@ export default function ProgramDetailPage() {
       status: formData.status,
       isFeatured: formData.isFeatured,
       modules: updatedModules,
+      hasGroupOption: formData.hasGroupOption,
+      minGroupSize: parseInt(formData.minGroupSize) || 2,
+      maxGroupSize: parseInt(formData.maxGroupSize) || 5,
+      pricePerParticipant: formData.pricePerParticipant !== "" ? parseFloat(formData.pricePerParticipant) : null,
+      trialPrice: formData.trialPrice !== "" ? parseFloat(formData.trialPrice) : null,
     };
 
     await ProgramMockService.saveProgram(updatedProgram);
@@ -582,11 +602,17 @@ export default function ProgramDetailPage() {
                 </div>
 
                 {/* Pricing & outline statistics */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs mb-5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs mb-5">
                   <div className={getSubElementClass("stat-card")}>
-                    <span className="text-[10px] text-zinc-400 font-bold block mb-1">INVESTASI KATALOG</span>
+                    <span className="text-[10px] text-zinc-400 font-bold block mb-1">INVESTASI KATALOG (INDIVIDU)</span>
                     <span className="text-sm font-black text-zinc-850 dark:text-zinc-100">
                       {formatPrice(program.price, program.currency)}
+                    </span>
+                  </div>
+                  <div className={getSubElementClass("stat-card")}>
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block mb-1">INVESTASI TRIAL</span>
+                    <span className="text-sm font-black text-zinc-850 dark:text-zinc-100">
+                      {formatPrice(program.trialPrice || 150000, program.currency)}
                     </span>
                   </div>
                   <div className={getSubElementClass("stat-card")}>
@@ -839,7 +865,7 @@ export default function ProgramDetailPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-start">
                     <div>
                       <UI.Label>Harga Katalog</UI.Label>
                       <UI.Input
@@ -852,8 +878,19 @@ export default function ProgramDetailPage() {
                         className="text-xs!"
                       />
                       {formErrors.price && (
-                        <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-tight">{formErrors.price}</p>
+                        <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-tight">{formErrors.price}</p>
                       )}
+                    </div>
+                    <div>
+                      <UI.Label>Harga Trial</UI.Label>
+                      <UI.Input
+                        type="text"
+                        placeholder="contoh: 150000"
+                        value={formData.trialPrice}
+                        onChange={(e) => setFormData({ ...formData, trialPrice: e.target.value })}
+                        accentColor={selectedColor}
+                        className="text-xs!"
+                      />
                     </div>
                     <div>
                       <UI.Label>Mata Uang</UI.Label>
@@ -906,6 +943,57 @@ export default function ProgramDetailPage() {
                       <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">Rekomendasikan Program</span>
                       <span className="text-[10px] text-zinc-450 dark:text-zinc-550 font-semibold leading-normal">Tampilkan label &ldquo;Unggulan&rdquo; pada katalog landing page untuk menarik perhatian calon murid.</span>
                     </div>
+                  </div>
+
+                  {/* Group learning configs */}
+                  <div className="border-t border-zinc-150 dark:border-zinc-800 pt-4 flex flex-col gap-3">
+                    <div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-900/40 p-3 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40">
+                      <UI.Toggle
+                        checked={formData.hasGroupOption}
+                        onChange={() => setFormData({ ...formData, hasGroupOption: !formData.hasGroupOption })}
+                        accentColor={selectedColor}
+                        aria-label="Tawarkan pilihan belajar kelompok"
+                      />
+                      <div className="flex flex-col text-left">
+                        <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">Tawarkan Pilihan Belajar Kelompok</span>
+                        <span className="text-[10px] text-zinc-450 dark:text-zinc-500 font-semibold leading-normal">Aktifkan jika modul program ini dapat diambil secara berkelompok (offline/tatap muka).</span>
+                      </div>
+                    </div>
+
+                    {formData.hasGroupOption && (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pl-1">
+                        <div>
+                          <UI.Label>Min Peserta Kelompok</UI.Label>
+                          <UI.Input
+                            type="number"
+                            value={formData.minGroupSize}
+                            onChange={(e) => setFormData({ ...formData, minGroupSize: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                        <div>
+                          <UI.Label>Maks Peserta Kelompok</UI.Label>
+                          <UI.Input
+                            type="number"
+                            value={formData.maxGroupSize}
+                            onChange={(e) => setFormData({ ...formData, maxGroupSize: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                        <div>
+                          <UI.Label>Harga Satuan Per Anak</UI.Label>
+                          <UI.Input
+                            type="text"
+                            value={formData.pricePerParticipant}
+                            onChange={(e) => setFormData({ ...formData, pricePerParticipant: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="border-t border-zinc-150 dark:border-zinc-800 pt-4">
@@ -989,7 +1077,7 @@ export default function ProgramDetailPage() {
                                   className="text-xs! py-2! px-3!"
                                 />
                                 {formErrors[`module-${idx}-title`] && (
-                                  <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-none">{formErrors[`module-${idx}-title`]}</p>
+                                  <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-none">{formErrors[`module-${idx}-title`]}</p>
                                 )}
                               </div>
                               <div className="sm:col-span-4">
@@ -1006,7 +1094,7 @@ export default function ProgramDetailPage() {
                                   className="text-xs! py-2! px-3!"
                                 />
                                 {formErrors[`module-${idx}-duration`] && (
-                                  <p className="text-[9.5px] text-rose-505 font-bold mt-1 leading-none">{formErrors[`module-${idx}-duration`]}</p>
+                                  <p className="text-[9.5px] text-rose-500 font-bold mt-1 leading-none">{formErrors[`module-${idx}-duration`]}</p>
                                 )}
                               </div>
                             </div>

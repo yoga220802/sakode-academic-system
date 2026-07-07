@@ -17,4 +17,11 @@ export interface PackageViewModel {
   registrationEnd: string; // YYYY-MM-DD
   modules: LearningModuleViewModel[];
   status: "draft" | "published";
+  
+  // Group and Trial pricing fields
+  trialPrice?: number | null;
+  hasGroupOption?: boolean;
+  minGroupSize?: number;
+  maxGroupSize?: number;
+  pricePerParticipant?: number | null;
 }

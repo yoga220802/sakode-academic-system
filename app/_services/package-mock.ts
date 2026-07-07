@@ -12,6 +12,11 @@ export const MOCK_PACKAGES: PackageViewModel[] = [
     registrationStart: "2026-07-01",
     registrationEnd: "2026-07-15",
     status: "published",
+    trialPrice: 150000,
+    hasGroupOption: true,
+    minGroupSize: 2,
+    maxGroupSize: 5,
+    pricePerParticipant: 250000,
     modules: [
       {
         title: "Dasar React & State Management",
@@ -44,6 +49,11 @@ export const MOCK_PACKAGES: PackageViewModel[] = [
     registrationStart: "2026-07-01",
     registrationEnd: "2026-07-20",
     status: "published",
+    trialPrice: 120000,
+    hasGroupOption: true,
+    minGroupSize: 2,
+    maxGroupSize: 5,
+    pricePerParticipant: 200000,
     modules: [
       {
         title: "TypeScript Fundamentals",
@@ -76,6 +86,11 @@ export const MOCK_PACKAGES: PackageViewModel[] = [
     registrationStart: "2026-07-01",
     registrationEnd: "2026-07-18",
     status: "published",
+    trialPrice: 180000,
+    hasGroupOption: true,
+    minGroupSize: 2,
+    maxGroupSize: 5,
+    pricePerParticipant: 300000,
     modules: [
       {
         title: "Go Syntax & Concurrency",

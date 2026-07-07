@@ -15,6 +15,10 @@ export class ProgramMockService {
       isFeatured: true,
       registrationStartDate: "2026-07-01",
       registrationEndDate: "2026-07-31",
+      hasGroupOption: true,
+      minGroupSize: 2,
+      maxGroupSize: 5,
+      pricePerParticipant: 250000,
       modules: [
         { id: "MOD-101", title: "JavaScript & TypeScript Fundamental", description: "Sintaks dasar, ES6+, async/await, static typing, interfaces, dan generics.", durationHours: 8, order: 1 },
         { id: "MOD-102", title: "React Core Concepts & Hooks", description: "State, props, lifecycle, virtual DOM, useEffect, useMemo, custom hooks.", durationHours: 12, order: 2 },
@@ -34,6 +38,10 @@ export class ProgramMockService {
       isFeatured: false,
       registrationStartDate: "2026-07-05",
       registrationEndDate: "2026-08-05",
+      hasGroupOption: true,
+      minGroupSize: 2,
+      maxGroupSize: 5,
+      pricePerParticipant: 300000,
       modules: [
         { id: "MOD-201", title: "Go Syntax & Concurrency", description: "Pointers, structs, slices, channels, goroutines, sync package.", durationHours: 10, order: 1 },
         { id: "MOD-202", title: "Database & SQL with PostgreSQL", description: "Desain skema database, indexing, query optimization, migrations, transaction management.", durationHours: 12, order: 2 },
@@ -53,6 +61,10 @@ export class ProgramMockService {
       isFeatured: false,
       registrationStartDate: "2026-06-15",
       registrationEndDate: "2026-07-15",
+      hasGroupOption: true,
+      minGroupSize: 2,
+      maxGroupSize: 5,
+      pricePerParticipant: 200000,
       modules: [
         { id: "MOD-301", title: "Advanced TypeScript Types & Utility Types", description: "Conditional types, mapped types, utility types, type guards.", durationHours: 8, order: 1 },
         { id: "MOD-302", title: "Linear Data Structures", description: "Linked lists, stacks, queues, hash tables, complexity analysis (Big O).", durationHours: 10, order: 2 },
@@ -70,6 +82,10 @@ export class ProgramMockService {
       currency: "IDR",
       status: "draft",
       isFeatured: false,
+      hasGroupOption: true,
+      minGroupSize: 2,
+      maxGroupSize: 5,
+      pricePerParticipant: 250000,
       modules: [
         { id: "MOD-401", title: "User Research & Persona Development", description: "Wawancara user, survei, peta empati, mendefinisikan user journey.", durationHours: 8, order: 1 },
         { id: "MOD-402", title: "Information Architecture & Wireframing", description: "Sitemap, user flows, low-fidelity wireframing di kertas & Figma.", durationHours: 10, order: 2 },

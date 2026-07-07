@@ -18,4 +18,11 @@ export interface ProgramViewModel {
   modules: ModuleViewModel[];
   registrationStartDate?: string;
   registrationEndDate?: string;
+  
+  // Group Learning Option fields
+  hasGroupOption?: boolean;
+  minGroupSize?: number;
+  maxGroupSize?: number;
+  pricePerParticipant?: number | null;
+  trialPrice?: number | null;
 }

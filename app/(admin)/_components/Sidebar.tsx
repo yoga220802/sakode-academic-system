@@ -63,6 +63,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
             groupName: "Manajemen Pendaftaran",
             items: [
               { label: "Review Pendaftaran", href: "/registration-review", icon: "ClipboardCheck" },
+              { label: "Repositori Murid", href: "/students", icon: "Users" },
               { label: "Program & Paket", href: "/programs", icon: "BookOpen" },
               { label: "Manajemen Trial", href: "/trials", icon: "Sparkles" }
             ]

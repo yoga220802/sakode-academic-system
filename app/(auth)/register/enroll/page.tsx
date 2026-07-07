@@ -48,6 +48,24 @@ function EnrollmentForm() {
   // Inputs
   const [referralInput, setReferralInput] = useState("");
   const [promoInput, setPromoInput] = useState("");
+  
+  // Learning format states (private, trial, group)
+  const [learningFormat, setLearningFormat] = useState<"private" | "trial" | "group">("private");
+  const [groupSize, setGroupSize] = useState<number>(3);
+  const [groupMembers, setGroupMembers] = useState<string[]>(["", "", ""]);
+
+  const handleGroupSizeChange = (size: number) => {
+    setGroupSize(size);
+    setGroupMembers((prev) => {
+      const next = [...prev];
+      if (size > prev.length) {
+        while (next.length < size) next.push("");
+      } else {
+        next.splice(size);
+      }
+      return next;
+    });
+  };
 
   // Validation States
   const [referralStatus, setReferralStatus] = useState<ReferralResult | null>(null);
@@ -227,8 +245,16 @@ function EnrollmentForm() {
 
   // Price Calculation Helpers
   const getListedPrice = () => {
-    if (!selectedPackage || selectedPackage.price === null) return 0;
-    return selectedPackage.price;
+    if (!selectedPackage) return 0;
+    if (learningFormat === "private") {
+      return selectedPackage.price === null ? 0 : selectedPackage.price;
+    }
+    if (learningFormat === "trial") {
+      return selectedPackage.trialPrice === null || selectedPackage.trialPrice === undefined ? 150000 : selectedPackage.trialPrice;
+    }
+    // group
+    const rate = selectedPackage.pricePerParticipant === null || selectedPackage.pricePerParticipant === undefined ? 250000 : selectedPackage.pricePerParticipant;
+    return rate * groupSize;
   };
 
   const getDiscountAmount = () => {
@@ -460,6 +486,128 @@ function EnrollmentForm() {
                   </div>
                 </div>
 
+                {/* Step 1.5: Learning Option (Private / Trial / Group) */}
+                {selectedPackage && (
+                  <div className="border-b border-zinc-150/40 dark:border-zinc-800/40 pb-5">
+                    <UI.Label className="text-xs font-black uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2.5 block">
+                      Pilihan Skema Belajar
+                    </UI.Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {/* Option 1: Private */}
+                      <div
+                        onClick={() => !isLoading && setLearningFormat("private")}
+                        className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer text-left flex flex-col justify-between ${
+                          learningFormat === "private"
+                            ? "border-sakode-blue dark:border-sky-400 bg-sakode-blue/5 dark:bg-sky-400/5"
+                            : "border-zinc-200 dark:border-zinc-800 bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/35"
+                        }`}
+                      >
+                        <div>
+                          <span className="font-extrabold text-xs text-zinc-800 dark:text-zinc-100 block">Individu / Private</span>
+                          <span className="text-[10px] text-zinc-450 dark:text-zinc-500 mt-1 block">Bimbingan 1-on-1 dengan mentor pendamping secara offline.</span>
+                        </div>
+                        <span className="font-black text-xs text-zinc-900 dark:text-white mt-3 block">
+                          {selectedPackage.price !== null ? formatIDR(selectedPackage.price) : "TBD"}
+                        </span>
+                      </div>
+
+                      {/* Option 2: Trial */}
+                      <div
+                        onClick={() => !isLoading && setLearningFormat("trial")}
+                        className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer text-left flex flex-col justify-between ${
+                          learningFormat === "trial"
+                            ? "border-amber-500 dark:border-amber-400 bg-amber-500/5"
+                            : "border-zinc-200 dark:border-zinc-800 bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/35"
+                        }`}
+                      >
+                        <div>
+                          <span className="font-extrabold text-xs text-zinc-800 dark:text-zinc-100 block">Trial (Coba Dulu)</span>
+                          <span className="text-[10px] text-zinc-450 dark:text-zinc-550 mt-1 block">Coba 1-2 sesi bimbingan terlebih dahulu sebelum komitmen bayar penuh.</span>
+                        </div>
+                        <span className="font-black text-xs text-zinc-900 dark:text-white mt-3 block">
+                          {formatIDR(selectedPackage.trialPrice || 150000)}
+                        </span>
+                      </div>
+
+                      {/* Option 3: Group */}
+                      <div
+                        onClick={() => {
+                          if (!isLoading && selectedPackage.hasGroupOption) {
+                            setLearningFormat("group");
+                          }
+                        }}
+                        className={`p-3.5 rounded-xl border-2 transition-all text-left flex flex-col justify-between ${
+                          !selectedPackage.hasGroupOption
+                            ? "opacity-50 cursor-not-allowed border-zinc-100 dark:border-zinc-850"
+                            : learningFormat === "group"
+                            ? "border-purple-500 dark:border-purple-400 bg-purple-500/5"
+                            : "border-zinc-200 dark:border-zinc-800 bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-900/35 cursor-pointer"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-extrabold text-xs text-zinc-800 dark:text-zinc-100 block">Kelompok Belajar</span>
+                            {!selectedPackage.hasGroupOption && (
+                              <span className="bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[8px] font-black px-1.5 py-0.5 rounded">Tutup</span>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-zinc-450 dark:text-zinc-500 mt-1 block">Belajar berkelompok (${selectedPackage.minGroupSize || 2}-${selectedPackage.maxGroupSize || 5} anak) di lab offline terdekat.</span>
+                        </div>
+                        <span className="font-black text-xs text-zinc-900 dark:text-white mt-3 block">
+                          {formatIDR(selectedPackage.pricePerParticipant || 250000)} <span className="text-[9px] font-bold text-zinc-450">/ anak</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Group members details inputs */}
+                    {learningFormat === "group" && (
+                      <div className="mt-5 p-4 bg-zinc-50 dark:bg-zinc-900/35 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/80 flex flex-col gap-4 text-left">
+                        <div className="flex justify-between items-center border-b border-zinc-200/60 dark:border-zinc-800/60 pb-2">
+                          <span className="text-xs font-extrabold text-zinc-800 dark:text-zinc-200">Konfigurasi Anggota Kelompok</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10.5px] font-bold text-zinc-450">Jumlah Peserta:</span>
+                            <select
+                              aria-label="Jumlah Anggota Kelompok"
+                              value={groupSize}
+                              onChange={(e) => handleGroupSizeChange(parseInt(e.target.value))}
+                              className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 py-1 text-xs font-bold text-zinc-800 dark:text-zinc-200 focus:outline-hidden"
+                            >
+                              {Array.from(
+                                { length: (selectedPackage.maxGroupSize || 5) - (selectedPackage.minGroupSize || 2) + 1 },
+                                (_, i) => (selectedPackage.minGroupSize || 2) + i
+                              ).map((n) => (
+                                <option key={n} value={n}>{n} Anak</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                          {groupMembers.map((member, idx) => (
+                            <div key={idx} className="flex flex-col gap-1">
+                              <UI.Label className="text-[10.5px] font-bold text-zinc-500">
+                                Nama Lengkap Anggota #${idx + 1} {idx === 0 ? "(Anda)" : ""}
+                              </UI.Label>
+                              <UI.Input
+                                type="text"
+                                placeholder={`contoh: ${idx === 0 ? "Nama Anda" : "Nama Teman Anda"}`}
+                                value={member}
+                                onChange={(e) => {
+                                  const next = [...groupMembers];
+                                  next[idx] = e.target.value;
+                                  setGroupMembers(next);
+                                }}
+                                className="text-xs!"
+                                disabled={isLoading}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Step 2: Promo & Referral Code Inputs (Separate Inputs) */}
                 <div className="flex flex-col gap-5">
                   {/* Referral Input */}
@@ -557,14 +705,19 @@ function EnrollmentForm() {
                   
                   {/* Selected Package Info */}
                   <div className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-850 pb-3">
-                    <span className="text-[10px] text-zinc-400 uppercase tracking-wider block">Paket Pilihan</span>
+                    <span className="text-[10px] text-zinc-400 uppercase tracking-wider block">Paket Pilihan & Skema</span>
                     <span className="font-extrabold text-sm text-zinc-850 dark:text-zinc-100">
                       {selectedPackage ? selectedPackage.name : "Belum memilih paket"}
                     </span>
                     {selectedPackage && (
-                      <span className="text-[10px] text-zinc-400 block font-normal">
-                        Mendukung {selectedPackage.modules.reduce((sum, m) => sum + m.sessionCount, 0)} sesi mentoring live.
-                      </span>
+                      <div className="flex flex-col gap-0.5 mt-1">
+                        <span className="text-[11px] font-bold text-sakode-blue dark:text-sky-400 uppercase">
+                          • Skema: {learningFormat === "private" ? "Private (Individu)" : learningFormat === "trial" ? "Trial (Coba Dulu)" : "Kelompok Belajar (" + groupSize + " Anak)"}
+                        </span>
+                        <span className="text-[10px] text-zinc-400 block font-normal">
+                          Mendukung {selectedPackage.modules.reduce((sum, m) => sum + m.sessionCount, 0)} sesi mentoring live.
+                        </span>
+                      </div>
                     )}
                   </div>
 
