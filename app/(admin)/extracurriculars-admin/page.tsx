@@ -1001,7 +1001,6 @@ export default function ExtracurricularsAdminPage() {
                           options={apiProvinces}
                           value={schoolForm.provinsi}
                           onChange={handleProvinceChange}
-                          accentColor={selectedColor}
                         />
 
                         <SearchableSelect
@@ -1011,7 +1010,6 @@ export default function ExtracurricularsAdminPage() {
                           value={schoolForm.kabupaten}
                           onChange={handleRegencyChange}
                           disabled={!schoolForm.provinsi}
-                          accentColor={selectedColor}
                         />
 
                         <SearchableSelect
@@ -1021,7 +1019,6 @@ export default function ExtracurricularsAdminPage() {
                           value={schoolForm.kecamatan}
                           onChange={handleDistrictChange}
                           disabled={!schoolForm.kabupaten}
-                          accentColor={selectedColor}
                         />
 
                         <SearchableSelect
@@ -1031,7 +1028,6 @@ export default function ExtracurricularsAdminPage() {
                           value={schoolForm.kelurahan}
                           onChange={handleVillageChange}
                           disabled={!schoolForm.kecamatan}
-                          accentColor={selectedColor}
                         />
 
                         <div>

@@ -1,7 +1,8 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useUIStyle } from "@/app/_components/UIStyleContext";
+import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 
 interface Option {
@@ -26,14 +27,17 @@ export default function SearchableSelect({
   onChange,
   disabled = false
 }: SearchableSelectProps) {
+  const { selectedStyle, selectedColor } = useUIStyle();
+  const UI = UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"];
+
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Sync selected value to query display when not searching
-  useEffect(() => {
-    setSearchQuery(value || "");
-  }, [value]);
+  // Compute the value to display in the input box:
+  // When open, show what the user is typing to filter options.
+  // When closed, show the final chosen value (e.g. selected province/city name).
+  const displayValue = isOpen ? searchQuery : (value || "");
 
   // Filter options based on typed input
   const filteredOptions = React.useMemo(() => {
@@ -48,39 +52,35 @@ export default function SearchableSelect({
     function handleClickOutside(event: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setSearchQuery(value || ""); // Reset search to current value
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [value]);
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full flex flex-col gap-1 text-xs">
-      <span className="font-extrabold text-zinc-700 dark:text-zinc-300 uppercase tracking-wide block mb-0.5">
-        {label}
-      </span>
+    <div ref={containerRef} className="relative w-full flex flex-col text-xs text-left">
+      <UI.Label className="mb-0.5">{label}</UI.Label>
       <div className="relative">
-        <input
+        <UI.Input
           type="text"
           placeholder={placeholder}
-          value={searchQuery}
-          onChange={(e) => {
+          value={displayValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearchQuery(e.target.value);
             setIsOpen(true);
           }}
           onFocus={() => {
             if (!disabled) {
-              setSearchQuery(""); // Clear input on focus for easy search
+              setSearchQuery(""); // Clear temporary search query on focus for easy search
               setIsOpen(true);
             }
           }}
           disabled={disabled}
-          className={`w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 focus:ring-2 focus:outline-hidden pr-8 ${
-            disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-          }`}
+          accentColor={selectedColor}
+          className="pr-8! text-xs! py-2!"
         />
         <div className="absolute right-2.5 top-2.5 pointer-events-none text-zinc-400">
           <Icons.Search className="w-3.5 h-3.5" />
