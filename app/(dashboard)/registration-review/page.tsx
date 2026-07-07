@@ -974,11 +974,14 @@ export default function RegistrationReviewPage() {
 										}>
 										<div className='p-5 flex flex-col gap-5 text-left relative'>
 											{/* Header Details */}
-											<div className='flex justify-between items-start border-b border-zinc-150 dark:border-zinc-850 pb-4'>
+											<div className='flex justify-between items-start border-b border-zinc-150 dark:border-zinc-855 pb-4'>
 												<div>
-													<span className='text-[9px] font-mono bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-sm border border-zinc-205 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400'>
+													<UI.Badge
+														variant="default"
+														className="text-[9px]! font-mono"
+													>
 														{selectedItem.id}
-													</span>
+													</UI.Badge>
 													<h2 className='text-base font-bold text-zinc-900 dark:text-white mt-1.5 leading-snug'>
 														{selectedItem.name}
 													</h2>

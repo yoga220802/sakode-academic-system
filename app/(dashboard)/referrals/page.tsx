@@ -1003,12 +1003,14 @@ export default function ReferralManagementPage() {
 														Inventori Kode Referral ({codes.length})
 													</h4>
 													{selectedProgram.status === "active" && (
-														<button
+														<UI.Button
 															onClick={() => setIsGenerateCodeOpen(true)}
-															className={`text-[9.5px] font-bold ${getTextClass(selectedColor)} hover:underline cursor-pointer flex items-center gap-1`}>
+															variant="secondary"
+															accentColor={selectedColor}
+															className="text-[9px]! py-1! px-2.5! font-bold! cursor-pointer flex items-center gap-1">
 															<Icons.Plus className='w-3 h-3' />
 															Tambah Kode
-														</button>
+														</UI.Button>
 													)}
 												</div>
 
@@ -1178,22 +1180,24 @@ export default function ReferralManagementPage() {
 																</div>
 
 																<div className='flex justify-between items-center border-t border-dashed border-zinc-200/60 dark:border-zinc-800/60 pt-2 text-[10.5px]'>
-																	<span className='text-zinc-500 dark:text-zinc-300 font-medium'>
+																	<span className='text-zinc-550 dark:text-zinc-300 font-medium'>
 																		Atribusi Kode:{" "}
 																		<strong className='font-mono text-zinc-800 dark:text-white'>
 																			{conv.codeUsed}
 																		</strong>
 																	</span>
 
-																	<button
+																	<UI.Button
 																		onClick={() => {
 																			setCorrectionForm({ newCode: conv.codeUsed });
 																			setIsCorrectionOpen({ conversion: conv });
 																		}}
-																		className={`text-[9.5px] font-bold ${getTextClass(selectedColor)} hover:underline cursor-pointer flex items-center gap-1`}
+																		variant="secondary"
+																		accentColor={selectedColor}
+																		className="text-[9px]! py-1! px-2.5! font-bold! cursor-pointer"
 																		title='Koreksi data pendaftaran jika salah isi kode'>
 																		Koreksi Atribusi
-																	</button>
+																	</UI.Button>
 																</div>
 															</div>
 														))}

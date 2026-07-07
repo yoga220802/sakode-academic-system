@@ -882,13 +882,15 @@ export default function TrialManagementPage() {
                         </h4>
                         
                         {selectedBooking.status !== "cancelled" && selectedBooking.status !== "completed" && (
-                          <button
+                          <UI.Button
                             onClick={openRescheduleModal}
-                            className={`text-[10px] font-bold ${getTextClass(selectedColor)} hover:underline cursor-pointer flex items-center gap-0.5`}
+                            variant="secondary"
+                            accentColor={selectedColor}
+                            className="text-[9px]! py-1! px-2.5! font-bold! cursor-pointer flex items-center gap-1"
                           >
                             <Icons.Calendar className="w-3.5 h-3.5" />
                             Reschedule
-                          </button>
+                          </UI.Button>
                         )}
                       </div>
 
@@ -958,13 +960,15 @@ export default function TrialManagementPage() {
                         </h4>
                         
                         {selectedBooking.status !== "cancelled" && selectedBooking.status !== "completed" && (
-                          <button
+                          <UI.Button
                             onClick={openAssignModal}
-                            className={`text-[10px] font-bold ${getTextClass(selectedColor)} hover:underline cursor-pointer flex items-center gap-0.5`}
+                            variant="secondary"
+                            accentColor={selectedColor}
+                            className="text-[9px]! py-1! px-2.5! font-bold! cursor-pointer flex items-center gap-1"
                           >
                             <Icons.UserCheck className="w-3.5 h-3.5" />
                             {selectedBooking.assignedMentorId ? "Ubah Mentor" : "Tugaskan Mentor"}
-                          </button>
+                          </UI.Button>
                         )}
                       </div>
 
