@@ -263,20 +263,28 @@ export default function ProgramsPage() {
   };
 
   // Sub-element styling based on active design theme
-  const getSubElementClass = (type: "card-grid-item" | "badge-draft" | "badge-published" | "btn-icon" | "panel-card") => {
+  const getSubElementClass = (type: "card-grid-item" | "badge-draft" | "badge-published" | "btn-icon" | "panel-card" | "textarea" | "simulator-bar" | "card-divider" | "stat-card") => {
     switch (selectedStyle) {
       case "neobrutalism":
         if (type === "card-grid-item") return "bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white p-5 font-mono shadow-[4px_4px_0_#000] dark:shadow-[4px_4px_0_#fff] hover:translate-x-1 hover:-translate-y-1 transition-all";
         if (type === "panel-card") return "bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white p-6 font-mono shadow-[4px_4px_0_#000] dark:shadow-[4px_4px_0_#fff]";
-        if (type === "badge-draft") return "bg-amber-100 text-amber-900 border-2 border-zinc-900 font-bold px-2 py-0.5";
-        if (type === "badge-published") return "bg-emerald-100 text-emerald-900 border-2 border-zinc-900 font-bold px-2 py-0.5";
-        return "p-1.5 border-2 border-zinc-900 dark:border-white hover:bg-zinc-150 dark:hover:bg-zinc-800 transition-colors";
+        if (type === "badge-draft") return "bg-amber-100 text-amber-900 border-2 border-zinc-900 font-bold px-2 py-0.5 rounded-none";
+        if (type === "badge-published") return "bg-emerald-100 text-emerald-900 border-2 border-zinc-900 font-bold px-2 py-0.5 rounded-none";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white rounded-none py-2.5 px-4 font-mono focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "simulator-bar") return "flex items-center bg-zinc-55 dark:bg-zinc-900 p-1 border-2 border-zinc-900 dark:border-white rounded-none z-20";
+        if (type === "card-divider") return "border-t-2 border-zinc-900 dark:border-white pt-3.5 mt-4 flex items-center justify-between text-xs";
+        if (type === "stat-card") return "bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white p-3.5 rounded-none";
+        return "p-1.5 border-2 border-zinc-900 dark:border-white hover:bg-zinc-150 dark:hover:bg-zinc-800 transition-colors rounded-none";
 
       case "claymorphism":
         if (type === "card-grid-item") return "bg-white/80 dark:bg-zinc-900/60 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4),_-2px_-2px_4px_rgba(0,0,0,0.03),_2px_2px_6px_rgba(0,0,0,0.05)] border border-zinc-200/50 dark:border-zinc-800/40 p-5 rounded-2xl transition-transform hover:scale-[1.02] hover:-translate-y-1";
         if (type === "panel-card") return "bg-slate-50 dark:bg-zinc-900 shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.05),_inset_4px_4px_8px_rgba(255,255,255,0.4),_3px_5px_15px_rgba(0,0,0,0.05)] border border-slate-200/40 dark:border-zinc-850 p-6 rounded-3xl";
         if (type === "badge-draft") return "bg-amber-500/10 text-amber-600 rounded-lg px-2.5 py-0.5 border border-amber-500/15";
         if (type === "badge-published") return "bg-emerald-500/10 text-emerald-600 rounded-lg px-2.5 py-0.5 border border-emerald-500/15";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-slate-50 dark:bg-zinc-900 border border-slate-200/40 dark:border-zinc-850 rounded-2xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.4)]";
+        if (type === "simulator-bar") return "flex items-center bg-slate-100/80 dark:bg-zinc-900/40 p-1 border border-slate-200/20 dark:border-zinc-800/20 rounded-2xl shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.02)] z-20";
+        if (type === "card-divider") return "border-t border-slate-200/50 dark:border-zinc-800/50 pt-3.5 mt-4 flex items-center justify-between text-xs";
+        if (type === "stat-card") return "bg-slate-50 dark:bg-zinc-900/40 border border-slate-200/30 dark:border-zinc-800/20 p-3.5 rounded-2xl shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.02)]";
         return "p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:scale-[1.05] active:scale-[0.95] transition-all";
 
       case "glassmorphism":
@@ -285,22 +293,34 @@ export default function ProgramsPage() {
         if (type === "panel-card") return "bg-white/15 dark:bg-zinc-950/35 border border-white/20 dark:border-zinc-850 backdrop-blur-md p-6 rounded-2xl shadow-xl";
         if (type === "badge-draft") return "bg-amber-400/15 text-amber-300 rounded-full px-3 py-0.5 text-[9px] border border-amber-400/20";
         if (type === "badge-published") return "bg-sky-400/15 text-sky-300 rounded-full px-3 py-0.5 text-[9px] border border-sky-400/20";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-white/10 dark:bg-zinc-950/20 border border-white/20 dark:border-zinc-850 backdrop-blur-xs rounded-xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "simulator-bar") return "flex items-center bg-white/10 dark:bg-zinc-950/20 backdrop-blur-xs border border-white/20 dark:border-zinc-900/30 p-1 rounded-xl z-20";
+        if (type === "card-divider") return "border-t border-white/10 dark:border-white/5 pt-3.5 mt-4 flex items-center justify-between text-xs";
+        if (type === "stat-card") return "bg-white/5 dark:bg-zinc-950/15 border border-white/10 dark:border-zinc-800/25 p-3.5 rounded-xl backdrop-blur-3xs";
         return "p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors";
 
       case "minimalism":
-        if (type === "card-grid-item") return "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 p-5 rounded-none transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900/40 hover:-translate-y-0.5";
+        if (type === "card-grid-item") return "bg-white dark:bg-zinc-950 border border-zinc-250/20 dark:border-zinc-900 p-5 rounded-none transition-all hover:bg-zinc-55 dark:hover:bg-zinc-900/40 hover:-translate-y-0.5";
         if (type === "panel-card") return "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 p-6 rounded-none";
         if (type === "badge-draft") return "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800 text-[9px] rounded-none";
         if (type === "badge-published") return "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-2 py-0.5 border border-zinc-900 dark:border-zinc-100 text-[9px] rounded-none";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-transparent border-b border-zinc-200 dark:border-zinc-805 rounded-none py-2 px-1 focus:outline-hidden focus:border-zinc-900 dark:focus:border-zinc-100 focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "simulator-bar") return "flex items-center bg-transparent p-0.5 border border-zinc-150 dark:border-zinc-855 rounded-none z-20";
+        if (type === "card-divider") return "border-t border-zinc-150 dark:border-zinc-800 pt-3.5 mt-4 flex items-center justify-between text-xs";
+        if (type === "stat-card") return "bg-transparent border border-zinc-150 dark:border-zinc-855 p-3.5 rounded-none";
         return "p-1.5 rounded-none bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-205 dark:hover:bg-zinc-750 transition-colors";
 
       case "bento-grid":
       case "sakode-modern":
       default:
         if (type === "card-grid-item") return "bg-white dark:bg-zinc-900/70 border border-zinc-200/60 dark:border-zinc-800/80 p-5 rounded-2xl transition-all shadow-3xs hover:shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-1";
-        if (type === "panel-card") return "bg-white/95 dark:bg-zinc-950/80 border border-zinc-200/65 dark:border-zinc-850 p-6 rounded-3xl shadow-sm";
+        if (type === "panel-card") return "bg-white/95 dark:bg-zinc-950/80 border border-zinc-200/65 dark:border-zinc-855 p-6 rounded-3xl shadow-sm";
         if (type === "badge-draft") return "bg-amber-500/10 text-amber-705 dark:text-amber-400 rounded-full px-2.5 py-0.5 border border-amber-500/10";
         if (type === "badge-published") return "bg-emerald-500/10 text-emerald-705 dark:text-emerald-400 rounded-full px-2.5 py-0.5 border border-emerald-500/10";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "simulator-bar") return "flex items-center bg-zinc-100/80 dark:bg-zinc-805 p-1 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 z-20";
+        if (type === "card-divider") return "border-t border-zinc-150 dark:border-zinc-800/80 pt-3.5 mt-4 flex items-center justify-between text-xs";
+        if (type === "stat-card") return "bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40";
         return "p-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-750 transition-colors";
     }
   };
@@ -402,7 +422,7 @@ export default function ProgramsPage() {
 
         {/* Action Controls & Simulation State */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center bg-zinc-100/80 dark:bg-zinc-805 p-1 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 z-20">
+          <div className={getSubElementClass("simulator-bar")}>
             <span className="text-[9px] text-zinc-550 dark:text-zinc-350 font-bold uppercase tracking-wider pl-2 pr-1.5">Simulasi:</span>
             {[
               { id: "default" as const, label: "Default" },
@@ -502,9 +522,12 @@ export default function ProgramsPage() {
                           <Icons.Star className="w-3 h-3" />
                         </span>
                       )}
-                      <span className={`text-[8.5px] font-bold tracking-wide uppercase ${getSubElementClass(p.status === "published" ? "badge-published" : "badge-draft")}`}>
+                      <UI.Badge
+                        variant={p.status === "published" ? "success" : "warning"}
+                        className="text-[8.5px]!"
+                      >
                         {p.status}
-                      </span>
+                      </UI.Badge>
                     </div>
                   </div>
 
@@ -520,7 +543,7 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Footer metadata */}
-                <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3.5 mt-4 flex items-center justify-between text-xs">
+                <div className={getSubElementClass("card-divider")}>
                   <span className="text-zinc-450 dark:text-zinc-500 font-bold flex items-center gap-1">
                     <Icons.BookOpen className="w-3.5 h-3.5 text-sakode-blue dark:text-sky-400" />
                     {p.modules.length} Modul ({totalHours} Jam)
@@ -614,7 +637,7 @@ export default function ProgramsPage() {
                       placeholder="Masukkan detail penjelasan, target pembelajaran, dan hasil yang akan dicapai oleh murid setelah lulus..."
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed"
+                      className={getSubElementClass("textarea")}
                     />
                   </div>
 

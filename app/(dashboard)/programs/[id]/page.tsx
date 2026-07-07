@@ -8,7 +8,7 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { DataStateBoundary } from "@/app/_components/DataStateBoundary";
 import { Icons } from "@/UI/shared/Icons";
-import { getBgClass, getTextClass } from "@/UI/shared/color-utils";
+import { getTextClass } from "@/UI/shared/color-utils";
 import { ProgramViewModel, ModuleViewModel } from "@/app/_types/program";
 import { ProgramMockService } from "../_services/program-mock";
 
@@ -406,42 +406,53 @@ export default function ProgramDetailPage() {
   };
 
   // Styling helpers
-  const getSubElementClass = (type: "badge-draft" | "badge-published" | "btn-icon" | "panel-card") => {
+  const getSubElementClass = (type: "panel-card" | "textarea" | "stat-card" | "timeline-marker" | "timeline-line") => {
     switch (selectedStyle) {
       case "neobrutalism":
-        if (type === "panel-card") return "bg-white dark:bg-zinc-950 border-3 border-zinc-900 dark:border-white p-6 font-mono shadow-[4px_4px_0_#000] dark:shadow-[4px_4px_0_#fff]";
-        if (type === "badge-draft") return "bg-amber-100 text-amber-900 border-2 border-zinc-900 font-bold px-2 py-0.5";
-        if (type === "badge-published") return "bg-emerald-100 text-emerald-900 border-2 border-zinc-900 font-bold px-2 py-0.5";
-        return "p-1.5 border-2 border-zinc-900 dark:border-white hover:bg-zinc-150 dark:hover:bg-zinc-800 transition-colors";
+        if (type === "panel-card") return "bg-white dark:bg-zinc-955 border-3 border-zinc-900 dark:border-white p-6 font-mono shadow-[4px_4px_0_#000] dark:shadow-[4px_4px_0_#fff]";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-white dark:bg-zinc-955 border-2 border-zinc-900 dark:border-white rounded-none py-2.5 px-4 font-mono focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "stat-card") return "bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white p-3.5 rounded-none";
+        if (type === "timeline-marker") return "absolute -left-[30px] top-0.5 w-5 h-5 rounded-none bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white border-2 border-zinc-900 dark:border-white text-[9px] font-bold flex items-center justify-center shadow-[1px_1px_0_#000] dark:shadow-[1px_1px_0_#fff]";
+        if (type === "timeline-line") return "relative border-l-2 border-zinc-900 dark:border-white pl-5.5 space-y-5 text-xs";
+        return "p-1.5 border-2 border-zinc-900 dark:border-white hover:bg-zinc-150 dark:hover:bg-zinc-800 transition-colors rounded-none";
 
       case "claymorphism":
         if (type === "panel-card") return "bg-slate-50 dark:bg-zinc-900 shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.05),_inset_4px_4px_8px_rgba(255,255,255,0.4),_3px_5px_15px_rgba(0,0,0,0.05)] border border-slate-200/40 dark:border-zinc-850 p-6 rounded-3xl";
-        if (type === "badge-draft") return "bg-amber-500/10 text-amber-600 rounded-lg px-2.5 py-0.5 border border-amber-500/15";
-        if (type === "badge-published") return "bg-emerald-500/10 text-emerald-600 rounded-lg px-2.5 py-0.5 border border-emerald-500/15";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-slate-50 dark:bg-zinc-900 border border-slate-200/40 dark:border-zinc-850 rounded-2xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.4)]";
+        if (type === "stat-card") return "bg-slate-50 dark:bg-zinc-900/40 border border-slate-200/30 dark:border-zinc-800/20 p-3.5 rounded-2xl shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.02)]";
+        if (type === "timeline-marker") return "absolute -left-[30px] top-0.5 w-5 h-5 rounded-full bg-slate-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)] text-[9px] font-bold flex items-center justify-center";
+        if (type === "timeline-line") return "relative border-l border-slate-200/60 dark:border-zinc-800/60 pl-5.5 space-y-5 text-xs";
         return "p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:scale-[1.05] active:scale-[0.95] transition-all";
 
       case "glassmorphism":
       case "liquid-glass":
         if (type === "panel-card") return "bg-white/15 dark:bg-zinc-950/35 border border-white/20 dark:border-zinc-850 backdrop-blur-md p-6 rounded-2xl shadow-xl";
-        if (type === "badge-draft") return "bg-amber-400/15 text-amber-300 rounded-full px-3 py-0.5 text-[9px] border border-amber-400/20";
-        if (type === "badge-published") return "bg-sky-400/15 text-sky-300 rounded-full px-3 py-0.5 text-[9px] border border-sky-400/20";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-white/10 dark:bg-zinc-955/20 border border-white/20 dark:border-zinc-850 backdrop-blur-xs rounded-xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "stat-card") return "bg-white/5 dark:bg-zinc-950/15 border border-white/10 dark:border-zinc-800/25 p-3.5 rounded-xl backdrop-blur-3xs";
+        if (type === "timeline-marker") return "absolute -left-[30px] top-0.5 w-5 h-5 rounded-full bg-white/10 dark:bg-zinc-805/40 text-white border border-white/20 dark:border-white/10 backdrop-blur-xs text-[9px] font-bold flex items-center justify-center";
+        if (type === "timeline-line") return "relative border-l border-white/10 dark:border-white/5 pl-5.5 space-y-5 text-xs";
         return "p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors";
 
       case "minimalism":
-        if (type === "panel-card") return "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 p-6 rounded-none";
-        if (type === "badge-draft") return "bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-400 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800 text-[9px] rounded-none";
-        if (type === "badge-published") return "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-2 py-0.5 border border-zinc-900 dark:border-zinc-100 text-[9px] rounded-none";
+        if (type === "panel-card") return "bg-white dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-900 p-6 rounded-none";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-transparent border-b border-zinc-200 dark:border-zinc-805 rounded-none py-2 px-1 focus:outline-hidden focus:border-zinc-900 dark:focus:border-zinc-100 focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "stat-card") return "bg-transparent border border-zinc-150 dark:border-zinc-855 p-3.5 rounded-none";
+        if (type === "timeline-marker") return "absolute -left-[30px] top-0.5 w-5 h-5 rounded-none bg-transparent text-zinc-450 dark:text-zinc-500 text-[9.5px] font-mono font-bold flex items-center justify-center";
+        if (type === "timeline-line") return "relative border-l border-zinc-200 dark:border-zinc-800 pl-5.5 space-y-5 text-xs";
         return "p-1.5 rounded-none bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-205 dark:hover:bg-zinc-750 transition-colors";
 
       case "bento-grid":
       case "sakode-modern":
       default:
-        if (type === "panel-card") return "bg-white dark:bg-zinc-950/80 border border-zinc-200/65 dark:border-zinc-850 p-6 rounded-3xl shadow-sm";
-        if (type === "badge-draft") return "bg-amber-500/10 text-amber-705 dark:text-amber-400 rounded-full px-2.5 py-0.5 border border-amber-500/10";
-        if (type === "badge-published") return "bg-emerald-500/10 text-emerald-705 dark:text-emerald-400 rounded-full px-2.5 py-0.5 border border-emerald-500/10";
+        if (type === "panel-card") return "bg-white dark:bg-zinc-955/80 border border-zinc-200/65 dark:border-zinc-850 p-6 rounded-3xl shadow-sm";
+        if (type === "textarea") return "w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed";
+        if (type === "stat-card") return "bg-zinc-55 dark:bg-zinc-900/50 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40";
+        if (type === "timeline-marker") return "absolute -left-[30px] top-0.5 w-5 h-5 rounded-full bg-zinc-200 dark:bg-zinc-805 text-zinc-855 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-700 text-[9px] font-bold flex items-center justify-center";
+        if (type === "timeline-line") return "relative border-l border-zinc-200 dark:border-zinc-805/80 pl-5.5 space-y-5 text-xs";
         return "p-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-750 transition-colors";
     }
   };
+
 
   const getPublicCardClass = () => {
     switch (selectedStyle) {
@@ -521,9 +532,12 @@ export default function ProgramDetailPage() {
                 <div className="flex justify-between items-start gap-4 border-b border-zinc-150 dark:border-zinc-800 pb-4 mb-4">
                   <div>
                     <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                      <span className={`text-[10px] font-bold tracking-wider uppercase ${getSubElementClass(program.status === "published" ? "badge-published" : "badge-draft")}`}>
-                        {program.status === "published" ? "Published (Tampil Publik)" : "Draft (Konsep)"}
-                      </span>
+                      <UI.Badge
+                        variant={program.status === "published" ? "success" : "warning"}
+                        className="text-[9px]!"
+                      >
+                        {program.status === "published" ? "Published" : "Draft"}
+                      </UI.Badge>
                       
                       {program.isFeatured && (
                         <span className="bg-yellow-500/10 text-yellow-750 dark:text-yellow-405 border border-yellow-500/15 rounded-full px-2.5 py-0.5 text-[9px] font-bold flex items-center gap-1">
@@ -537,39 +551,46 @@ export default function ProgramDetailPage() {
                       {program.name}
                     </h3>
 
-                    <span className="inline-block bg-zinc-100 dark:bg-zinc-850 px-2 py-0.5 rounded text-[10.5px] font-mono text-zinc-550 dark:text-zinc-400 mt-2">
+                    <UI.Badge
+                      variant="default"
+                      className="text-[10px]! font-mono mt-2"
+                    >
                       Public Slug: /programs?program={program.slug}
-                    </span>
+                    </UI.Badge>
                   </div>
 
                   <div className="flex gap-2">
-                    <button
+                    <UI.Button
                       onClick={openEditModal}
-                      className={getSubElementClass("btn-icon")}
+                      variant="secondary"
+                      accentColor={selectedColor}
+                      className="p-2! h-9! w-9! flex items-center justify-center cursor-pointer"
                       title="Edit Program"
                     >
-                      <EditIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-300" />
-                    </button>
-                    <button
+                      <EditIcon className="w-4 h-4" />
+                    </UI.Button>
+                    <UI.Button
                       onClick={() => setIsDeleteConfirmOpen(true)}
-                      className="p-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 hover:bg-rose-500/20 hover:scale-[1.05] active:scale-[0.95] transition-all cursor-pointer"
+                      variant="secondary"
+                      accentColor="red"
+                      className="p-2! h-9! w-9! flex items-center justify-center cursor-pointer"
                       title="Hapus Program"
                     >
                       <TrashIcon className="w-4 h-4" />
-                    </button>
+                    </UI.Button>
                   </div>
                 </div>
 
                 {/* Pricing & outline statistics */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs mb-5">
-                  <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40">
+                  <div className={getSubElementClass("stat-card")}>
                     <span className="text-[10px] text-zinc-400 font-bold block mb-1">INVESTASI KATALOG</span>
                     <span className="text-sm font-black text-zinc-850 dark:text-zinc-100">
                       {formatPrice(program.price, program.currency)}
                     </span>
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40">
-                    <span className="text-[10px] text-zinc-400 font-bold block mb-1">RENCANA KURIKULUM</span>
+                  <div className={getSubElementClass("stat-card")}>
+                    <span className="text-[10px] text-zinc-450 font-bold block mb-1">RENCANA KURIKULUM</span>
                     <span className="text-sm font-black text-zinc-850 dark:text-zinc-100">
                       {program.modules.length} Bab Pembelajaran
                     </span>
@@ -621,12 +642,12 @@ export default function ProgramDetailPage() {
                     Program ini belum memiliki rencana modul belajar.
                   </div>
                 ) : (
-                  <div className="relative border-l border-zinc-200 dark:border-zinc-800/80 pl-5.5 space-y-5 text-xs">
+                  <div className={getSubElementClass("timeline-line")}>
                     {program.modules
                       .sort((a, b) => a.order - b.order)
                       .map((mod, idx) => (
                         <div key={mod.id} className="relative">
-                          <span className="absolute -left-[30px] top-0.5 w-5 h-5 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-850 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-700 text-[9px] font-bold flex items-center justify-center">
+                          <span className={getSubElementClass("timeline-marker")}>
                             {idx + 1}
                           </span>
                           
@@ -636,23 +657,30 @@ export default function ProgramDetailPage() {
                                 {mod.title}
                               </h5>
                               <div className="flex items-center gap-2 shrink-0">
-                                <button
+                                <UI.Button
                                   onClick={() => openEditModuleModal(mod)}
-                                  className="p-1.5 rounded-lg bg-blue-500/10 dark:bg-sky-500/10 border border-blue-500/15 dark:border-sky-500/20 text-blue-600 dark:text-sky-400 hover:bg-blue-500/20 dark:hover:bg-sky-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                  variant="secondary"
+                                  accentColor="blue"
+                                  className="p-1.5! h-8! w-8! flex items-center justify-center cursor-pointer"
                                   title="Ubah Modul"
                                 >
                                   <EditIcon className="w-3.5 h-3.5" />
-                                </button>
-                                <button
+                                </UI.Button>
+                                <UI.Button
                                   onClick={() => handleDeleteModule(mod.id)}
-                                  className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/15 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 dark:hover:bg-rose-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                  variant="secondary"
+                                  accentColor="red"
+                                  className="p-1.5! h-8! w-8! flex items-center justify-center cursor-pointer"
                                   title="Hapus Modul"
                                 >
                                   <TrashIcon className="w-3.5 h-3.5" />
-                                </button>
-                                <span className="text-[9.5px] font-bold text-zinc-450 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800/80 px-2 py-0.5 rounded">
+                                </UI.Button>
+                                <UI.Badge
+                                  variant="default"
+                                  className="text-[9px]!"
+                                >
                                   {mod.durationHours} Jam
-                                </span>
+                                </UI.Badge>
                               </div>
                             </div>
                             <p className="text-zinc-550 dark:text-zinc-400 mt-1 leading-normal font-semibold">
@@ -700,7 +728,7 @@ export default function ProgramDetailPage() {
                       {program.description}
                     </p>
 
-                    <div className="bg-zinc-50 dark:bg-zinc-900/40 p-2.5 rounded-xl border border-zinc-200/35 dark:border-zinc-800/40 flex justify-between items-center text-[11px] font-bold text-zinc-550 dark:text-zinc-300">
+                    <div className={getSubElementClass("stat-card") + " flex justify-between items-center text-[11px] font-bold text-zinc-550 dark:text-zinc-300"}>
                       <span className="flex items-center gap-1.5">
                         <Icons.BookOpen className="w-4 h-4 text-sakode-blue dark:text-sky-400" />
                         {program.modules.length} Rencana Modul
@@ -718,17 +746,18 @@ export default function ProgramDetailPage() {
                         </span>
                       </div>
 
-                      <a
-                        href={`/register/enroll?program=${program.slug}`}
-                        onClick={(e) => e.preventDefault()}
-                        className={`w-full py-2.5 rounded-xl text-center text-xs font-black select-none ${
-                          program.price === null && program.status === "published"
-                            ? "bg-zinc-200 text-zinc-400 cursor-not-allowed"
-                            : getBgClass(selectedColor) + " text-white hover:opacity-90 transition-opacity"
-                        }`}
+                      <UI.Button
+                        onClick={() => {
+                          if (program.price === null && program.status === "published") return;
+                          router.push(`/register/enroll?program=${program.slug}`);
+                        }}
+                        variant="primary"
+                        accentColor={selectedColor}
+                        disabled={program.price === null && program.status === "published"}
+                        className="w-full! text-xs! font-black! cursor-pointer"
                       >
                         Daftar Sekarang & Mulai Belajar
-                      </a>
+                      </UI.Button>
                     </div>
                   </div>
                 </div>
@@ -803,10 +832,10 @@ export default function ProgramDetailPage() {
                   <div>
                     <UI.Label>Deskripsi Hasil Belajar (Outcome)</UI.Label>
                     <textarea
-                    placeholder="contoh: Siswa akan mampu membangun aplikasi web full-stack menggunakan React, Node.js, dan MongoDB."
+                      placeholder="contoh: Siswa akan mampu membangun aplikasi web full-stack menggunakan React, Node.js, dan MongoDB."
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed"
+                      className={getSubElementClass("textarea")}
                     />
                   </div>
 
@@ -880,18 +909,20 @@ export default function ProgramDetailPage() {
                   </div>
 
                   <div className="border-t border-zinc-150 dark:border-zinc-800 pt-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
-                        Rencana Bab & Outline Modul Belajar
-                      </h4>
-                      <button
+                    <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-2 mb-2.5">
+                      <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                        Penyusunan Rencana Bab Modul Belajar
+                      </span>
+                      <UI.Button
                         type="button"
                         onClick={addModuleToForm}
-                        className={`text-[10px] font-bold ${getTextClass(selectedColor)} hover:underline flex items-center gap-0.5 cursor-pointer`}
+                        variant="secondary"
+                        accentColor={selectedColor}
+                        className="text-[9px]! py-1! px-2.5! font-bold! cursor-pointer"
                       >
-                        <Icons.Plus className="w-3.5 h-3.5" />
+                        <Icons.Plus className="w-3 h-3" />
                         Tambah Modul
-                      </button>
+                      </UI.Button>
                     </div>
 
                     <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
@@ -908,32 +939,38 @@ export default function ProgramDetailPage() {
                               </span>
 
                               <div className="flex items-center gap-1.5">
-                                <button
+                                <UI.Button
                                   type="button"
                                   onClick={() => moveModuleOrder(idx, "up")}
                                   disabled={idx === 0}
-                                  className={getSubElementClass("btn-icon") + " p-1! cursor-pointer disabled:opacity-30"}
+                                  variant="secondary"
+                                  accentColor={selectedColor}
+                                  className="p-1! h-7! w-7! flex items-center justify-center cursor-pointer disabled:opacity-30"
                                   title="Pindahkan ke atas"
                                 >
-                                  <ArrowUpIcon />
-                                </button>
-                                <button
+                                  <ArrowUpIcon className="w-3.5 h-3.5" />
+                                </UI.Button>
+                                <UI.Button
                                   type="button"
                                   onClick={() => moveModuleOrder(idx, "down")}
                                   disabled={idx === formData.modules.length - 1}
-                                  className={getSubElementClass("btn-icon") + " p-1! cursor-pointer disabled:opacity-30"}
+                                  variant="secondary"
+                                  accentColor={selectedColor}
+                                  className="p-1! h-7! w-7! flex items-center justify-center cursor-pointer disabled:opacity-30"
                                   title="Pindahkan ke bawah"
                                 >
-                                  <ArrowDownIcon />
-                                </button>
-                                <button
+                                  <ArrowDownIcon className="w-3.5 h-3.5" />
+                                </UI.Button>
+                                <UI.Button
                                   type="button"
                                   onClick={() => removeModuleFromForm(idx)}
-                                  className="p-1 rounded bg-rose-500/10 border border-rose-500/25 text-rose-600 hover:bg-rose-500/20 cursor-pointer"
+                                  variant="secondary"
+                                  accentColor="red"
+                                  className="p-1.5! h-7! w-7! flex items-center justify-center cursor-pointer text-rose-500 hover:text-rose-600"
                                   title="Hapus Modul"
                                 >
                                   <TrashIcon className="w-3.5 h-3.5" />
-                                </button>
+                                </UI.Button>
                               </div>
                             </div>
 
@@ -1060,7 +1097,7 @@ export default function ProgramDetailPage() {
                       accentColor="red"
                       onClick={handleDeleteProgram}
                       isLoading={isActionLoading}
-                      className="text-xs! py-2! font-semibold! bg-rose-650! hover:bg-rose-700! text-white! cursor-pointer"
+                      className="text-xs! py-2! font-semibold! cursor-pointer"
                     >
                       Hapus Permanen
                     </UI.Button>
@@ -1146,7 +1183,7 @@ export default function ProgramDetailPage() {
                       placeholder="contoh: Memahami cara kerja routing dinamis Next.js, static layouting, dan error handling..."
                       value={moduleFormData.description}
                       onChange={(e) => setModuleFormData({ ...moduleFormData, description: e.target.value })}
-                      className="w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2 px-3 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed"
+                      className={getSubElementClass("textarea")}
                     />
                   </div>
 
