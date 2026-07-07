@@ -305,6 +305,63 @@ export default function ProgramsPage() {
     }
   };
 
+  const getTabFilterClasses = (type: "container" | "button", isActive?: boolean) => {
+    switch (selectedStyle) {
+      case "neobrutalism":
+        if (type === "container") {
+          return "flex gap-1.5 p-1 bg-zinc-55 dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-none";
+        }
+        return `flex-1 text-center py-1.5 text-xs font-mono font-bold rounded-none transition-all cursor-pointer ${
+          isActive
+            ? "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] translate-x-[-1px] translate-y-[-1px]"
+            : "bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+        }`;
+
+      case "claymorphism":
+        if (type === "container") {
+          return "flex gap-2 p-1 bg-slate-100/85 dark:bg-zinc-900/40 border border-slate-200/20 dark:border-zinc-800/20 rounded-xl shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.4)]";
+        }
+        return `flex-1 text-center py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          isActive
+            ? "bg-white dark:bg-zinc-850 text-zinc-900 dark:text-white shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.02),_2px_2px_5px_rgba(0,0,0,0.05),_inset_1px_1px_1px_rgba(255,255,255,0.8)] scale-[1.03]"
+            : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:scale-[1.01]"
+        }`;
+
+      case "glassmorphism":
+      case "liquid-glass":
+        if (type === "container") {
+          return "flex gap-1.5 p-1 bg-white/10 dark:bg-zinc-950/20 backdrop-blur-xs border border-white/20 dark:border-zinc-900/30 rounded-xl";
+        }
+        return `flex-1 text-center py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          isActive
+            ? "bg-white/20 dark:bg-white/10 text-white border border-white/20 dark:border-white/15 backdrop-blur-xs shadow-xs"
+            : "text-zinc-350 hover:text-white hover:bg-white/5"
+        }`;
+
+      case "minimalism":
+        if (type === "container") {
+          return "flex gap-4 p-0.5 border-b border-zinc-200 dark:border-zinc-800 rounded-none bg-transparent";
+        }
+        return `px-2 py-1 text-xs font-bold rounded-none transition-all cursor-pointer ${
+          isActive
+            ? "text-zinc-900 dark:text-white border-b-2 border-zinc-900 dark:border-white font-black"
+            : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-650 dark:hover:text-zinc-305"
+        }`;
+
+      case "bento-grid":
+      case "sakode-modern":
+      default:
+        if (type === "container") {
+          return "flex gap-1 bg-zinc-100/70 dark:bg-zinc-900/80 p-1 rounded-xl border border-zinc-200/50 dark:border-zinc-800/80 min-w-[250px]";
+        }
+        return `flex-1 text-center py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+          isActive
+            ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-3xs"
+            : "text-zinc-450 dark:text-zinc-400 hover:text-zinc-850 dark:hover:text-zinc-205"
+        }`;
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 text-left">
       {/* Toast Feedback */}
@@ -395,7 +452,7 @@ export default function ProgramsPage() {
         </div>
 
         {/* Status tabs filter */}
-        <div className="flex gap-1 bg-zinc-100/50 dark:bg-zinc-900/50 p-1 rounded-xl border border-zinc-200/35 dark:border-zinc-800/40 min-w-[250px]">
+        <div className={getTabFilterClasses("container")}>
           {[
             { id: "all" as const, label: "Semua" },
             { id: "published" as const, label: "Published" },
@@ -404,11 +461,7 @@ export default function ProgramsPage() {
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`flex-1 text-center py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                statusFilter === tab.id
-                  ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-3xs"
-                  : "text-zinc-450 dark:text-zinc-400 hover:text-zinc-850 dark:hover:text-zinc-200"
-              }`}
+              className={getTabFilterClasses("button", statusFilter === tab.id)}
             >
               {tab.label}
             </button>
