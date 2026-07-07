@@ -563,22 +563,37 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Footer metadata */}
-                <div className={getSubElementClass("card-divider")}>
-                  <span className="text-zinc-450 dark:text-zinc-500 font-bold flex items-center gap-1">
-                    <Icons.BookOpen className="w-3.5 h-3.5 text-sakode-blue dark:text-sky-400" />
-                    {p.modules.length} Modul ({totalHours} Jam)
-                  </span>
+                <div className={getSubElementClass("card-divider") + " flex flex-col gap-2.5 pt-3"}>
+                  <div className="flex justify-between items-center w-full">
+                    <span className="text-zinc-450 dark:text-zinc-500 font-bold flex items-center gap-1">
+                      <Icons.BookOpen className="w-3.5 h-3.5 text-sakode-blue dark:text-sky-400" />
+                      {p.modules.length} Modul ({totalHours} Jam)
+                    </span>
 
-                  {isMissingPrice ? (
-                    <span className="text-[10px] font-bold text-rose-500 flex items-center gap-1" title="Harga wajib ditentukan untuk status Published.">
-                      <Icons.AlertCircle className="w-3.5 h-3.5" />
-                      Harga Hilang
-                    </span>
-                  ) : (
-                    <span className="font-black text-zinc-800 dark:text-zinc-200">
-                      {formatPrice(p.price, p.currency)}
-                    </span>
-                  )}
+                    {isMissingPrice ? (
+                      <span className="text-[10px] font-bold text-rose-500 flex items-center gap-1" title="Harga wajib ditentukan untuk status Published.">
+                        <Icons.AlertCircle className="w-3.5 h-3.5" />
+                        Harga Hilang
+                      </span>
+                    ) : (
+                      <span className="font-black text-zinc-800 dark:text-zinc-200">
+                        {formatPrice(p.price, p.currency)}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-between items-center w-full border-t border-zinc-100 dark:border-zinc-800/40 pt-2 text-[10px] font-bold">
+                    <span className="text-zinc-400 dark:text-zinc-500">Pilihan Kelompok:</span>
+                    {p.hasGroupOption ? (
+                      <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded flex items-center gap-0.5">
+                        👥 Aktif ({p.minGroupSize || 2}-{p.maxGroupSize || 5} Anak)
+                      </span>
+                    ) : (
+                      <span className="text-zinc-400 bg-zinc-100 dark:bg-zinc-850 px-2 py-0.5 rounded">
+                        👤 Individu Saja
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             );

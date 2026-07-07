@@ -623,6 +623,30 @@ export default function ProgramDetailPage() {
                   </div>
                 </div>
 
+                {/* Group Options enabled status card */}
+                <div className="mb-5">
+                  {program.hasGroupOption ? (
+                    <div className={getSubElementClass("stat-card") + " bg-purple-500/5 border border-purple-500/20"}>
+                      <span className="text-[10px] text-purple-600 dark:text-purple-400 font-bold block mb-1">PAKET BELAJAR KELOMPOK (OFFLINE)</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-xs">
+                        <span className="font-semibold text-zinc-800 dark:text-zinc-200 block">
+                          Status: <span className="font-extrabold text-emerald-600 dark:text-emerald-400 uppercase">✓ Aktif</span> | Batas Kelompok: <span className="font-extrabold">{program.minGroupSize || 2} - {program.maxGroupSize || 5} Peserta</span>
+                        </span>
+                        <span className="font-semibold text-zinc-800 dark:text-zinc-200 block">
+                          Harga per Satuan Anak: <span className="font-black text-sakode-blue dark:text-sky-400">{formatPrice(program.pricePerParticipant || 250000, program.currency)}</span>
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={getSubElementClass("stat-card") + " bg-zinc-50/50 dark:bg-zinc-900/10 opacity-75"}>
+                      <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold block mb-1">PAKET BELAJAR KELOMPOK (OFFLINE)</span>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5 font-semibold">
+                        <span>👤 Status: <span className="text-rose-500 dark:text-rose-400 uppercase font-extrabold">✕ Tidak Aktif</span> (Hanya tersedia kelas individu/private)</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Validation alert banner for missing price */}
                 {program.price === null && (
                   <div className="bg-rose-500/10 border border-rose-500/20 p-3.5 rounded-2xl text-[10.5px] text-rose-600 dark:text-rose-455 font-semibold mb-5 leading-normal flex items-start gap-2.5">

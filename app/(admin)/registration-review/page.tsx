@@ -1064,6 +1064,22 @@ export default function RegistrationReviewPage() {
 														{selectedItem.paymentConfirmed ? '✓ TERVERIFIKASI' : '⚠ MENUNGGU KONFIRMASI'}
 													</span>
 												</div>
+
+												{/* Render group members detail */}
+												{selectedItem.isGroup && selectedItem.groupMembers && (
+													<div className='mt-2.5 p-2.5 bg-purple-500/5 border border-purple-500/20 rounded-xl text-left'>
+														<span className='text-[9.5px] font-bold text-purple-600 dark:text-purple-400 block mb-1.5 uppercase tracking-wider'>
+															Anggota Kelompok Belajar ({selectedItem.groupMembers.length} Anak):
+														</span>
+														<div className='flex flex-wrap gap-1.5'>
+															{selectedItem.groupMembers.map((member, mIdx) => (
+																<span key={mIdx} className='bg-purple-500/10 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 px-2 py-0.5 rounded text-[10px] font-bold'>
+																	{member}
+																</span>
+															))}
+														</div>
+													</div>
+												)}
 											</div>
 
 											<div className={getSubElementClass("divider")} />
