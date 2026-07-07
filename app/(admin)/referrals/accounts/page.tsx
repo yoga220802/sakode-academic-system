@@ -956,7 +956,7 @@ export default function ReferrerAccountsPage() {
 													type='text'
 													placeholder='Cari nama, email, bank...'
 													value={searchQuery}
-													onChange={(e) => setSearchQuery(e.target.value)}
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
 													accentColor={selectedColor}
 													className='pl-10! text-xs! py-2!'
 												/>
@@ -1343,7 +1343,7 @@ export default function ReferrerAccountsPage() {
 													min={1}
 													max={31}
 													value={simulatedDay}
-													onChange={(e) => {
+													onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
 														setSimulatedDay(Number(e.target.value));
 														setSelectedPayoutIds([]); // Clear selection when date changes to prevent invalid actions
 													}}
@@ -1400,7 +1400,7 @@ export default function ReferrerAccountsPage() {
 												<div className='relative min-w-[200px]'>
 													<UI.Select
 														value={payoutProgramFilter}
-														onChange={(e) => {
+														onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
 															setPayoutProgramFilter(e.target.value);
 															setSelectedPayoutIds([]);
 														}}
@@ -1470,7 +1470,7 @@ export default function ReferrerAccountsPage() {
 																		selectedPayoutIds.length ===
 																			allPendingPayouts.filter((tx) => tx.isDateAllowed).length
 																	}
-																	onChange={(e) => {
+																	onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
 																		if (e.target.checked) {
 																			// Only select payouts that are active on the current simulated date
 																			setSelectedPayoutIds(
@@ -1516,7 +1516,7 @@ export default function ReferrerAccountsPage() {
 																			type='checkbox'
 																			checked={isChecked}
 																			disabled={!tx.isDateAllowed}
-																			onChange={(e) => {
+																			onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
 																				if (e.target.checked) {
 																					setSelectedPayoutIds((prev) => [...prev, tx.id]);
 																				} else {
@@ -1644,7 +1644,7 @@ export default function ReferrerAccountsPage() {
 												type='text'
 												placeholder='contoh: Akbar Ramadhan'
 												value={accountForm.name}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setAccountForm((prev) => ({ ...prev, name: e.target.value }))
 												}
 												accentColor={selectedColor}
@@ -1662,7 +1662,7 @@ export default function ReferrerAccountsPage() {
 													type='email'
 													placeholder='akbar@mail.com'
 													value={accountForm.email}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({ ...prev, email: e.target.value }))
 													}
 													accentColor={selectedColor}
@@ -1678,7 +1678,7 @@ export default function ReferrerAccountsPage() {
 													type='tel'
 													placeholder='+62 81...'
 													value={accountForm.phone}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({ ...prev, phone: e.target.value }))
 													}
 													accentColor={selectedColor}
@@ -1700,7 +1700,7 @@ export default function ReferrerAccountsPage() {
 												<div className='relative'>
 													<UI.Select
 														value={accountForm.bankName}
-														onChange={(e) =>
+														onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 															setAccountForm((prev) => ({ ...prev, bankName: e.target.value }))
 														}
 														accentColor={selectedColor}
@@ -1730,7 +1730,7 @@ export default function ReferrerAccountsPage() {
 													type='text'
 													placeholder='contoh: 880123...'
 													value={accountForm.accountNumber}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({
 															...prev,
 															accountNumber: e.target.value,
@@ -1750,7 +1750,7 @@ export default function ReferrerAccountsPage() {
 												type='text'
 												placeholder='contoh: Akbar Ramadhan (Sesuai Bank)'
 												value={accountForm.accountHolder}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setAccountForm((prev) => ({
 														...prev,
 														accountHolder: e.target.value,
@@ -1821,7 +1821,7 @@ export default function ReferrerAccountsPage() {
 												type='text'
 												placeholder='contoh: Akbar Ramadhan'
 												value={accountForm.name}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setAccountForm((prev) => ({ ...prev, name: e.target.value }))
 												}
 												accentColor={selectedColor}
@@ -1839,7 +1839,7 @@ export default function ReferrerAccountsPage() {
 													type='email'
 													placeholder='akbar@mail.com'
 													value={accountForm.email}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({ ...prev, email: e.target.value }))
 													}
 													accentColor={selectedColor}
@@ -1855,7 +1855,7 @@ export default function ReferrerAccountsPage() {
 													type='tel'
 													placeholder='+62 81...'
 													value={accountForm.phone}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({ ...prev, phone: e.target.value }))
 													}
 													accentColor={selectedColor}
@@ -1877,7 +1877,7 @@ export default function ReferrerAccountsPage() {
 												<div className='relative'>
 													<UI.Select
 														value={accountForm.bankName}
-														onChange={(e) =>
+														onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 															setAccountForm((prev) => ({ ...prev, bankName: e.target.value }))
 														}
 														accentColor={selectedColor}
@@ -1907,7 +1907,7 @@ export default function ReferrerAccountsPage() {
 													type='text'
 													placeholder='contoh: 880123...'
 													value={accountForm.accountNumber}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setAccountForm((prev) => ({
 															...prev,
 															accountNumber: e.target.value,
@@ -1927,7 +1927,7 @@ export default function ReferrerAccountsPage() {
 												type='text'
 												placeholder='contoh: Akbar Ramadhan'
 												value={accountForm.accountHolder}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setAccountForm((prev) => ({
 														...prev,
 														accountHolder: e.target.value,
@@ -2072,7 +2072,7 @@ export default function ReferrerAccountsPage() {
 												type='text'
 												placeholder='contoh: AKBARNEXT'
 												value={linkCodeForm.code}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													setLinkCodeForm((prev) => ({ ...prev, code: e.target.value }))
 												}
 												accentColor={selectedColor}
@@ -2088,7 +2088,7 @@ export default function ReferrerAccountsPage() {
 											<div className='relative'>
 												<UI.Select
 													value={linkCodeForm.programId}
-													onChange={(e) =>
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 														setLinkCodeForm((prev) => ({
 															...prev,
 															programId: e.target.value,
@@ -2151,7 +2151,7 @@ export default function ReferrerAccountsPage() {
 														type='number'
 														min={1}
 														value={linkCodeForm.limitValue}
-														onChange={(e) =>
+														onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 															setLinkCodeForm((prev) => ({
 																...prev,
 																limitValue: parseInt(e.target.value) || 1,

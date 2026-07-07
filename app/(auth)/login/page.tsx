@@ -139,8 +139,15 @@ export default function LoginPage() {
 
 			setTimeout(() => {
 				setIsLoading(false);
-				login(demoAccounts[cleanedEmailLower]);
-				router.push("/dashboard");
+				const role = demoAccounts[cleanedEmailLower];
+				login(role);
+				if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
+					router.push("/dashboard");
+				} else if (role === "mentor") {
+					router.push("/mentor/dashboard");
+				} else {
+					router.push("/student/dashboard");
+				}
 			}, 1000);
 		}, 1200);
 	};
@@ -156,7 +163,13 @@ export default function LoginPage() {
 		setTimeout(() => {
 			setIsLoading(false);
 			login(role);
-			router.push("/dashboard");
+			if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
+				router.push("/dashboard");
+			} else if (role === "mentor") {
+				router.push("/mentor/dashboard");
+			} else {
+				router.push("/student/dashboard");
+			}
 		}, 800);
 	};
 
