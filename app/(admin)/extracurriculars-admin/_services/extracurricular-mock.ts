@@ -1,7 +1,7 @@
 import { ExtracurricularOrganization, ExtracurricularRegistration } from "../_types/extracurricular";
 
-const STORAGE_KEY_ORGS = "sakode_extracurricular_organizations_v3";
-const STORAGE_KEY_REGS = "sakode_extracurricular_registrations_v3";
+const STORAGE_KEY_ORGS = "sakode_extracurricular_organizations_v5";
+const STORAGE_KEY_REGS = "sakode_extracurricular_registrations_v5";
 
 export const DEFAULT_ORGANIZATIONS: ExtracurricularOrganization[] = [
   {
@@ -10,7 +10,12 @@ export const DEFAULT_ORGANIZATIONS: ExtracurricularOrganization[] = [
     picName: "Drs. H. Mulyono, M.Pd.",
     picEmail: "mulyono@sman1yogyakarta.sch.id",
     picPhone: "+62 812-9900-1122",
-    branch: "Yogyakarta",
+    provinsi: "DAERAH ISTIMEWA YOGYAKARTA",
+    kabupaten: "KOTA YOGYAKARTA",
+    kecamatan: "Danurejan",
+    kelurahan: "Bausasran",
+    rtRw: "RT 02 / RW 08",
+    streetAddress: "Jl. Cik Di Tiro No. 1",
     status: "active",
     mentorId: "MTR-002",
     mentorName: "Budi Santoso",
@@ -27,7 +32,12 @@ export const DEFAULT_ORGANIZATIONS: ExtracurricularOrganization[] = [
     picName: "Ir. Hermawan Baskoro",
     picEmail: "hermawan@smktelkom-jkt.sch.id",
     picPhone: "+62 813-7788-9900",
-    branch: "Jakarta Selatan",
+    provinsi: "DKI JAKARTA",
+    kabupaten: "KOTA JAKARTA SELATAN",
+    kecamatan: "Tebet",
+    kelurahan: "Tebet Barat",
+    rtRw: "RT 05 / RW 03",
+    streetAddress: "Jl. Tebet Barat Dalam Raya No. 4",
     status: "active",
     mentorId: "MTR-001",
     mentorName: "Akbar Ramadhan",
@@ -44,7 +54,12 @@ export const DEFAULT_ORGANIZATIONS: ExtracurricularOrganization[] = [
     picName: "Dra. Sri Wahyuni, M.Si.",
     picEmail: "sri.wahyuni@labschool.sch.id",
     picPhone: "+62 899-1122-3344",
-    branch: "Jakarta Selatan",
+    provinsi: "DKI JAKARTA",
+    kabupaten: "KOTA JAKARTA SELATAN",
+    kecamatan: "Kebayoran Baru",
+    kelurahan: "Kramat Pela",
+    rtRw: "RT 03 / RW 01",
+    streetAddress: "Jl. KH. Ahmad Dahlan No. 14",
     status: "inactive",
     mentorId: "MTR-003",
     mentorName: "Citra Kirana",

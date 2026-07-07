@@ -14,6 +14,12 @@ import {
 } from "../_services/extracurricular-mock";
 import { getStoredMentors } from "../../mentors/_services/mentor-mock";
 import { Mentor } from "../../mentors/_types/mentor";
+import SearchableSelect from "../_components/SearchableSelect";
+
+interface ApiRegion {
+  id: string;
+  name: string;
+}
 
 interface DetailPageProps {
   params: Promise<{ id: string }>;
@@ -31,6 +37,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
   const [organizations, setOrganizations] = useState<ExtracurricularOrganization[]>([]);
   const [mentors, setMentors] = useState<Mentor[]>([]);
 
+  // Hierarchical Region States (for Edit Form)
+  const [apiProvinces, setApiProvinces] = useState<ApiRegion[]>([]);
+  const [apiRegencies, setApiRegencies] = useState<ApiRegion[]>([]);
+  const [apiDistricts, setApiDistricts] = useState<ApiRegion[]>([]);
+  const [apiVillages, setApiVillages] = useState<ApiRegion[]>([]);
+
   // 2. Modals state
   const [isEditSchoolOpen, setIsEditSchoolOpen] = useState(false);
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
@@ -43,7 +55,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
     picName: "",
     picEmail: "",
     picPhone: "",
-    branch: "Yogyakarta",
+    provinsi: "",
+    kabupaten: "",
+    kecamatan: "",
+    kelurahan: "",
+    rtRw: "",
+    streetAddress: "",
     status: "active" as "active" | "inactive",
     mentorId: "",
     mouFileName: "",
@@ -68,6 +85,22 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
     setMentors(getStoredMentors());
   }, []);
 
+  // Fetch initial provinces on mount
+  useEffect(() => {
+    fetch("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json")
+      .then((res) => res.json())
+      .then((data) => setApiProvinces(data))
+      .catch(() => {
+        // Fallback offline provinces
+        setApiProvinces([
+          { id: "34", name: "DAERAH ISTIMEWA YOGYAKARTA" },
+          { id: "31", name: "DKI JAKARTA" },
+          { id: "32", name: "JAWA BARAT" },
+          { id: "33", name: "JAWA TENGAH" }
+        ]);
+      });
+  }, []);
+
   const showToast = (text: string, type: "success" | "error" = "success") => {
     setToastMessage({ text, type });
     setTimeout(() => setToastMessage(null), 3000);
@@ -86,7 +119,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
         picName: school.picName,
         picEmail: school.picEmail,
         picPhone: school.picPhone,
-        branch: school.branch,
+        provinsi: school.provinsi || "",
+        kabupaten: school.kabupaten || "",
+        kecamatan: school.kecamatan || "",
+        kelurahan: school.kelurahan || "",
+        rtRw: school.rtRw || "",
+        streetAddress: school.streetAddress || "",
         status: school.status,
         mentorId: school.mentorId,
         mouFileName: school.mouFileName || "",
@@ -95,10 +133,44 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
     }
   }, [school]);
 
+  // Lazy-load nested regions for selected school on edit modal open
+  useEffect(() => {
+    if (isEditSchoolOpen && schoolForm.provinsi) {
+      // Find province ID by name to fetch regencies
+      const foundProv = apiProvinces.find(p => p.name.toLowerCase() === schoolForm.provinsi.toLowerCase());
+      if (foundProv) {
+        fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${foundProv.id}.json`)
+          .then(res => res.json())
+          .then(regs => {
+            setApiRegencies(regs);
+            const foundReg = regs.find((r: ApiRegion) => r.name.toLowerCase() === schoolForm.kabupaten.toLowerCase());
+            if (foundReg) {
+              return fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/districts/${foundReg.id}.json`);
+            }
+          })
+          .then(res => res ? res.json() : null)
+          .then(districts => {
+            if (districts) {
+              setApiDistricts(districts);
+              const foundDist = districts.find((d: ApiRegion) => d.name.toLowerCase() === schoolForm.kecamatan.toLowerCase());
+              if (foundDist) {
+                return fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/villages/${foundDist.id}.json`);
+              }
+            }
+          })
+          .then(res => res ? res.json() : null)
+          .then(villages => {
+            if (villages) setApiVillages(villages);
+          })
+          .catch(() => {});
+      }
+    }
+  }, [isEditSchoolOpen, schoolForm.provinsi, apiProvinces, schoolForm.kabupaten, schoolForm.kecamatan]);
+
   if (!school) {
     return (
       <div className="py-16 text-center text-xs text-zinc-400 font-medium border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center gap-2">
-        <Icons.AlertCircle className="w-8 h-8 text-rose-500" />
+        <Icons.AlertCircle className="w-8 h-8 text-rose-505" />
         <span>Sekolah / Organisasi Ekskul tidak ditemukan.</span>
         <button
           onClick={() => router.push("/extracurriculars-admin")}
@@ -110,6 +182,64 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
       </div>
     );
   }
+
+  // Province change handler: resets nested options and fetches regencies
+  const handleProvinceChange = (prov: ApiRegion) => {
+    setSchoolForm((prev) => ({
+      ...prev,
+      provinsi: prov.name,
+      kabupaten: "",
+      kecamatan: "",
+      kelurahan: ""
+    }));
+    setApiRegencies([]);
+    setApiDistricts([]);
+    setApiVillages([]);
+
+    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${prov.id}.json`)
+      .then((res) => res.json())
+      .then((data) => setApiRegencies(data))
+      .catch(() => {});
+  };
+
+  // Regency change handler: resets nested options and fetches districts (kecamatan)
+  const handleRegencyChange = (reg: ApiRegion) => {
+    setSchoolForm((prev) => ({
+      ...prev,
+      kabupaten: reg.name,
+      kecamatan: "",
+      kelurahan: ""
+    }));
+    setApiDistricts([]);
+    setApiVillages([]);
+
+    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/districts/${reg.id}.json`)
+      .then((res) => res.json())
+      .then((data) => setApiDistricts(data))
+      .catch(() => {});
+  };
+
+  // District change handler: resets nested options and fetches villages (kelurahan)
+  const handleDistrictChange = (dist: ApiRegion) => {
+    setSchoolForm((prev) => ({
+      ...prev,
+      kecamatan: dist.name,
+      kelurahan: ""
+    }));
+    setApiVillages([]);
+
+    fetch(`https://emsifa.github.io/api-wilayah-indonesia/api/villages/${dist.id}.json`)
+      .then((res) => res.json())
+      .then((data) => setApiVillages(data))
+      .catch(() => {});
+  };
+
+  const handleVillageChange = (vil: ApiRegion) => {
+    setSchoolForm((prev) => ({
+      ...prev,
+      kelurahan: vil.name
+    }));
+  };
 
   // Toggle School Partnership status (Active / Inactive)
   const handleToggleSchoolStatus = () => {
@@ -166,7 +296,18 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
   // Edit School details submit
   const handleEditSchoolSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!schoolForm.name || !schoolForm.picName || !schoolForm.picEmail || !schoolForm.picPhone) {
+    if (
+      !schoolForm.name ||
+      !schoolForm.picName ||
+      !schoolForm.picEmail ||
+      !schoolForm.picPhone ||
+      !schoolForm.provinsi ||
+      !schoolForm.kabupaten ||
+      !schoolForm.kecamatan ||
+      !schoolForm.kelurahan ||
+      !schoolForm.rtRw ||
+      !schoolForm.streetAddress
+    ) {
       setFormError("Mohon lengkapi semua kolom wajib.");
       return;
     }
@@ -193,7 +334,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
             picName: schoolForm.picName,
             picEmail: schoolForm.picEmail,
             picPhone: schoolForm.picPhone,
-            branch: schoolForm.branch,
+            provinsi: schoolForm.provinsi,
+            kabupaten: schoolForm.kabupaten,
+            kecamatan: schoolForm.kecamatan,
+            kelurahan: schoolForm.kelurahan,
+            rtRw: schoolForm.rtRw,
+            streetAddress: schoolForm.streetAddress,
             status: schoolForm.status,
             mentorId: mentor.id,
             mentorName: mentor.name,
@@ -414,7 +560,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                 <span className="text-[10px] text-zinc-400 font-bold block uppercase tracking-wider">Status Kemitraan</span>
                 <span className="text-xs text-zinc-500 mt-1 block flex items-center gap-1">
                   <Icons.Compass className="w-3.5 h-3.5 text-zinc-400" />
-                  Cabang {school.branch}
+                  Kec. {school.kecamatan}
                 </span>
               </div>
               
@@ -428,6 +574,27 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               >
                 {school.status === "active" ? "Aktif" : "Nonaktif"}
               </span>
+            </div>
+
+            {/* School Full Address */}
+            <div className="space-y-2">
+              <span className="text-[9.5px] text-zinc-400 font-bold block uppercase tracking-wider">
+                Alamat Sekolah Lengkap:
+              </span>
+              <div className={getSubElementClass("card-item") + " flex flex-col gap-1 text-xs text-left"}>
+                <span className="font-extrabold text-zinc-800 dark:text-zinc-150">
+                  {school.streetAddress}
+                </span>
+                <span className="text-zinc-500 font-medium">
+                  {school.rtRw}
+                </span>
+                <span className="text-zinc-500 font-medium">
+                  Kel. {school.kelurahan}, Kec. {school.kecamatan}
+                </span>
+                <span className="text-zinc-500 font-medium">
+                  {school.kabupaten}, {school.provinsi}
+                </span>
+              </div>
             </div>
 
             {/* Guru Pendamping */}
@@ -463,7 +630,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                     {school.mentorName}
                   </span>
                   <span className="text-[9.5px] text-zinc-400 font-semibold block flex items-center gap-0.5 mt-0.5">
-                    <Icons.AcademicCap className="w-3 h-3 text-zinc-400" />
+                    <Icons.AcademicCap className="w-3 h-3 text-zinc-405" />
                     Mentor Ekskul ({school.mentorId})
                   </span>
                 </div>
@@ -484,7 +651,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                       {school.mouFileName}
                     </span>
                   </div>
-                  <div className="flex justify-between text-[10px] text-zinc-450 border-t border-zinc-150/40 pt-2 mt-1">
+                  <div className="flex justify-between text-[10px] text-zinc-455 border-t border-zinc-150/40 pt-2 mt-1">
                     <span>Tanggal MoU:</span>
                     <span className="font-bold text-zinc-700 dark:text-zinc-300">
                       {school.mouSignedDate || "N/A"}
@@ -592,7 +759,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                             </button>
                             <button
                               onClick={() => handleOpenDeleteMemberConfirm(member)}
-                              className="text-zinc-450 hover:text-rose-600 font-bold text-[10.5px] cursor-pointer"
+                              className="text-zinc-455 hover:text-rose-605 font-bold text-[10.5px] cursor-pointer"
                             >
                               Keluarkan
                             </button>
@@ -650,7 +817,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                       </UI.Alert>
                     )}
 
-                    {/* School name & branch selection */}
+                    {/* School name & status selection */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       
                       <div className="col-span-1 md:col-span-2">
@@ -665,17 +832,18 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                       </div>
 
                       <div>
-                        <UI.Label>Cabang Pembimbing</UI.Label>
+                        <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
                         <UI.Select
-                          value={schoolForm.branch}
-                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, branch: e.target.value })}
+                          value={schoolForm.mentorId}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
                           accentColor={selectedColor}
                           className="text-xs!"
                         >
-                          <option value="Yogyakarta">Yogyakarta</option>
-                          <option value="Jakarta Selatan">Jakarta Selatan</option>
-                          <option value="Semarang">Semarang</option>
-                          <option value="Surabaya">Surabaya</option>
+                          {mentors.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.name} ({m.skills.slice(0, 2).join(", ")})
+                            </option>
+                          ))}
                         </UI.Select>
                       </div>
 
@@ -692,22 +860,77 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                         </UI.Select>
                       </div>
 
-                      <div className="col-span-1 md:col-span-2">
-                        <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
-                        <UI.Select
-                          value={schoolForm.mentorId}
-                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
-                          accentColor={selectedColor}
-                          className="text-xs!"
-                        >
-                          {mentors.map((m) => (
-                            <option key={m.id} value={m.id}>
-                              {m.name} ({m.skills.slice(0, 2).join(", ")})
-                            </option>
-                          ))}
-                        </UI.Select>
-                      </div>
+                    </div>
 
+                    {/* Address Fields */}
+                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
+                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3 font-bold">
+                        Ubah Alamat Administrasi Wilayah
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <SearchableSelect
+                          label="Provinsi"
+                          placeholder="Cari provinsi..."
+                          options={apiProvinces}
+                          value={schoolForm.provinsi}
+                          onChange={handleProvinceChange}
+                          accentColor={selectedColor}
+                        />
+
+                        <SearchableSelect
+                          label="Kota / Kabupaten"
+                          placeholder="Pilih provinsi dahulu..."
+                          options={apiRegencies}
+                          value={schoolForm.kabupaten}
+                          onChange={handleRegencyChange}
+                          disabled={!schoolForm.provinsi}
+                          accentColor={selectedColor}
+                        />
+
+                        <SearchableSelect
+                          label="Kecamatan"
+                          placeholder="Pilih kota/kabupaten dahulu..."
+                          options={apiDistricts}
+                          value={schoolForm.kecamatan}
+                          onChange={handleDistrictChange}
+                          disabled={!schoolForm.kabupaten}
+                          accentColor={selectedColor}
+                        />
+
+                        <SearchableSelect
+                          label="Desa / Kelurahan"
+                          placeholder="Pilih kecamatan dahulu..."
+                          options={apiVillages}
+                          value={schoolForm.kelurahan}
+                          onChange={handleVillageChange}
+                          disabled={!schoolForm.kecamatan}
+                          accentColor={selectedColor}
+                        />
+
+                        <div>
+                          <UI.Label>RT / RW</UI.Label>
+                          <UI.Input
+                            type="text"
+                            value={schoolForm.rtRw}
+                            onChange={(e) => setSchoolForm({ ...schoolForm, rtRw: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+
+                        <div>
+                          <UI.Label>Alamat Jalan / Gedung</UI.Label>
+                          <UI.Input
+                            type="text"
+                            value={schoolForm.streetAddress}
+                            onChange={(e) => setSchoolForm({ ...schoolForm, streetAddress: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
+
+                      </div>
                     </div>
 
                     {/* Guru Pendamping details */}
@@ -1052,7 +1275,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                 </div>
                 <button
                   onClick={() => setToastMessage(null)}
-                  className="shrink-0 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
+                  className="shrink-0 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-255 cursor-pointer"
                   title="Tutup"
                 >
                   <Icons.X className="w-3.5 h-3.5" />

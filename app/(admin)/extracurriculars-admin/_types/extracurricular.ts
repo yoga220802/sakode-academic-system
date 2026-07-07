@@ -10,7 +10,15 @@ export interface ExtracurricularOrganization {
   picName: string; // Guru Pendamping name
   picEmail: string; // Guru Pendamping email
   picPhone: string; // Guru Pendamping phone
-  branch: string; // Offline branch context
+  
+  // School Full Address specs
+  provinsi: string;
+  kabupaten: string;
+  kecamatan: string;
+  kelurahan: string;
+  rtRw: string;
+  streetAddress: string;
+
   status: "active" | "inactive";
   mentorId: string;
   mentorName: string;
