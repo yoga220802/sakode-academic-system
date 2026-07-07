@@ -1343,7 +1343,7 @@ export default function ReferrerAccountsPage() {
 													min={1}
 													max={31}
 													value={simulatedDay}
-													onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 														setSimulatedDay(Number(e.target.value));
 														setSelectedPayoutIds([]); // Clear selection when date changes to prevent invalid actions
 													}}
@@ -1470,7 +1470,7 @@ export default function ReferrerAccountsPage() {
 																		selectedPayoutIds.length ===
 																			allPendingPayouts.filter((tx) => tx.isDateAllowed).length
 																	}
-																	onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+																	onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																		if (e.target.checked) {
 																			// Only select payouts that are active on the current simulated date
 																			setSelectedPayoutIds(
@@ -1516,7 +1516,7 @@ export default function ReferrerAccountsPage() {
 																			type='checkbox'
 																			checked={isChecked}
 																			disabled={!tx.isDateAllowed}
-																			onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+																			onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																				if (e.target.checked) {
 																					setSelectedPayoutIds((prev) => [...prev, tx.id]);
 																				} else {
@@ -2088,7 +2088,7 @@ export default function ReferrerAccountsPage() {
 											<div className='relative'>
 												<UI.Select
 													value={linkCodeForm.programId}
-													onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+													onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 														setLinkCodeForm((prev) => ({
 															...prev,
 															programId: e.target.value,
@@ -2151,7 +2151,7 @@ export default function ReferrerAccountsPage() {
 														type='number'
 														min={1}
 														value={linkCodeForm.limitValue}
-														onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+														onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 															setLinkCodeForm((prev) => ({
 																...prev,
 																limitValue: parseInt(e.target.value) || 1,
