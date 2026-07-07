@@ -246,9 +246,9 @@ export default function MentorDirectoryPage() {
       case "glassmorphism":
       case "liquid-glass":
         if (type === "card-grid-item")
-          return "bg-white/10 dark:bg-zinc-955/20 backdrop-blur-xs border border-white/20 dark:border-zinc-900/30 p-5 rounded-xl transition-all hover:bg-white/15 hover:-translate-y-1";
+          return "bg-white/10 dark:bg-zinc-900/20 backdrop-blur-xs border border-white/20 dark:border-zinc-900/30 p-5 rounded-xl transition-all hover:bg-white/15 hover:-translate-y-1";
         if (type === "panel-card")
-          return "bg-white/15 dark:bg-zinc-955/35 border border-white/20 dark:border-zinc-850 backdrop-blur-md p-6 rounded-2xl shadow-xl";
+          return "bg-white/15 dark:bg-zinc-900/35 border border-white/20 dark:border-zinc-850 backdrop-blur-md p-6 rounded-2xl shadow-xl";
         if (type === "progress-track")
           return "w-full h-2.5 bg-white/5 border border-white/10 rounded-full overflow-hidden relative backdrop-blur-3xs";
         if (type === "progress-fill")
@@ -256,39 +256,39 @@ export default function MentorDirectoryPage() {
         if (type === "stat-box")
           return "bg-white/5 dark:bg-zinc-950/15 border border-white/10 dark:border-zinc-800/25 p-3.5 rounded-xl backdrop-blur-3xs";
         if (type === "textarea")
-          return "w-full text-xs min-h-20 bg-white/10 dark:bg-zinc-955/20 border border-white/20 dark:border-zinc-855 backdrop-blur-xs rounded-xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+          return "w-full text-xs min-h-20 bg-white/10 dark:bg-zinc-900/20 border border-white/20 dark:border-zinc-800 backdrop-blur-xs rounded-xl py-2.5 px-4 focus:outline-hidden focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
         return "";
 
       case "minimalism":
         if (type === "card-grid-item")
-          return "bg-white dark:bg-zinc-955 border border-zinc-250/20 dark:border-zinc-900 p-5 rounded-none transition-all hover:bg-zinc-55 dark:hover:bg-zinc-900/40 hover:-translate-y-0.5";
+          return "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-none transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900/40 hover:-translate-y-0.5";
         if (type === "panel-card")
-          return "bg-white dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-900 p-6 rounded-none";
+          return "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-none";
         if (type === "progress-track")
-          return "w-full h-1 bg-zinc-100 dark:bg-zinc-900 rounded-none overflow-hidden relative";
+          return "w-full h-1 bg-zinc-100 dark:bg-zinc-900/50 rounded-none overflow-hidden relative";
         if (type === "progress-fill")
           return "h-full rounded-none";
         if (type === "stat-box")
-          return "bg-transparent border border-zinc-150 dark:border-zinc-855 p-3.5 rounded-none";
+          return "bg-transparent border border-zinc-200 dark:border-zinc-800 p-3.5 rounded-none";
         if (type === "textarea")
-          return "w-full text-xs min-h-20 bg-transparent border-b border-zinc-200 dark:border-zinc-805 rounded-none py-2 px-1 focus:outline-hidden focus:border-zinc-900 dark:focus:border-zinc-100 focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
+          return "w-full text-xs min-h-20 bg-transparent border-b border-zinc-200 dark:border-zinc-800 rounded-none py-2 px-1 focus:outline-hidden focus:border-zinc-900 dark:focus:border-zinc-100 focus:ring-0 text-zinc-900 dark:text-white leading-relaxed";
         return "";
 
       case "bento-grid":
       case "sakode-modern":
       default:
         if (type === "card-grid-item")
-          return "bg-white dark:bg-zinc-955/80 border border-zinc-200/65 dark:border-zinc-850 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1";
+          return "bg-white/95 dark:bg-zinc-900/60 border border-zinc-200/65 dark:border-zinc-800/60 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all hover:-translate-y-1";
         if (type === "panel-card")
-          return "bg-white dark:bg-zinc-955/80 border border-zinc-200/65 dark:border-zinc-855 p-6 rounded-3xl shadow-sm";
+          return "bg-white/95 dark:bg-zinc-900/60 border border-zinc-200/65 dark:border-zinc-800/60 p-6 rounded-3xl shadow-sm";
         if (type === "progress-track")
           return "w-full h-2.5 bg-zinc-100 dark:bg-zinc-900 rounded-full overflow-hidden relative border border-zinc-200/35 dark:border-zinc-800/40";
         if (type === "progress-fill")
           return "h-full rounded-full";
         if (type === "stat-box")
-          return "bg-zinc-55 dark:bg-zinc-900/50 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40";
+          return "bg-zinc-50 dark:bg-zinc-900/40 p-3.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40";
         if (type === "textarea")
-          return "w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-805/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed";
+          return "w-full text-xs min-h-20 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2.5 px-4 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed";
         return "";
     }
   };
@@ -305,7 +305,7 @@ export default function MentorDirectoryPage() {
       case "minimalism":
         return "p-1.5 rounded-none text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer";
       default:
-        return "p-1.5 rounded-lg bg-zinc-55 hover:bg-zinc-200 dark:bg-zinc-900/60 dark:hover:bg-zinc-805 transition-colors text-zinc-400 hover:text-zinc-650 cursor-pointer";
+        return "p-1.5 rounded-lg bg-zinc-50 hover:bg-zinc-200 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 transition-colors text-zinc-400 hover:text-zinc-650 cursor-pointer";
     }
   };
 
@@ -313,7 +313,7 @@ export default function MentorDirectoryPage() {
     <div className="w-full flex flex-col gap-6 font-sans">
       
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-150 dark:border-zinc-805/60 pb-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-200 dark:border-zinc-800/60 pb-5">
         <div>
           <h1 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-white leading-tight">
             Direktori Mentor
@@ -355,7 +355,7 @@ export default function MentorDirectoryPage() {
           }}
           className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
             simulationState === "loading"
-              ? "bg-white dark:bg-zinc-955 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
+              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
               : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
@@ -368,7 +368,7 @@ export default function MentorDirectoryPage() {
           }}
           className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
             simulationState === "empty"
-              ? "bg-white dark:bg-zinc-955 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
+              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
               : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
@@ -381,7 +381,7 @@ export default function MentorDirectoryPage() {
           }}
           className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
             simulationState === "error"
-              ? "bg-white dark:bg-zinc-955 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
+              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
               : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
@@ -486,7 +486,7 @@ export default function MentorDirectoryPage() {
                         onClick={() => setSelectedMentorId(m.id)}
                         className={`${getSubElementClass("card-grid-item")} cursor-pointer flex flex-col justify-between text-left relative ${
                           isSelected
-                            ? "ring-2 ring-sakode-blue dark:ring-sky-400 bg-zinc-55/40 dark:bg-zinc-900/10"
+                            ? "ring-2 ring-sakode-blue dark:ring-sky-400 bg-zinc-50/40 dark:bg-zinc-900/10"
                             : ""
                         } ${m.status === "inactive" ? "opacity-60" : ""}`}
                       >
@@ -517,19 +517,20 @@ export default function MentorDirectoryPage() {
                           <h3 className="font-extrabold text-sm text-zinc-900 dark:text-white leading-snug">
                             {m.name}
                           </h3>
-                          <span className="text-[10px] text-zinc-450 dark:text-zinc-400 block truncate">
+                          <span className="text-[10px] text-zinc-400 dark:text-zinc-400 block truncate">
                             {m.email}
                           </span>
 
                           {/* Skill preview */}
                           <div className="flex flex-wrap gap-1 mt-2.5">
                             {m.skills.slice(0, 3).map((sk, skIdx) => (
-                              <span
+                              <UI.Badge
                                 key={skIdx}
-                                className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-350 text-[8.5px] font-semibold px-1.5 py-0.5 rounded"
+                                variant="default"
+                                className="text-[8.5px]! py-0.5! px-1.5! font-semibold! rounded!"
                               >
                                 {sk}
-                              </span>
+                              </UI.Badge>
                             ))}
                             {m.skills.length > 3 && (
                               <span className="text-[8px] text-zinc-400 font-bold self-center">
@@ -573,7 +574,7 @@ export default function MentorDirectoryPage() {
                     <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                       Informasi Profil Detail
                     </h3>
-                    <p className="text-xs text-zinc-450 dark:text-zinc-500 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-xs text-zinc-400 dark:text-zinc-500 max-w-xs mx-auto leading-relaxed">
                       Pilih salah satu profil mentor di sebelah kiri untuk melihat riwayat beban murid, data kontak lengkap, rating, dan keahlian modul.
                     </p>
                   </div>
@@ -587,15 +588,15 @@ export default function MentorDirectoryPage() {
                 exit={{ opacity: 0, x: -10 }}
                 className={getSubElementClass("panel-card")}
               >
-                <div className="flex justify-between items-start border-b border-zinc-150 dark:border-zinc-800 pb-4 mb-4">
+                <div className="flex justify-between items-start border-b border-zinc-200 dark:border-zinc-800 pb-4 mb-4">
                   <div>
-                    <span className="text-[9px] font-mono text-zinc-450 dark:text-zinc-500 block">
+                    <span className="text-[9px] font-mono text-zinc-400 dark:text-zinc-500 block">
                       {selectedMentor.id}
                     </span>
                     <h2 className="text-base md:text-lg font-black text-zinc-900 dark:text-white mt-1 leading-tight">
                       {selectedMentor.name}
                     </h2>
-                    <span className="text-[10px] text-zinc-450 dark:text-zinc-400 block mt-0.5">
+                    <span className="text-[10px] text-zinc-400 dark:text-zinc-400 block mt-0.5">
                       Bergabung sejak: {selectedMentor.joinedDate}
                     </span>
                   </div>
@@ -608,7 +609,21 @@ export default function MentorDirectoryPage() {
                       className="p-2! h-9! w-9! flex items-center justify-center cursor-pointer"
                       title="Ubah Profil"
                     >
-                      <Icons.Check className="w-4 h-4" /> {/* Standard X or Check as placeholder */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
+                      >
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
                     </UI.Button>
                     <UI.Button
                       onClick={() => setDeletingMentorId(selectedMentor.id)}
@@ -617,7 +632,24 @@ export default function MentorDirectoryPage() {
                       className="p-2! h-9! w-9! flex items-center justify-center cursor-pointer"
                       title="Hapus Mentor"
                     >
-                      <Icons.AlertCircle className="w-4 h-4" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        <line x1="10" x2="10" y1="11" y2="17" />
+                        <line x1="14" x2="14" y1="11" y2="17" />
+                      </svg>
                     </UI.Button>
                   </div>
                 </div>
@@ -639,7 +671,7 @@ export default function MentorDirectoryPage() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-zinc-400 font-medium">No. Telepon:</span>
-                          <span className="font-semibold text-zinc-805 dark:text-zinc-150">
+                          <span className="font-semibold text-zinc-800 dark:text-zinc-150">
                             {selectedMentor.phone}
                           </span>
                         </div>
@@ -694,14 +726,14 @@ export default function MentorDirectoryPage() {
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {selectedMentor.skills.map((s, idx) => (
-                        <span
+                        <UI.Badge
                           key={idx}
-                          className={`px-2.5 py-1 text-[10px] font-extrabold border ${getBgOpacity10Class(
-                            selectedColor
-                          )} ${getTextClass(selectedColor)} border-sakode-blue/15 rounded-full`}
+                          variant="accent"
+                          accentColor={selectedColor}
+                          className="text-[10px]! font-extrabold!"
                         >
                           {s}
-                        </span>
+                        </UI.Badge>
                       ))}
                     </div>
                   </div>
@@ -754,8 +786,8 @@ export default function MentorDirectoryPage() {
             >
               <UI.Card accentColor={selectedColor}>
                 <form onSubmit={handleSaveMentor} className="flex flex-col gap-4 text-left">
-                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-555 dark:text-zinc-200">
+                  <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-200">
                       {editingMentor ? "Ubah Profil Mentor" : "Tambah Mentor Baru"}
                     </h3>
                     <button
@@ -776,7 +808,7 @@ export default function MentorDirectoryPage() {
                     
                     {/* Basic Info */}
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-zinc-705 dark:text-zinc-300">Nama Lengkap</label>
+                      <label className="font-bold text-zinc-700 dark:text-zinc-300">Nama Lengkap</label>
                       <UI.Input
                         type="text"
                         placeholder="contoh: Akbar Ramadhan"
@@ -790,7 +822,7 @@ export default function MentorDirectoryPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Email Utama</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Email Utama</label>
                         <UI.Input
                           type="email"
                           placeholder="akbar@sakode.org"
@@ -802,7 +834,7 @@ export default function MentorDirectoryPage() {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Nomor Telepon/WA</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Nomor Telepon/WA</label>
                         <UI.Input
                           type="tel"
                           placeholder="contoh: +62 81..."
@@ -817,7 +849,7 @@ export default function MentorDirectoryPage() {
 
                     {/* Expertise & Status */}
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-zinc-705 dark:text-zinc-300">
+                      <label className="font-bold text-zinc-700 dark:text-zinc-300">
                         Keahlian / Skillset (Pisahkan dengan koma)
                       </label>
                       <UI.Input
@@ -833,7 +865,7 @@ export default function MentorDirectoryPage() {
 
                     <div className="grid grid-cols-3 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Beban Maksimal</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Beban Maksimal</label>
                         <UI.Input
                           type="number"
                           min={1}
@@ -846,7 +878,7 @@ export default function MentorDirectoryPage() {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Murid Aktif</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Murid Aktif</label>
                         <UI.Input
                           type="number"
                           min={0}
@@ -859,7 +891,7 @@ export default function MentorDirectoryPage() {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Status Awal</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Status Awal</label>
                         <UI.Select
                           value={formStatus}
                           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormStatus(e.target.value as "active" | "inactive" | "busy")}
@@ -875,7 +907,7 @@ export default function MentorDirectoryPage() {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-zinc-705 dark:text-zinc-300">Rating Awal (1-5)</label>
+                        <label className="font-bold text-zinc-700 dark:text-zinc-300">Rating Awal (1-5)</label>
                         <UI.Input
                           type="number"
                           step="0.1"
@@ -891,7 +923,7 @@ export default function MentorDirectoryPage() {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-zinc-705 dark:text-zinc-300">Bio Ringkas Mentor</label>
+                      <label className="font-bold text-zinc-700 dark:text-zinc-300">Bio Ringkas Mentor</label>
                       <textarea
                         placeholder="Tuliskan pengalaman mengajar singkat..."
                         value={formBio}
@@ -903,7 +935,7 @@ export default function MentorDirectoryPage() {
 
                   </div>
 
-                  <div className="flex gap-2.5 justify-end mt-2 border-t border-zinc-150 dark:border-zinc-800 pt-4">
+                  <div className="flex gap-2.5 justify-end mt-2 border-t border-zinc-200 dark:border-zinc-800 pt-4">
                     <UI.Button
                       type="button"
                       variant="secondary"
@@ -945,7 +977,7 @@ export default function MentorDirectoryPage() {
             >
               <UI.Card accentColor="red">
                 <div className="flex flex-col gap-4 text-left">
-                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
+                  <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-rose-600">
                       Hapus Mentor
                     </h3>
@@ -960,15 +992,15 @@ export default function MentorDirectoryPage() {
                   </div>
 
                   <div className="flex flex-col gap-2 py-1 text-xs">
-                    <p className="font-semibold text-zinc-850 dark:text-zinc-150">
+                    <p className="font-semibold text-zinc-800 dark:text-zinc-150">
                       Apakah Anda yakin ingin menghapus mentor ini dari sistem akademik?
                     </p>
-                    <p className="text-[10px] text-zinc-450 dark:text-zinc-500 italic">
+                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 italic">
                       * Aksi ini akan menghapus seluruh data keahlian dan rating mentor tersebut secara permanen.
                     </p>
                   </div>
 
-                  <div className="flex gap-2.5 justify-end mt-2 border-t border-zinc-150 dark:border-zinc-800 pt-4">
+                  <div className="flex gap-2.5 justify-end mt-2 border-t border-zinc-200 dark:border-zinc-800 pt-4">
                     <UI.Button
                       variant="secondary"
                       accentColor={selectedColor}
@@ -1012,7 +1044,7 @@ export default function MentorDirectoryPage() {
                     <Icons.AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-455" />
                   )}
                 </div>
-                <div className="flex-1 font-semibold text-zinc-850 dark:text-zinc-200">
+                <div className="flex-1 font-semibold text-zinc-800 dark:text-zinc-200">
                   {toastMessage.text}
                 </div>
                 <button
