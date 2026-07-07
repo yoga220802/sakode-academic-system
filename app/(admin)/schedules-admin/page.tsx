@@ -33,7 +33,9 @@ const DAYS = [
   { name: "Tuesday", label: "Selasa", dateOffset: 1 },
   { name: "Wednesday", label: "Rabu", dateOffset: 2 },
   { name: "Thursday", label: "Kamis", dateOffset: 3 },
-  { name: "Friday", label: "Jumat", dateOffset: 4 }
+  { name: "Friday", label: "Jumat", dateOffset: 4 },
+  { name: "Saturday", label: "Sabtu", dateOffset: 5 },
+  { name: "Sunday", label: "Minggu", dateOffset: 6 }
 ];
 
 // Reference date for the week view (July 6th to July 12th, 2026)
@@ -213,7 +215,7 @@ export default function SchedulesAdminPage() {
       programName: selectedStudent.programName,
       programSlug: selectedStudent.programSlug,
       mentorId: selectedStudent.assignedMentorId,
-      mentorName: selectedStudent.assignedMentorName,
+      mentorName: selectedStudent.assignedMentorName || "",
       address: selectedStudent.address,
       roomName: formData.roomName,
       date: formData.date,
@@ -268,7 +270,7 @@ export default function SchedulesAdminPage() {
       programName: selectedStudent.programName,
       programSlug: selectedStudent.programSlug,
       mentorId: selectedStudent.assignedMentorId,
-      mentorName: selectedStudent.assignedMentorName,
+      mentorName: selectedStudent.assignedMentorName || "",
       address: selectedStudent.address,
       roomName: formData.roomName,
       date: formData.date,
@@ -771,7 +773,7 @@ export default function SchedulesAdminPage() {
         
         /* TAB 2: WEEKLY CALENDAR VIEW */
         <div className="w-full overflow-x-auto">
-          <div className="min-w-[800px] grid grid-cols-5 gap-3">
+          <div className="min-w-[1000px] grid grid-cols-7 gap-3">
             
             {/* Days columns */}
             {DAYS.map((day) => {
@@ -939,7 +941,7 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        {Array.from({ length: 5 }, (_, i) => getWeekDayDateString(i)).map((dateStr, dIdx) => (
+                        {Array.from({ length: 7 }, (_, i) => getWeekDayDateString(i)).map((dateStr, dIdx) => (
                           <option key={dateStr} value={dateStr}>
                             {DAYS[dIdx].label} ({getWeekDayLabel(dIdx)})
                           </option>
@@ -1111,7 +1113,7 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        {Array.from({ length: 5 }, (_, i) => getWeekDayDateString(i)).map((dateStr, dIdx) => (
+                        {Array.from({ length: 7 }, (_, i) => getWeekDayDateString(i)).map((dateStr, dIdx) => (
                           <option key={dateStr} value={dateStr}>
                             {DAYS[dIdx].label} ({getWeekDayLabel(dIdx)})
                           </option>
