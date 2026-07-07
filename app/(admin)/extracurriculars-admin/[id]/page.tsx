@@ -102,8 +102,9 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
         <span>Sekolah / Organisasi Ekskul tidak ditemukan.</span>
         <button
           onClick={() => router.push("/extracurriculars-admin")}
-          className="text-sakode-blue dark:text-sky-400 hover:underline mt-2 font-bold cursor-pointer"
+          className="text-sakode-blue dark:text-sky-400 hover:underline mt-2 font-bold cursor-pointer flex items-center gap-1"
         >
+          <Icons.ArrowLeft className="w-4 h-4" />
           Kembali ke Daftar Ekskul
         </button>
       </div>
@@ -411,7 +412,10 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
             <div className="flex justify-between items-start border-b border-zinc-150 dark:border-zinc-800 pb-3.5">
               <div>
                 <span className="text-[10px] text-zinc-400 font-bold block uppercase tracking-wider">Status Kemitraan</span>
-                <span className="text-xs text-zinc-500 mt-1 block">📍 Cabang {school.branch}</span>
+                <span className="text-xs text-zinc-500 mt-1 block flex items-center gap-1">
+                  <Icons.Compass className="w-3.5 h-3.5 text-zinc-400" />
+                  Cabang {school.branch}
+                </span>
               </div>
               
               <span
@@ -432,14 +436,15 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                 Guru Pendamping (Principal):
               </span>
               <div className={getSubElementClass("card-item") + " flex flex-col gap-1.5 text-xs text-left"}>
-                <span className="font-extrabold text-zinc-850 dark:text-white">
-                  👤 {school.picName}
+                <span className="font-extrabold text-zinc-850 dark:text-white flex items-center gap-1">
+                  <Icons.User className="w-3.5 h-3.5 text-zinc-400" />
+                  {school.picName}
                 </span>
-                <span className="text-zinc-500 font-medium block">
-                  ✉️ {school.picEmail}
+                <span className="text-zinc-500 font-medium pl-4.5 block">
+                  Email: {school.picEmail}
                 </span>
-                <span className="text-zinc-500 font-medium block">
-                  📞 {school.picPhone}
+                <span className="text-zinc-500 font-medium pl-4.5 block">
+                  Telp: {school.picPhone}
                 </span>
               </div>
             </div>
@@ -454,10 +459,13 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                   M
                 </div>
                 <div>
-                  <span className="font-extrabold text-zinc-850 dark:text-zinc-200 block">
+                  <span className="font-extrabold text-zinc-855 dark:text-zinc-200 block">
                     {school.mentorName}
                   </span>
-                  <span className="text-[9.5px] text-zinc-400 font-semibold block">Mentor Ekskul ({school.mentorId})</span>
+                  <span className="text-[9.5px] text-zinc-400 font-semibold block flex items-center gap-0.5 mt-0.5">
+                    <Icons.AcademicCap className="w-3 h-3 text-zinc-400" />
+                    Mentor Ekskul ({school.mentorId})
+                  </span>
                 </div>
               </div>
             </div>
@@ -495,14 +503,14 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                 {uploadProgress !== null ? (
                   <div className="w-full space-y-1">
                     <Icons.Loader className="w-5 h-5 text-sakode-blue dark:text-sky-400 mx-auto animate-spin" />
-                    <span className="text-[9px] font-bold text-zinc-400 block">Mengunggah MoU... {uploadProgress}%</span>
+                    <span className="text-[9px] font-bold text-zinc-400 block text-center">Mengunggah MoU... {uploadProgress}%</span>
                     <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1 rounded-full overflow-hidden">
                       <div className="bg-sakode-blue dark:bg-sky-400 h-full" style={{ width: `${uploadProgress}%` }} />
                     </div>
                   </div>
                 ) : (
                   <>
-                    <Icons.Clock className="w-4 h-4 text-zinc-455" />
+                    <Icons.Clock className="w-4 h-4 text-zinc-400" />
                     <span className="text-[11px] font-bold text-zinc-650 dark:text-zinc-300">Simulasikan Upload Ulang MoU</span>
                     <span className="text-[9px] text-zinc-450">Klik untuk mengganti PDF MoU</span>
                   </>
@@ -551,7 +559,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
 
             {/* Members table */}
             {school.members && school.members.length > 0 ? (
-              <div className="overflow-x-auto border border-zinc-200/60 dark:border-zinc-800 rounded-2xl">
+              <div className="overflow-x-auto border border-zinc-200/60 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900/30">
                 <table className="w-full text-xs">
                   <thead>
                     <tr>
@@ -564,9 +572,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                   <tbody className="divide-y divide-zinc-150 dark:divide-zinc-850">
                     {school.members.map((member, idx) => (
                       <tr key={member.id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/15 transition-colors text-left">
-                        <td className="p-3 pl-4 font-mono text-zinc-400">{idx + 1}</td>
+                        <td className="p-3 pl-4 font-mono text-zinc-405">{idx + 1}</td>
                         <td className="p-3 font-bold text-zinc-900 dark:text-white">
-                          {member.name}
+                          <span className="flex items-center gap-1">
+                            <Icons.User className="w-3.5 h-3.5 text-zinc-450" />
+                            {member.name}
+                          </span>
                         </td>
                         <td className="p-3 font-extrabold text-sakode-blue dark:text-sky-400">
                           {member.grade}
@@ -596,7 +607,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               <div className="py-16 text-center text-xs text-zinc-450 font-medium border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center gap-1.5">
                 <Icons.User className="w-8 h-8 text-zinc-300" />
                 <span>Belum ada anggota yang terdaftar di club ekskul sekolah ini.</span>
-                <span className="text-[10px] text-zinc-400">Klik &ldquo;Tambah Anggota&rdquo; di atas untuk mendaftarkan siswa secara manual.</span>
+                <span className="text-[10px] text-zinc-400 font-bold">Klik &ldquo;Tambah Anggota&rdquo; di atas untuk mendaftarkan siswa secara manual.</span>
               </div>
             )}
 
@@ -613,105 +624,106 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md relative my-8"
+              className="w-full max-w-2xl relative my-8"
             >
               <UI.Card accentColor={selectedColor}>
-                <form onSubmit={handleEditSchoolSubmit} className="flex flex-col gap-4 text-left">
-                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
-                      <Icons.Compass className="w-4 h-4" />
-                      Ubah Rincian Ekskul Sekolah
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditSchoolOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
-                      title="Tutup"
-                    >
-                      <Icons.X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {formError && (
-                    <UI.Alert title="Gagal Menyimpan" type="warning">
-                      {formError}
-                    </UI.Alert>
-                  )}
-
-                  {/* School name & branch selection */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="col-span-2">
-                      <UI.Label>Nama Sekolah / Institusi</UI.Label>
-                      <UI.Input
-                        type="text"
-                        value={schoolForm.name}
-                        onChange={(e) => setSchoolForm({ ...schoolForm, name: e.target.value })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
-                      />
-                    </div>
-
-                    <div>
-                      <UI.Label>Cabang Pembimbing</UI.Label>
-                      <UI.Select
-                        value={schoolForm.branch}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, branch: e.target.value })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
+                <div className="max-h-[85vh] overflow-y-auto pr-3 text-left">
+                  <form onSubmit={handleEditSchoolSubmit} className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                        <Icons.Compass className="w-4 h-4" />
+                        Ubah Rincian Ekskul Sekolah
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditSchoolOpen(false)}
+                        className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
+                        title="Tutup"
                       >
-                        <option value="Yogyakarta">Yogyakarta</option>
-                        <option value="Jakarta Selatan">Jakarta Selatan</option>
-                        <option value="Semarang">Semarang</option>
-                        <option value="Surabaya">Surabaya</option>
-                      </UI.Select>
+                        <Icons.X className="w-4 h-4" />
+                      </button>
                     </div>
 
-                    <div>
-                      <UI.Label>Status Pendaftaran</UI.Label>
-                      <UI.Select
-                        value={schoolForm.status}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, status: e.target.value as "active" | "inactive" })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
-                      >
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
-                      </UI.Select>
-                    </div>
-                  </div>
+                    {formError && (
+                      <UI.Alert title="Gagal Menyimpan" type="warning">
+                        {formError}
+                      </UI.Alert>
+                    )}
 
-                  {/* SAKODE Mentor Selection */}
-                  <div>
-                    <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
-                    <UI.Select
-                      value={schoolForm.mentorId}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
-                      accentColor={selectedColor}
-                      className="text-xs!"
-                    >
-                      {mentors.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          🎓 {m.name} ({m.skills.slice(0, 2).join(", ")})
-                        </option>
-                      ))}
-                    </UI.Select>
-                  </div>
-
-                  {/* Guru Pendamping details */}
-                  <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
-                    <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">Akun Kepala Sekolah / Guru Pendamping</span>
-                    <div className="space-y-3.5">
-                      <div>
-                        <UI.Label>Nama Lengkap Guru</UI.Label>
+                    {/* School name & branch selection */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      
+                      <div className="col-span-1 md:col-span-2">
+                        <UI.Label>Nama Sekolah / Institusi</UI.Label>
                         <UI.Input
                           type="text"
-                          value={schoolForm.picName}
-                          onChange={(e) => setSchoolForm({ ...schoolForm, picName: e.target.value })}
+                          value={schoolForm.name}
+                          onChange={(e) => setSchoolForm({ ...schoolForm, name: e.target.value })}
                           accentColor={selectedColor}
                           className="text-xs!"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+
+                      <div>
+                        <UI.Label>Cabang Pembimbing</UI.Label>
+                        <UI.Select
+                          value={schoolForm.branch}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, branch: e.target.value })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          <option value="Yogyakarta">Yogyakarta</option>
+                          <option value="Jakarta Selatan">Jakarta Selatan</option>
+                          <option value="Semarang">Semarang</option>
+                          <option value="Surabaya">Surabaya</option>
+                        </UI.Select>
+                      </div>
+
+                      <div>
+                        <UI.Label>Status Pendaftaran</UI.Label>
+                        <UI.Select
+                          value={schoolForm.status}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, status: e.target.value as "active" | "inactive" })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          <option value="active">Aktif</option>
+                          <option value="inactive">Nonaktif</option>
+                        </UI.Select>
+                      </div>
+
+                      <div className="col-span-1 md:col-span-2">
+                        <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
+                        <UI.Select
+                          value={schoolForm.mentorId}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          {mentors.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.name} ({m.skills.slice(0, 2).join(", ")})
+                            </option>
+                          ))}
+                        </UI.Select>
+                      </div>
+
+                    </div>
+
+                    {/* Guru Pendamping details */}
+                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
+                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">Akun Kepala Sekolah / Guru Pendamping</span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="col-span-1 md:col-span-2">
+                          <UI.Label>Nama Lengkap Guru</UI.Label>
+                          <UI.Input
+                            type="text"
+                            value={schoolForm.picName}
+                            onChange={(e) => setSchoolForm({ ...schoolForm, picName: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
                         <div>
                           <UI.Label>Email Guru</UI.Label>
                           <UI.Input
@@ -734,12 +746,10 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* MoU Document Edit info */}
-                  <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
-                    <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">Dokumen Kerja Sama (MoU)</span>
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* MoU Document Edit info */}
+                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block col-span-1 md:col-span-2">Dokumen Kerja Sama (MoU)</span>
                       <div>
                         <UI.Label>Nama File Dokumen MoU</UI.Label>
                         <UI.Input
@@ -761,29 +771,29 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                         />
                       </div>
                     </div>
-                  </div>
 
-                  {/* Submit buttons */}
-                  <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
-                    <UI.Button
-                      type="button"
-                      onClick={() => setIsEditSchoolOpen(false)}
-                      variant="secondary"
-                      accentColor={selectedColor}
-                      className="text-xs! py-2! font-bold! cursor-pointer"
-                    >
-                      Batal
-                    </UI.Button>
-                    <UI.Button
-                      type="submit"
-                      variant="primary"
-                      accentColor={selectedColor}
-                      className="text-xs! py-2! px-5! font-bold! cursor-pointer"
-                    >
-                      Simpan Perubahan
-                    </UI.Button>
-                  </div>
-                </form>
+                    {/* Submit buttons */}
+                    <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
+                      <UI.Button
+                        type="button"
+                        onClick={() => setIsEditSchoolOpen(false)}
+                        variant="secondary"
+                        accentColor={selectedColor}
+                        className="text-xs! py-2! font-bold! cursor-pointer"
+                      >
+                        Batal
+                      </UI.Button>
+                      <UI.Button
+                        type="submit"
+                        variant="primary"
+                        accentColor={selectedColor}
+                        className="text-xs! py-2! px-5! font-bold! cursor-pointer"
+                      >
+                        Simpan Perubahan
+                      </UI.Button>
+                    </div>
+                  </form>
+                </div>
               </UI.Card>
             </motion.div>
           </div>
@@ -810,7 +820,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                     <button
                       type="button"
                       onClick={() => setIsAddMemberOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
                       title="Tutup"
                     >
                       <Icons.X className="w-4 h-4" />
@@ -895,7 +905,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                     <button
                       type="button"
                       onClick={() => setIsEditMemberOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
                       title="Tutup"
                     >
                       <Icons.X className="w-4 h-4" />
@@ -978,7 +988,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                     <button
                       type="button"
                       onClick={() => setIsDeleteMemberConfirmOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
                       title="Tutup"
                     >
                       <Icons.X className="w-4 h-4" />
@@ -989,7 +999,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                     <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-350 leading-normal block">
                       Apakah Anda yakin ingin mengeluarkan siswa <span className="font-extrabold text-zinc-900 dark:text-white">{memberForm.name} ({memberForm.grade})</span> dari bimbingan club ekskul {school.name}?
                     </span>
-                    <span className="text-[10px] text-zinc-450 mt-2 block">
+                    <span className="text-[10px] text-zinc-455 mt-2 block">
                       Tindakan ini akan membatalkan status aktif siswa pada sistem administrasi ekskul sekolah ini.
                     </span>
                   </div>

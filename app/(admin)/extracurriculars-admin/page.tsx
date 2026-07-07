@@ -351,7 +351,7 @@ export default function ExtracurricularsAdminPage() {
         if (type === "panel-card")
           return "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-none";
         if (type === "tab-button")
-          return "rounded-none py-1.5 px-4 font-medium border border-zinc-200 dark:border-zinc-800";
+          return "rounded-none py-1.5 px-4 font-medium border border-zinc-200/80 dark:border-zinc-800";
         if (type === "divider")
           return "h-px bg-zinc-200 dark:bg-zinc-800 my-4";
         if (type === "table-header")
@@ -529,23 +529,25 @@ export default function ExtracurricularsAdminPage() {
         <div className="flex gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-px">
           <button
             onClick={() => setActiveTab("schools")}
-            className={`${getSubElementClass("tab-button")} cursor-pointer ${
+            className={`${getSubElementClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
               activeTab === "schools"
                 ? "bg-sakode-blue dark:bg-sky-400 text-white dark:text-zinc-950 border-sakode-blue"
                 : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900/35 border-transparent"
             }`}
           >
-            🏫 Kemitraan & Ekskul Sekolah
+            <Icons.AcademicCap className="w-4 h-4" />
+            Kemitraan & Ekskul Sekolah
           </button>
           <button
             onClick={() => setActiveTab("reviews")}
-            className={`${getSubElementClass("tab-button")} cursor-pointer ${
+            className={`${getSubElementClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
               activeTab === "reviews"
                 ? "bg-sakode-blue dark:bg-sky-400 text-white dark:text-zinc-950 border-sakode-blue"
                 : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900/35 border-transparent"
             }`}
           >
-            📥 Review Pendaftaran Ekskul ({metrics.pendingReviews})
+            <Icons.Gift className="w-4 h-4" />
+            Review Pendaftaran Ekskul ({metrics.pendingReviews})
           </button>
         </div>
 
@@ -625,23 +627,38 @@ export default function ExtracurricularsAdminPage() {
                   <td className="p-4 pl-4 text-left">
                     <span className="font-extrabold text-sm text-zinc-900 dark:text-white hover:text-sakode-blue hover:dark:text-sky-400 transition-colors block">{org.name}</span>
                     {org.mouFileName && (
-                      <span className="text-[9px] text-rose-500 font-bold block mt-0.5">📄 MoU: {org.mouFileName}</span>
+                      <span className="text-[9px] text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 mt-0.5">
+                        <Icons.BookOpen className="w-3 h-3" />
+                        MoU: {org.mouFileName}
+                      </span>
                     )}
                   </td>
                   <td className="p-4 text-zinc-700 dark:text-zinc-300 text-left font-semibold">
-                    {org.branch}
+                    <span className="flex items-center gap-1">
+                      <Icons.Compass className="w-3.5 h-3.5 text-zinc-400" />
+                      {org.branch}
+                    </span>
                   </td>
                   <td className="p-4 text-left">
                     <div className="flex flex-col">
-                      <span className="font-bold text-zinc-800 dark:text-zinc-200">👤 {org.picName}</span>
-                      <span className="text-[10px] text-zinc-450 mt-0.5">{org.picEmail}</span>
+                      <span className="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1">
+                        <Icons.User className="w-3 h-3 text-zinc-450" />
+                        {org.picName}
+                      </span>
+                      <span className="text-[10px] text-zinc-450 pl-4 mt-0.5">{org.picEmail}</span>
                     </div>
                   </td>
                   <td className="p-4 text-left font-bold text-sakode-blue dark:text-sky-400">
-                    🎓 {org.mentorName}
+                    <span className="flex items-center gap-1">
+                      <Icons.User className="w-3.5 h-3.5" />
+                      {org.mentorName}
+                    </span>
                   </td>
                   <td className="p-4 text-center font-extrabold text-zinc-800 dark:text-white">
-                    👥 {org.members?.length || 0} Siswa
+                    <span className="flex items-center justify-center gap-1">
+                      <Icons.User className="w-3.5 h-3.5 text-zinc-400" />
+                      {org.members?.length || 0} Siswa
+                    </span>
                   </td>
                   <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
                     <span
@@ -694,10 +711,16 @@ export default function ExtracurricularsAdminPage() {
                       {reg.studentName}
                     </td>
                     <td className="p-4 font-semibold text-zinc-700 dark:text-zinc-300">
-                      🏫 {reg.schoolName}
+                      <span className="flex items-center gap-1">
+                        <Icons.AcademicCap className="w-3.5 h-3.5 text-zinc-400" />
+                        {reg.schoolName}
+                      </span>
                     </td>
                     <td className="p-4 font-bold text-sakode-blue dark:text-sky-400">
-                      🎨 {reg.extracurricularName}
+                      <span className="flex items-center gap-1">
+                        <Icons.BookOpen className="w-3.5 h-3.5 text-sakode-blue dark:text-sky-400" />
+                        {reg.extracurricularName}
+                      </span>
                     </td>
                     <td className="p-4 text-zinc-500 font-semibold">
                       {reg.date}
@@ -748,109 +771,111 @@ export default function ExtracurricularsAdminPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md relative my-8"
+              className="w-full max-w-2xl relative my-8"
             >
               <UI.Card accentColor={selectedColor}>
-                <form onSubmit={handleAddSchoolSubmit} className="flex flex-col gap-4 text-left">
-                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
-                      <Icons.Plus className="w-4 h-4" />
-                      Daftarkan Ekskul Sekolah Baru
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => setIsAddSchoolOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
-                      title="Tutup"
-                    >
-                      <Icons.X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {formError && (
-                    <UI.Alert title="Gagal Mendaftar Kemitraan" type="warning">
-                      {formError}
-                    </UI.Alert>
-                  )}
-
-                  {/* School name & branch selection */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="col-span-2">
-                      <UI.Label>Nama Sekolah / Institusi Mitra</UI.Label>
-                      <UI.Input
-                        type="text"
-                        placeholder="contoh: SMA Labschool Jakarta"
-                        value={schoolForm.name}
-                        onChange={(e) => setSchoolForm({ ...schoolForm, name: e.target.value })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
-                      />
-                    </div>
-                    
-                    <div>
-                      <UI.Label>Cabang Pembimbing</UI.Label>
-                      <UI.Select
-                        value={schoolForm.branch}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, branch: e.target.value })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
+                {/* Scrollable Container with max-height to prevent block content */}
+                <div className="max-h-[85vh] overflow-y-auto pr-3 text-left">
+                  <form onSubmit={handleAddSchoolSubmit} className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                        <Icons.Plus className="w-4 h-4" />
+                        Daftarkan Ekskul Sekolah Baru
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => setIsAddSchoolOpen(false)}
+                        className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
+                        title="Tutup"
                       >
-                        <option value="Yogyakarta">Yogyakarta</option>
-                        <option value="Jakarta Selatan">Jakarta Selatan</option>
-                        <option value="Semarang">Semarang</option>
-                        <option value="Surabaya">Surabaya</option>
-                      </UI.Select>
+                        <Icons.X className="w-4 h-4" />
+                      </button>
                     </div>
 
-                    <div>
-                      <UI.Label>Status Awal</UI.Label>
-                      <UI.Select
-                        value={schoolForm.status}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, status: e.target.value as "active" | "inactive" })}
-                        accentColor={selectedColor}
-                        className="text-xs!"
-                      >
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
-                      </UI.Select>
-                    </div>
-                  </div>
+                    {formError && (
+                      <UI.Alert title="Gagal Mendaftar Kemitraan" type="warning">
+                        {formError}
+                      </UI.Alert>
+                    )}
 
-                  {/* SAKODE Mentor Selection */}
-                  <div>
-                    <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
-                    <UI.Select
-                      value={schoolForm.mentorId}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
-                      accentColor={selectedColor}
-                      className="text-xs!"
-                    >
-                      {mentors.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          🎓 {m.name} ({m.skills.slice(0, 2).join(", ")})
-                        </option>
-                      ))}
-                    </UI.Select>
-                  </div>
-
-                  {/* Guru Pendamping Account Registry Section */}
-                  <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
-                    <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">
-                      Akun Kepala Sekolah / Guru Pendamping
-                    </span>
-                    <div className="space-y-3.5">
-                      <div>
-                        <UI.Label>Nama Lengkap Guru</UI.Label>
+                    {/* Widen layouts using a 2-column grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      
+                      <div className="col-span-1 md:col-span-2">
+                        <UI.Label>Nama Sekolah / Institusi Mitra</UI.Label>
                         <UI.Input
                           type="text"
-                          placeholder="Nama lengkap & gelar akademik..."
-                          value={schoolForm.picName}
-                          onChange={(e) => setSchoolForm({ ...schoolForm, picName: e.target.value })}
+                          placeholder="contoh: SMA Labschool Jakarta"
+                          value={schoolForm.name}
+                          onChange={(e) => setSchoolForm({ ...schoolForm, name: e.target.value })}
                           accentColor={selectedColor}
                           className="text-xs!"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      
+                      <div>
+                        <UI.Label>Cabang Pembimbing</UI.Label>
+                        <UI.Select
+                          value={schoolForm.branch}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, branch: e.target.value })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          <option value="Yogyakarta">Yogyakarta</option>
+                          <option value="Jakarta Selatan">Jakarta Selatan</option>
+                          <option value="Semarang">Semarang</option>
+                          <option value="Surabaya">Surabaya</option>
+                        </UI.Select>
+                      </div>
+
+                      <div>
+                        <UI.Label>Status Awal</UI.Label>
+                        <UI.Select
+                          value={schoolForm.status}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, status: e.target.value as "active" | "inactive" })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          <option value="active">Aktif</option>
+                          <option value="inactive">Nonaktif</option>
+                        </UI.Select>
+                      </div>
+
+                      <div className="col-span-1 md:col-span-2">
+                        <UI.Label>Pilih Mentor SAKODE (Pemegang Ekskul)</UI.Label>
+                        <UI.Select
+                          value={schoolForm.mentorId}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSchoolForm({ ...schoolForm, mentorId: e.target.value })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        >
+                          {mentors.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.name} ({m.skills.slice(0, 2).join(", ")})
+                            </option>
+                          ))}
+                        </UI.Select>
+                      </div>
+
+                    </div>
+
+                    {/* Guru Pendamping Account Registry Section */}
+                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1">
+                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block mb-3">
+                        Akun Kepala Sekolah / Guru Pendamping
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="col-span-1 md:col-span-2">
+                          <UI.Label>Nama Lengkap Guru</UI.Label>
+                          <UI.Input
+                            type="text"
+                            placeholder="Nama lengkap & gelar akademik..."
+                            value={schoolForm.picName}
+                            onChange={(e) => setSchoolForm({ ...schoolForm, picName: e.target.value })}
+                            accentColor={selectedColor}
+                            className="text-xs!"
+                          />
+                        </div>
                         <div>
                           <UI.Label>Email Akun Guru</UI.Label>
                           <UI.Input
@@ -875,73 +900,77 @@ export default function ExtracurricularsAdminPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* MoU File Upload simulator info */}
-                  <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1 flex flex-col gap-3">
-                    <span className="text-[10px] text-zinc-400 font-extrabold uppercase block">Dokumen Kerja Sama (MoU)</span>
-                    
-                    {/* Simulated File upload input area */}
-                    <div
-                      onClick={handleSimulateFileUpload}
-                      className="border-2 border-dashed border-zinc-200/80 dark:border-zinc-800 hover:border-sakode-blue dark:hover:border-sky-400 bg-zinc-50 dark:bg-zinc-950/20 p-5 rounded-2xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2"
-                    >
-                      {uploadProgress !== null ? (
-                        <div className="w-full space-y-2">
-                          <Icons.Loader className="w-6 h-6 text-sakode-blue dark:text-sky-400 mx-auto animate-spin" />
-                          <span className="text-[10px] font-bold text-zinc-400">Mengunggah MoU... {uploadProgress}%</span>
-                          <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                            <div className="bg-sakode-blue dark:bg-sky-400 h-full" style={{ width: `${uploadProgress}%` }} />
-                          </div>
+                    {/* MoU File Upload simulator info */}
+                    <div className="border-t border-zinc-150 dark:border-zinc-800/80 pt-3 mt-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <span className="text-[10px] text-zinc-400 font-extrabold uppercase block col-span-1 md:col-span-2">
+                        Dokumen Kerja Sama (MoU)
+                      </span>
+                      
+                      {/* Simulated File upload input area */}
+                      <div className="col-span-1 md:col-span-2">
+                        <div
+                          onClick={handleSimulateFileUpload}
+                          className="border-2 border-dashed border-zinc-200/80 dark:border-zinc-800 hover:border-sakode-blue dark:hover:border-sky-400 bg-zinc-50 dark:bg-zinc-950/20 p-5 rounded-2xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2"
+                        >
+                          {uploadProgress !== null ? (
+                            <div className="w-full space-y-2">
+                              <Icons.Loader className="w-6 h-6 text-sakode-blue dark:text-sky-400 mx-auto animate-spin" />
+                              <span className="text-[10px] font-bold text-zinc-400">Mengunggah MoU... {uploadProgress}%</span>
+                              <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                                <div className="bg-sakode-blue dark:bg-sky-400 h-full" style={{ width: `${uploadProgress}%` }} />
+                              </div>
+                            </div>
+                          ) : uploadedFileName ? (
+                            <>
+                              <Icons.Check className="w-6 h-6 text-emerald-500" />
+                              <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">{uploadedFileName}</span>
+                              <span className="text-[9px] text-zinc-400">Klik lagi untuk mengganti berkas</span>
+                            </>
+                          ) : (
+                            <>
+                              <Icons.BookOpen className="w-6 h-6 text-zinc-400" />
+                              <span className="text-xs font-bold text-zinc-650 dark:text-zinc-300">Pilih Berkas MoU (PDF)</span>
+                              <span className="text-[9.5px] text-zinc-400">Klik untuk mensimulasikan upload berkas kerja sama</span>
+                            </>
+                          )}
                         </div>
-                      ) : uploadedFileName ? (
-                        <>
-                          <Icons.Check className="w-6 h-6 text-emerald-500" />
-                          <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">{uploadedFileName}</span>
-                          <span className="text-[9px] text-zinc-400">Klik lagi untuk mengganti berkas</span>
-                        </>
-                      ) : (
-                        <>
-                          <Icons.BookOpen className="w-6 h-6 text-zinc-400" />
-                          <span className="text-xs font-bold text-zinc-650 dark:text-zinc-300">Pilih Berkas MoU (PDF)</span>
-                          <span className="text-[9.5px] text-zinc-400">Klik untuk mensimulasikan upload berkas kerja sama</span>
-                        </>
-                      )}
+                      </div>
+
+                      <div className="col-span-1 md:col-span-2">
+                        <UI.Label>Tanggal Tanda Tangan MoU</UI.Label>
+                        <UI.Input
+                          type="date"
+                          value={schoolForm.mouSignedDate}
+                          onChange={(e) => setSchoolForm({ ...schoolForm, mouSignedDate: e.target.value })}
+                          accentColor={selectedColor}
+                          className="text-xs!"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <UI.Label>Tanggal Tanda Tangan MoU</UI.Label>
-                      <UI.Input
-                        type="date"
-                        value={schoolForm.mouSignedDate}
-                        onChange={(e) => setSchoolForm({ ...schoolForm, mouSignedDate: e.target.value })}
+                    {/* Submit buttons */}
+                    <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
+                      <UI.Button
+                        type="button"
+                        onClick={() => setIsAddSchoolOpen(false)}
+                        variant="secondary"
                         accentColor={selectedColor}
-                        className="text-xs!"
-                      />
+                        className="text-xs! py-2! font-bold! cursor-pointer"
+                      >
+                        Batal
+                      </UI.Button>
+                      <UI.Button
+                        type="submit"
+                        variant="primary"
+                        accentColor={selectedColor}
+                        className="text-xs! py-2! px-5! font-bold! cursor-pointer"
+                      >
+                        Buat Ekskul
+                      </UI.Button>
                     </div>
-                  </div>
-
-                  {/* Submit buttons */}
-                  <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
-                    <UI.Button
-                      type="button"
-                      onClick={() => setIsAddSchoolOpen(false)}
-                      variant="secondary"
-                      accentColor={selectedColor}
-                      className="text-xs! py-2! font-bold! cursor-pointer"
-                    >
-                      Batal
-                    </UI.Button>
-                    <UI.Button
-                      type="submit"
-                      variant="primary"
-                      accentColor={selectedColor}
-                      className="text-xs! py-2! px-5! font-bold! cursor-pointer"
-                    >
-                      Buat Ekskul
-                    </UI.Button>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </UI.Card>
             </motion.div>
           </div>
@@ -968,7 +997,7 @@ export default function ExtracurricularsAdminPage() {
                     <button
                       type="button"
                       onClick={() => setIsRejectOpen(false)}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-750 dark:hover:text-zinc-250 cursor-pointer"
                       title="Tutup"
                     >
                       <Icons.X className="w-4 h-4" />
