@@ -252,6 +252,117 @@ export default function ProgramDetailPage() {
     router.push("/programs");
   };
 
+  // Dedicated Module Editor Modal State
+  const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
+  const [editingModule, setEditingModule] = useState<ModuleViewModel | null>(null); // if null, we are adding
+  const [moduleFormData, setModuleFormData] = useState({
+    title: "",
+    description: "",
+    durationHours: ""
+  });
+  const [moduleFormErrors, setModuleFormErrors] = useState<Record<string, string>>({});
+
+  // Toast feedback statement Helpers
+  const openAddModuleModal = () => {
+    setEditingModule(null);
+    setModuleFormData({
+      title: "",
+      description: "",
+      durationHours: ""
+    });
+    setModuleFormErrors({});
+    setIsModuleModalOpen(true);
+  };
+
+  const openEditModuleModal = (mod: ModuleViewModel) => {
+    setEditingModule(mod);
+    setModuleFormData({
+      title: mod.title,
+      description: mod.description,
+      durationHours: mod.durationHours.toString()
+    });
+    setModuleFormErrors({});
+    setIsModuleModalOpen(true);
+  };
+
+  const handleSaveModule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!program) return;
+
+    const errors: Record<string, string> = {};
+    if (!moduleFormData.title.trim()) errors.title = "Judul modul wajib diisi.";
+    const duration = Number(moduleFormData.durationHours);
+    if (!moduleFormData.durationHours || isNaN(duration) || duration <= 0) {
+      errors.duration = "Durasi jam belajar harus angka positif (> 0).";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setModuleFormErrors(errors);
+      return;
+    }
+
+    setIsActionLoading(true);
+    let updatedModules: ModuleViewModel[];
+
+    if (editingModule) {
+      updatedModules = program.modules.map(m => 
+        m.id === editingModule.id 
+          ? { ...m, title: moduleFormData.title, description: moduleFormData.description, durationHours: duration }
+          : m
+      );
+    } else {
+      const newId = `MOD-${program.id.split("-")[1]}-${Date.now().toString().slice(-4)}`;
+      const newModule: ModuleViewModel = {
+        id: newId,
+        title: moduleFormData.title,
+        description: moduleFormData.description,
+        durationHours: duration,
+        order: program.modules.length + 1
+      };
+      updatedModules = [...program.modules, newModule];
+    }
+
+    const updatedProgram: ProgramViewModel = {
+      ...program,
+      modules: updatedModules.map((m, idx) => ({ ...m, order: idx + 1 }))
+    };
+
+    await ProgramMockService.saveProgram(updatedProgram);
+    setProgram(updatedProgram);
+    setIsModuleModalOpen(false);
+    setIsActionLoading(false);
+    setToast({
+      type: "success",
+      message: editingModule 
+        ? `Modul "${moduleFormData.title}" berhasil diubah.` 
+        : `Modul "${moduleFormData.title}" berhasil ditambahkan.`
+    });
+  };
+
+  const handleDeleteModule = async (moduleId: string) => {
+    if (!program) return;
+    const targetModule = program.modules.find(m => m.id === moduleId);
+    if (!targetModule) return;
+
+    setIsActionLoading(true);
+    const updatedModules = program.modules
+      .filter(m => m.id !== moduleId)
+      .map((m, idx) => ({ ...m, order: idx + 1 }));
+
+    const updatedProgram: ProgramViewModel = {
+      ...program,
+      modules: updatedModules
+    };
+
+    await ProgramMockService.saveProgram(updatedProgram);
+    setProgram(updatedProgram);
+    setIsActionLoading(false);
+    setToast({
+      type: "success",
+      message: `Modul "${targetModule.title}" berhasil dihapus.`
+    });
+  };
+
   // Modules form inline editing
   const addModuleToForm = () => {
     const nextOrder = formData.modules.length + 1;
@@ -437,14 +548,14 @@ export default function ProgramDetailPage() {
                       className={getSubElementClass("btn-icon")}
                       title="Edit Program"
                     >
-                      <EditIcon className="text-zinc-600 dark:text-zinc-300" />
+                      <EditIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-300" />
                     </button>
                     <button
                       onClick={() => setIsDeleteConfirmOpen(true)}
                       className="p-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 hover:bg-rose-500/20 hover:scale-[1.05] active:scale-[0.95] transition-all cursor-pointer"
                       title="Hapus Program"
                     >
-                      <TrashIcon />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -488,12 +599,21 @@ export default function ProgramDetailPage() {
               {/* Modules Timeline Outline */}
               <div className={getSubElementClass("panel-card")}>
                 <div className="flex justify-between items-center border-b border-zinc-150 dark:border-zinc-800 pb-3 mb-4">
-                  <h4 className="text-[10.5px] font-black text-zinc-400 dark:text-zinc-450 uppercase tracking-wider">
+                  <h4 className="text-[10.5px] font-black text-zinc-400 dark:text-zinc-455 uppercase tracking-wider">
                     Kurikulum & Outline Bab Pembelajaran
                   </h4>
-                  <span className="text-[10px] font-bold text-sakode-blue dark:text-sky-400 font-mono">
-                    Total: {program.modules.reduce((acc, m) => acc + m.durationHours, 0)} Jam Mentoring
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={openAddModuleModal}
+                      className={`text-[10px] font-bold ${getTextClass(selectedColor)} hover:underline flex items-center gap-0.5 cursor-pointer`}
+                    >
+                      <Icons.Plus className="w-3.5 h-3.5" />
+                      Tambah Modul
+                    </button>
+                    <span className="text-[10px] font-bold text-sakode-blue dark:text-sky-400 font-mono">
+                      Total: {program.modules.reduce((acc, m) => acc + m.durationHours, 0)} Jam
+                    </span>
+                  </div>
                 </div>
 
                 {program.modules.length === 0 ? (
@@ -515,9 +635,25 @@ export default function ProgramDetailPage() {
                               <h5 className="font-extrabold text-zinc-900 dark:text-white leading-tight">
                                 {mod.title}
                               </h5>
-                              <span className="text-[9.5px] font-bold text-zinc-450 dark:text-zinc-500 shrink-0 bg-zinc-100 dark:bg-zinc-800/80 px-2 py-0.5 rounded">
-                                {mod.durationHours} Jam
-                              </span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <button
+                                  onClick={() => openEditModuleModal(mod)}
+                                  className="p-1.5 rounded-lg bg-blue-500/10 dark:bg-sky-500/10 border border-blue-500/15 dark:border-sky-500/20 text-blue-600 dark:text-sky-400 hover:bg-blue-500/20 dark:hover:bg-sky-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                  title="Ubah Modul"
+                                >
+                                  <EditIcon className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteModule(mod.id)}
+                                  className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/15 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 dark:hover:bg-rose-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                                  title="Hapus Modul"
+                                >
+                                  <TrashIcon className="w-3.5 h-3.5" />
+                                </button>
+                                <span className="text-[9.5px] font-bold text-zinc-450 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800/80 px-2 py-0.5 rounded">
+                                  {mod.durationHours} Jam
+                                </span>
+                              </div>
                             </div>
                             <p className="text-zinc-550 dark:text-zinc-400 mt-1 leading-normal font-semibold">
                               {mod.description}
@@ -930,6 +1066,111 @@ export default function ProgramDetailPage() {
                     </UI.Button>
                   </div>
                 </div>
+              </UI.Card>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* DEDICATED MODULE EDITOR MODAL */}
+      <AnimatePresence>
+        {isModuleModalOpen && (
+          <div className="fixed inset-0 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-md relative"
+            >
+              <UI.Card accentColor={selectedColor}>
+                <form onSubmit={handleSaveModule} className="flex flex-col gap-4 text-left">
+                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-555 dark:text-zinc-205 flex items-center gap-1.5">
+                      {editingModule ? (
+                        <>
+                          <EditIcon className="w-4 h-4" />
+                          Ubah Bab Modul Belajar
+                        </>
+                      ) : (
+                        <>
+                          <Icons.Plus className="w-4 h-4" />
+                          Tambah Bab Modul Baru
+                        </>
+                      )}
+                    </h3>
+                    <button
+                    title="Tutup"
+                      type="button"
+                      onClick={() => setIsModuleModalOpen(false)}
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+                    >
+                      <CloseIcon />
+                    </button>
+                  </div>
+
+                  <div>
+                    <UI.Label>Judul Bab / Modul</UI.Label>
+                    <UI.Input
+                      type="text"
+                      placeholder="contoh: Routing & Layouting Next.js"
+                      value={moduleFormData.title}
+                      onChange={(e) => setModuleFormData({ ...moduleFormData, title: e.target.value })}
+                      accentColor={selectedColor}
+                      hasError={!!moduleFormErrors.title}
+                      className="text-xs!"
+                    />
+                    {moduleFormErrors.title && (
+                      <p className="text-[10px] text-rose-500 font-bold mt-1">{moduleFormErrors.title}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <UI.Label>Durasi Belajar (Jam Mentoring)</UI.Label>
+                    <UI.Input
+                      type="number"
+                      placeholder="contoh: 8"
+                      value={moduleFormData.durationHours}
+                      onChange={(e) => setModuleFormData({ ...moduleFormData, durationHours: e.target.value })}
+                      accentColor={selectedColor}
+                      hasError={!!moduleFormErrors.duration}
+                      className="text-xs!"
+                    />
+                    {moduleFormErrors.duration && (
+                      <p className="text-[10px] text-rose-500 font-bold mt-1">{moduleFormErrors.duration}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <UI.Label>Deskripsi Ringkas / Capaian Materi</UI.Label>
+                    <textarea
+                      placeholder="contoh: Memahami cara kerja routing dinamis Next.js, static layouting, dan error handling..."
+                      value={moduleFormData.description}
+                      onChange={(e) => setModuleFormData({ ...moduleFormData, description: e.target.value })}
+                      className="w-full text-xs min-h-20 bg-zinc-55 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80 rounded-xl py-2 px-3 focus:ring-2 focus:ring-sakode-blue focus:outline-hidden transition-all text-zinc-900 dark:text-white leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="flex gap-2.5 justify-end border-t border-zinc-150 dark:border-zinc-800 pt-4 mt-1">
+                    <UI.Button
+                      variant="secondary"
+                      accentColor={selectedColor}
+                      onClick={() => setIsModuleModalOpen(false)}
+                      disabled={isActionLoading}
+                      className="text-xs! py-2! font-semibold!"
+                    >
+                      Batal
+                    </UI.Button>
+                    <UI.Button
+                      type="submit"
+                      variant="primary"
+                      accentColor={selectedColor}
+                      isLoading={isActionLoading}
+                      className="text-xs! py-2! font-semibold! cursor-pointer"
+                    >
+                      {editingModule ? "Simpan Perubahan" : "Tambah Modul"}
+                    </UI.Button>
+                  </div>
+                </form>
               </UI.Card>
             </motion.div>
           </div>
