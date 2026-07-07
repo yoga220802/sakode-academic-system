@@ -26,6 +26,16 @@ interface RegistrationItem {
 	status: "pending" | "approved" | "rejected";
 	timeline: { title: string; time: string; desc: string }[];
 	modules: string[];
+	
+	// Offline cabang & payment fields
+	address: string;
+	paymentType: "lunas" | "trial" | "cicil";
+	paymentConfirmed: boolean;
+	isConversion?: boolean;
+	trialPricePaid?: number | null;
+	isGroup: boolean;
+	groupMembers?: string[] | null;
+	pricePerParticipant?: number | null;
 }
 
 export default function RegistrationReviewPage() {
@@ -97,6 +107,10 @@ export default function RegistrationReviewPage() {
 				"Integrasi API & state management dengan Zustand",
 				"Deploying Next.js to Vercel with Database connection",
 			],
+			address: "Cabang Jakarta Selatan - Jl. Kemang Raya No. 12",
+			paymentType: "lunas",
+			paymentConfirmed: true,
+			isGroup: false
 		},
 		{
 			id: "REG-002",
@@ -118,11 +132,6 @@ export default function RegistrationReviewPage() {
 					desc: "Endah berhasil mendaftar akun baru.",
 				},
 				{
-					title: "Atribusi Referral Terdeteksi",
-					time: "13 Mar 2026 13:42 WIB",
-					desc: "Referral dari Mandiri berhasil di-prefill secara transparan.",
-				},
-				{
 					title: "Paket Dipilih & Disubmit",
 					time: "13 Mar 2026 14:15 WIB",
 					desc: "Pendaftaran Bootcamp TypeScript dikirim oleh pendaftar.",
@@ -132,8 +141,11 @@ export default function RegistrationReviewPage() {
 				"TypeScript Types, Interfaces & Generics",
 				"Data Structures fundamentals (Stack, Queue, LinkedList)",
 				"Algorithms & Complexities (Big O Notation)",
-				"Sorting and Searching Algorithms in Node.js",
 			],
+			address: "Cabang Bandung - Jl. Dago No. 45",
+			paymentType: "cicil",
+			paymentConfirmed: false,
+			isGroup: false
 		},
 		{
 			id: "REG-003",
@@ -155,47 +167,52 @@ export default function RegistrationReviewPage() {
 					desc: "Rian berhasil mendaftar akun baru.",
 				},
 				{
-					title: "Paket Dipilih & Disubmit",
-					time: "12 Mar 2026 18:22 WIB",
-					desc: "Pendaftaran Bootcamp Backend Go & Docker dikirim oleh pendaftar.",
+					title: "Pendaftaran Lanjutan Trial",
+					time: "12 Mar 2026 18:10 WIB",
+					desc: "Mengkonversi sesi trial yang sudah dibayar.",
 				},
 			],
 			modules: [
 				"Go (Golang) basics & concurrency patterns",
 				"REST API development with Gin/Fiber frameworks",
-				"Database connections (PostgreSQL/MySQL & GORM)",
-				"Docker containerization & Orchestration basics",
 			],
+			address: "Cabang Surabaya - Jl. Gubeng Masjid No. 20",
+			paymentType: "lunas",
+			paymentConfirmed: true,
+			isConversion: true,
+			trialPricePaid: 50000,
+			isGroup: false
 		},
 		{
 			id: "REG-004",
-			name: "Siti Aminah",
+			name: "Kelompok Belajar Figma (3 Anak)",
 			email: "siti.aminah@gmail.com",
 			phone: "+62 855-4433-2211",
-			program: "React & Next.js Professional",
+			program: "React & Next.js Professional (Belajar Kelompok)",
 			date: "11 Mar 2026 10:05 WIB",
 			refCode: "Akbar",
 			promoCode: "",
 			promoDiscount: 0,
-			originalPrice: 3500000,
-			finalPrice: 3500000,
-			status: "approved",
+			originalPrice: 750000,
+			finalPrice: 750000,
+			status: "pending",
 			timeline: [
 				{
 					title: "Akun Dibuat",
 					time: "11 Mar 2026 09:30 WIB",
-					desc: "Siti mendaftar akun baru.",
-				},
-				{
-					title: "Review Disetujui",
-					time: "11 Mar 2026 10:05 WIB",
-					desc: "Pendaftaran disetujui oleh Admin dan dipindahkan ke plotting.",
+					desc: "Siti mendaftar akun kelompok baru.",
 				},
 			],
 			modules: [
 				"React Fundamentals & Hooks (State, Ref, Effect)",
 				"Next.js Core Concepts (App Router, Layouts, Metadata)",
 			],
+			address: "Cabang Yogyakarta - Jl. Kaliurang KM 5",
+			paymentType: "lunas",
+			paymentConfirmed: true,
+			isGroup: true,
+			groupMembers: ["Charles Go", "Dendi Kurniawan", "Eka Prasetya"],
+			pricePerParticipant: 250000
 		},
 		{
 			id: "REG-005",
@@ -209,23 +226,22 @@ export default function RegistrationReviewPage() {
 			promoDiscount: 0,
 			originalPrice: 4000000,
 			finalPrice: 4000000,
-			status: "rejected",
+			status: "pending",
 			timeline: [
 				{
 					title: "Akun Dibuat",
 					time: "10 Mar 2026 08:30 WIB",
 					desc: "Joko mendaftar akun baru.",
 				},
-				{
-					title: "Review Ditolak",
-					time: "10 Mar 2026 09:12 WIB",
-					desc: "Pendaftaran ditolak oleh Admin.",
-				},
 			],
 			modules: [
 				"Go (Golang) basics & concurrency patterns",
 				"REST API development with Gin/Fiber frameworks",
 			],
+			address: "Cabang Semarang - Jl. Pandanaran No. 10",
+			paymentType: "cicil",
+			paymentConfirmed: true,
+			isGroup: false
 		},
 	]);
 
@@ -475,6 +491,10 @@ export default function RegistrationReviewPage() {
 					"Integrasi API & state management dengan Zustand",
 					"Deploying Next.js to Vercel with Database connection",
 				],
+				address: "Cabang Jakarta Selatan - Jl. Kemang Raya No. 12",
+				paymentType: "lunas",
+				paymentConfirmed: true,
+				isGroup: false
 			},
 			{
 				id: "REG-002",
@@ -496,11 +516,6 @@ export default function RegistrationReviewPage() {
 						desc: "Endah berhasil mendaftar akun baru.",
 					},
 					{
-						title: "Atribusi Referral Terdeteksi",
-						time: "13 Mar 2026 13:42 WIB",
-						desc: "Referral dari Mandiri berhasil di-prefill secara transparan.",
-					},
-					{
 						title: "Paket Dipilih & Disubmit",
 						time: "13 Mar 2026 14:15 WIB",
 						desc: "Pendaftaran Bootcamp TypeScript dikirim oleh pendaftar.",
@@ -510,8 +525,11 @@ export default function RegistrationReviewPage() {
 					"TypeScript Types, Interfaces & Generics",
 					"Data Structures fundamentals (Stack, Queue, LinkedList)",
 					"Algorithms & Complexities (Big O Notation)",
-					"Sorting and Searching Algorithms in Node.js",
 				],
+				address: "Cabang Bandung - Jl. Dago No. 45",
+				paymentType: "cicil",
+				paymentConfirmed: false,
+				isGroup: false
 			},
 			{
 				id: "REG-003",
@@ -533,47 +551,52 @@ export default function RegistrationReviewPage() {
 						desc: "Rian berhasil mendaftar akun baru.",
 					},
 					{
-						title: "Paket Dipilih & Disubmit",
-						time: "12 Mar 2026 18:22 WIB",
-						desc: "Pendaftaran Bootcamp Backend Go & Docker dikirim oleh pendaftar.",
+						title: "Pendaftaran Lanjutan Trial",
+						time: "12 Mar 2026 18:10 WIB",
+						desc: "Mengkonversi sesi trial yang sudah dibayar.",
 					},
 				],
 				modules: [
 					"Go (Golang) basics & concurrency patterns",
 					"REST API development with Gin/Fiber frameworks",
-					"Database connections (PostgreSQL/MySQL & GORM)",
-					"Docker containerization & Orchestration basics",
 				],
+				address: "Cabang Surabaya - Jl. Gubeng Masjid No. 20",
+				paymentType: "lunas",
+				paymentConfirmed: true,
+				isConversion: true,
+				trialPricePaid: 50000,
+				isGroup: false
 			},
 			{
 				id: "REG-004",
-				name: "Siti Aminah",
+				name: "Kelompok Belajar Figma (3 Anak)",
 				email: "siti.aminah@gmail.com",
 				phone: "+62 855-4433-2211",
-				program: "React & Next.js Professional",
+				program: "React & Next.js Professional (Belajar Kelompok)",
 				date: "11 Mar 2026 10:05 WIB",
 				refCode: "Akbar",
 				promoCode: "",
 				promoDiscount: 0,
-				originalPrice: 3500000,
-				finalPrice: 3500000,
-				status: "approved",
+				originalPrice: 750000,
+				finalPrice: 750000,
+				status: "pending",
 				timeline: [
 					{
 						title: "Akun Dibuat",
 						time: "11 Mar 2026 09:30 WIB",
-						desc: "Siti mendaftar akun baru.",
-					},
-					{
-						title: "Review Disetujui",
-						time: "11 Mar 2026 10:05 WIB",
-						desc: "Pendaftaran disetujui oleh Admin dan dipindahkan ke plotting.",
+						desc: "Siti mendaftar akun kelompok baru.",
 					},
 				],
 				modules: [
 					"React Fundamentals & Hooks (State, Ref, Effect)",
 					"Next.js Core Concepts (App Router, Layouts, Metadata)",
 				],
+				address: "Cabang Yogyakarta - Jl. Kaliurang KM 5",
+				paymentType: "lunas",
+				paymentConfirmed: true,
+				isGroup: true,
+				groupMembers: ["Charles Go", "Dendi Kurniawan", "Eka Prasetya"],
+				pricePerParticipant: 250000
 			},
 			{
 				id: "REG-005",
@@ -587,26 +610,25 @@ export default function RegistrationReviewPage() {
 				promoDiscount: 0,
 				originalPrice: 4000000,
 				finalPrice: 4000000,
-				status: "rejected",
+				status: "pending",
 				timeline: [
 					{
 						title: "Akun Dibuat",
 						time: "10 Mar 2026 08:30 WIB",
 						desc: "Joko mendaftar akun baru.",
 					},
-					{
-						title: "Review Ditolak",
-						time: "10 Mar 2026 09:12 WIB",
-						desc: "Pendaftaran ditolak oleh Admin.",
-					},
 				],
 				modules: [
 					"Go (Golang) basics & concurrency patterns",
 					"REST API development with Gin/Fiber frameworks",
 				],
+				address: "Cabang Semarang - Jl. Pandanaran No. 10",
+				paymentType: "cicil",
+				paymentConfirmed: true,
+				isGroup: false
 			},
 		]);
-		setSelectedItemId(null);
+			setSelectedItemId(null);
 		setConfirmAction(null);
 		setSearchQuery("");
 		setSelectedStatus("all");
@@ -848,7 +870,7 @@ export default function RegistrationReviewPage() {
 							: filteredItems.length === 0 ?
 								// 3.3 EMPTY STATE
 								<div className='flex flex-col items-center justify-center py-14 px-4 text-center'>
-									<div className='w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-805 flex items-center justify-center text-zinc-400 mb-4'>
+									<div className='w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 mb-4'>
 										<Icons.Info className='w-6 h-6' />
 									</div>
 									<h3 className='text-sm font-bold text-zinc-800 dark:text-zinc-200 mb-1'>
@@ -891,6 +913,17 @@ export default function RegistrationReviewPage() {
 																No Ref
 															</UI.Badge>
 														}
+														<UI.Badge
+															variant={item.paymentType === 'lunas' ? 'success' : item.paymentType === 'trial' ? 'warning' : 'accent'}
+															accentColor={item.paymentType === 'cicil' ? 'purple' : undefined}
+															className='text-[8px]! px-1.5! py-0.5!'>
+															{item.paymentType === 'lunas' ? 'Lunas' : item.paymentType === 'trial' ? 'Trial' : 'Cicil'}
+														</UI.Badge>
+														{!item.paymentConfirmed && (
+															<UI.Badge variant='default' className='text-[8px]! bg-rose-500/10 text-rose-600 border-rose-500/20 px-1.5! py-0.5!'>
+																Pending
+															</UI.Badge>
+														)}
 													</div>
 												</div>
 
@@ -974,7 +1007,7 @@ export default function RegistrationReviewPage() {
 										}>
 										<div className='p-5 flex flex-col gap-5 text-left relative'>
 											{/* Header Details */}
-											<div className='flex justify-between items-start border-b border-zinc-150 dark:border-zinc-855 pb-4'>
+											<div className='flex justify-between items-start border-b border-zinc-150 dark:border-zinc-800 pb-4'>
 												<div>
 													<UI.Badge
 														variant="default"
@@ -1013,6 +1046,22 @@ export default function RegistrationReviewPage() {
 													</span>
 													<span className='font-semibold text-zinc-800 dark:text-zinc-100'>
 														{selectedItem.phone}
+													</span>
+												</div>
+												<div className='flex justify-between'>
+													<span className='text-zinc-400 dark:text-zinc-400 font-medium'>
+														Cabang Offline:
+													</span>
+													<span className='font-bold text-zinc-800 dark:text-zinc-100'>
+														{selectedItem.address}
+													</span>
+												</div>
+												<div className='flex justify-between'>
+													<span className='text-zinc-400 dark:text-zinc-400 font-medium'>
+														Status Verifikasi Bayar:
+													</span>
+													<span className={`font-black ${selectedItem.paymentConfirmed ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}`}>
+														{selectedItem.paymentConfirmed ? '✓ TERVERIFIKASI' : '⚠ MENUNGGU KONFIRMASI'}
 													</span>
 												</div>
 											</div>
@@ -1158,27 +1207,72 @@ export default function RegistrationReviewPage() {
 												</div>
 											</div>
 
-											{/* Mock review actions */}
-											{selectedItem.status === "pending" && (
-												<div className='flex gap-3 mt-4 border-t border-zinc-150 dark:border-zinc-800 pt-5'>
-													<UI.Button
-														variant='secondary'
-														accentColor={selectedColor}
-														onClick={() =>
-															setConfirmAction({ type: "reject", item: selectedItem })
-														}
-														className='flex-1 text-xs! py-2.5! font-semibold! cursor-pointer'>
-														Tolak
-													</UI.Button>
+											{/* Payment verification action (Admin only gatekeeper) */}
+											{selectedItem.status === "pending" && !selectedItem.paymentConfirmed && (
+												<div className='mt-2'>
 													<UI.Button
 														variant='primary'
-														accentColor={selectedColor}
-														onClick={() =>
-															setConfirmAction({ type: "approve", item: selectedItem })
-														}
-														className='flex-1 text-xs! py-2.5! font-semibold! cursor-pointer'>
-														Setujui & Plotting
+														accentColor='green'
+														onClick={() => {
+															const updatedList = items.map((item) =>
+																item.id === selectedItem.id
+																	? {
+																			...item,
+																			paymentConfirmed: true,
+																			timeline: [
+																				...item.timeline,
+																				{
+																					title: "Pembayaran Terverifikasi",
+																					time: "Hari ini " + new Date().toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' }),
+																					desc: "Pembayaran terverifikasi secara manual oleh Admin SAKODE."
+																				}
+																			]
+																	  }
+																	: item
+															);
+															setItems(updatedList);
+															setToastMessage({
+																type: "success",
+																text: "Pembayaran murid berhasil diverifikasi oleh Admin!"
+															});
+														}}
+														className='w-full text-xs! py-2! font-extrabold! cursor-pointer flex items-center justify-center gap-1.5'>
+														<Icons.Check className="w-4 h-4" />
+														Verifikasi Pembayaran Murid
 													</UI.Button>
+												</div>
+											)}
+
+											{/* Mock review actions */}
+											{selectedItem.status === "pending" && (
+												<div className='flex flex-col gap-2 mt-4 border-t border-zinc-150 dark:border-zinc-800 pt-4'>
+													{!selectedItem.paymentConfirmed && (
+														<span className="text-[10px] text-rose-500 font-extrabold block text-center mb-1">
+															⚠ Pembayaran belum terverifikasi. Selesaikan pembayaran sebelum menyetujui.
+														</span>
+													)}
+													
+													<div className='flex gap-3'>
+														<UI.Button
+															variant='secondary'
+															accentColor={selectedColor}
+															onClick={() =>
+																setConfirmAction({ type: "reject", item: selectedItem })
+															}
+															className='flex-1 text-xs! py-2.5! font-semibold! cursor-pointer'>
+															Tolak
+														</UI.Button>
+														<UI.Button
+															variant='primary'
+															accentColor={selectedColor}
+															disabled={!selectedItem.paymentConfirmed}
+															onClick={() =>
+																setConfirmAction({ type: "approve", item: selectedItem })
+															}
+															className='flex-1 text-xs! py-2.5! font-semibold! cursor-pointer'>
+															Setujui & Plotting
+														</UI.Button>
+													</div>
 												</div>
 											)}
 										</div>

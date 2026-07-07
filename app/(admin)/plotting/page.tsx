@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
@@ -41,7 +42,7 @@ export default function MentorPlottingPage() {
   // 4. Interaction States
   const [isConfirmingPlot, setIsConfirmingPlot] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
-  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Initialize data from mock database
@@ -81,21 +82,7 @@ export default function MentorPlottingPage() {
     return students.find((s) => s.id === selectedStudentId) || null;
   }, [students, selectedStudentId]);
 
-  // Admin Payment Verification Action
-  const handleVerifyPayment = () => {
-    if (!activeStudent) return;
-    setIsVerifyingPayment(true);
 
-    setTimeout(() => {
-      const updatedList = students.map((s) =>
-        s.id === activeStudent.id ? { ...s, paymentConfirmed: true } : s
-      );
-      setStudents(updatedList);
-      saveStoredStudents(updatedList);
-      setIsVerifyingPayment(false);
-      showToast(`Pembayaran untuk ${activeStudent.name} berhasil diverifikasi Admin!`);
-    }, 850);
-  };
 
   // Compute Eligible Mentors with Trial Conversion priorities and group capacity validation
   const eligibleMentors = useMemo(() => {
@@ -290,9 +277,18 @@ export default function MentorPlottingPage() {
           <h1 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-white leading-tight">
             Plotting & Penugasan Mentor
           </h1>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+<p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             Ploting mentor pendamping untuk calon murid yang baru terdaftar berdasarkan kecocokan keahlian program.
           </p>
+        </div>
+      </div>
+
+      {/* Backup Warning Banner */}
+      <div className="bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-2xl text-xs text-amber-700 dark:text-amber-400 flex items-start gap-2.5">
+        <Icons.AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+        <div>
+          <span className="font-extrabold block mb-0.5">Pemberitahuan Operasional (Admin Backup Mode):</span>
+          Modul penugasan mentor ini diperuntukkan sebagai **backup operasional** apabila Mentor Lead berhalangan dalam jangka waktu lama. Pengelolaan data administrasi pendaftaran, cabang offline, dan pembayaran wajib dikelola terpusat melalui menu <Link href="/registration-review" className="underline font-black hover:text-amber-900 dark:hover:text-amber-300">Review Pendaftaran</Link>.
         </div>
       </div>
 
@@ -660,19 +656,7 @@ export default function MentorPlottingPage() {
                     </div>
                   </div>
 
-                  {/* Payment Verification Action button (Required for unconfirmed cases) */}
-                  {!activeStudent.paymentConfirmed && (
-                    <UI.Button
-                      onClick={handleVerifyPayment}
-                      isLoading={isVerifyingPayment}
-                      variant="primary"
-                      accentColor="green"
-                      className="w-full text-xs! font-bold! py-2! mb-1 cursor-pointer flex items-center justify-center gap-1.5"
-                    >
-                      <Icons.Check className="w-4 h-4" />
-                      Konfirmasi & Verifikasi Pembayaran Murid
-                    </UI.Button>
-                  )}
+
                 </div>
 
                 {/* 2. Eligible Mentor Comparison */}
@@ -811,15 +795,13 @@ export default function MentorPlottingPage() {
                 {/* 3. Plotting Action Trigger */}
                 <UI.Button
                   onClick={() => setIsConfirmingPlot(true)}
-                  disabled={!selectedMentorId || !activeStudent.paymentConfirmed}
+                  disabled={!selectedMentorId}
                   variant="primary"
                   accentColor={selectedColor}
                   className="w-full font-bold! text-xs! py-3! flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Icons.UserCheck className="w-4 h-4" />
-                  {!activeStudent.paymentConfirmed
-                    ? "Harap Verifikasi Pembayaran Terlebih Dahulu"
-                    : "Konfirmasi Penugasan Plotting Mentor"}
+                  Konfirmasi Penugasan Plotting Mentor
                 </UI.Button>
               </motion.div>
             )}
