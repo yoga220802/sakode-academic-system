@@ -379,8 +379,8 @@ export default function TrialManagementPage() {
 
       case "minimalism":
         if (type === "divider") return "h-px bg-zinc-200/40 dark:bg-zinc-800/40 w-full my-1";
-        if (type === "inner-card") return "p-3.5 bg-zinc-50/50 dark:bg-zinc-900/20 border border-zinc-200/40 dark:border-zinc-855/40 rounded-lg text-left";
-        return "p-2.5 border border-zinc-150 dark:border-zinc-855 rounded-md";
+        if (type === "inner-card") return "p-3.5 bg-zinc-50/50 dark:bg-zinc-900/20 border border-zinc-200/40 dark:border-zinc-855/40 rounded-none text-left";
+        return "p-2.5 border border-zinc-150 dark:border-zinc-855 rounded-none";
 
       case "bento-grid":
       case "sakode-modern":
