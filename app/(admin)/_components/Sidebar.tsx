@@ -87,8 +87,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           {
             groupName: "Ekstrakurikuler",
             items: [
-              { label: "Organisasi Ekskul", href: "/extracurriculars-admin", icon: "AcademicCap" },
-              { label: "Keanggotaan Kepsek", href: "/principal-membership", icon: "ShieldCheck" }
+              { label: "Organisasi Ekskul", href: "/extracurriculars-admin", icon: "AcademicCap" }
             ]
           },
           {
