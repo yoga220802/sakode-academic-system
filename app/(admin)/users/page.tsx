@@ -139,19 +139,19 @@ export default function UsersPage() {
     }
   };
 
-  const getRoleBadgeColor = (role: string) => {
+  const getRoleBadgeProps = (role: string): { variant: "accent" | "default" | "success" | "warning"; accentColor?: any } => {
     switch (role) {
       case "admin":
-        return "bg-rose-500/10 text-rose-600";
+        return { variant: "accent", accentColor: "red" };
       case "mentor_lead":
-        return "bg-amber-500/10 text-amber-600";
+        return { variant: "accent", accentColor: "orange" };
       case "mentor":
-        return "bg-blue-500/10 text-sakode-blue dark:text-sky-400";
+        return { variant: "accent", accentColor: "blue" };
       case "school_principal":
-        return "bg-purple-500/10 text-purple-600";
+        return { variant: "accent", accentColor: "purple" };
       case "murid":
       default:
-        return "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400";
+        return { variant: "default" };
     }
   };
 
@@ -387,47 +387,54 @@ export default function UsersPage() {
                   <td className="p-4 font-semibold text-zinc-600 dark:text-zinc-350">
                     {user.email}
                   </td>
-                  <td className="p-4 text-center">
-                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9.5px] font-black uppercase tracking-wider ${getRoleBadgeColor(user.role)}`}>
+                   <td className="p-4 text-center">
+                    <UI.Badge
+                      {...getRoleBadgeProps(user.role)}
+                      className="text-[9.5px]! font-black! uppercase tracking-wider"
+                    >
                       {translateRole(user.role)}
-                    </span>
+                    </UI.Badge>
                   </td>
                   <td className="p-4 text-center font-semibold text-zinc-500">
                     {user.joinedDate}
                   </td>
                   <td className="p-4 text-center">
-                    <span
-                      onClick={() => handleToggleStatus(user)}
-                      className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-black select-none cursor-pointer transition-all ${
-                        user.status === "active"
-                          ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-                          : "bg-rose-500/10 text-rose-600 hover:bg-rose-500/20"
-                      }`}
-                      title="Klik untuk ubah status"
-                    >
-                      {user.status === "active" ? "Aktif" : "Nonaktif"}
+                    <span onClick={() => handleToggleStatus(user)} className="cursor-pointer" title="Klik untuk ubah status">
+                      <UI.Badge
+                        variant={user.status === "active" ? "success" : "warning"}
+                        accentColor={user.status === "active" ? "green" : "orange"}
+                        className="text-[10px]! font-black! select-none"
+                      >
+                        {user.status === "active" ? "Aktif" : "Nonaktif"}
+                      </UI.Badge>
                     </span>
                   </td>
                   <td className="p-4 text-center pr-4">
-                    <div className="flex gap-3 justify-center items-center">
-                      <button
+                    <div className="flex gap-2.5 justify-center items-center">
+                      <UI.Button
                         onClick={() => router.push(`/users/${user.id}/edit`)}
-                        className="bg-sakode-blue/10 text-sakode-blue dark:bg-sky-400/10 dark:text-sky-400 hover:bg-sakode-blue hover:text-white dark:hover:bg-sky-400 dark:hover:text-zinc-950 font-black text-[10px] px-2.5 py-1 rounded-lg transition-all cursor-pointer"
+                        variant="secondary"
+                        accentColor={selectedColor}
+                        className="text-[10px]! py-1! px-2.5! font-black! cursor-pointer"
                       >
                         Ubah Peran
-                      </button>
-                      <button
+                      </UI.Button>
+                      <UI.Button
                         onClick={() => handleOpenResetPassword(user)}
-                        className="text-zinc-450 hover:text-amber-600 font-bold text-[10px] cursor-pointer"
+                        variant="secondary"
+                        accentColor="yellow"
+                        className="text-[10px]! py-1! px-2.5! font-bold! cursor-pointer text-amber-600! dark:text-amber-400!"
                       >
                         Reset Sandi
-                      </button>
-                      <button
+                      </UI.Button>
+                      <UI.Button
                         onClick={() => handleOpenDeleteConfirm(user)}
-                        className="text-zinc-450 hover:text-rose-600 font-bold text-[10px] cursor-pointer"
+                        variant="secondary"
+                        accentColor="red"
+                        className="text-[10px]! py-1! px-2.5! font-bold! cursor-pointer text-rose-600! dark:text-rose-455!"
                       >
                         Hapus
-                      </button>
+                      </UI.Button>
                     </div>
                   </td>
                 </tr>

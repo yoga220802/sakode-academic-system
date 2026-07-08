@@ -71,31 +71,31 @@ export default function LogsPage() {
   }, [logs, searchQuery, categoryFilter, statusFilter, simulationState]);
 
   // Log level styling translation
-  const getStatusBadgeColor = (status: string) => {
+  const getStatusBadgeProps = (status: string): { variant: "success" | "warning" | "default" | "accent"; accentColor?: any } => {
     switch (status) {
       case "success":
-        return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+        return { variant: "success", accentColor: "green" };
       case "warning":
-        return "bg-amber-500/10 text-amber-600";
+        return { variant: "warning", accentColor: "orange" };
       case "error":
       default:
-        return "bg-rose-500/10 text-rose-600 dark:text-rose-455";
+        return { variant: "default", accentColor: "red" };
     }
   };
 
-  const getCategoryBadgeColor = (cat: string) => {
+  const getCategoryBadgeProps = (cat: string): { variant: "accent" | "default"; accentColor?: any } => {
     switch (cat) {
       case "auth":
-        return "bg-sky-500/10 text-sky-600 dark:text-sky-400";
+        return { variant: "accent", accentColor: "blue" };
       case "registration":
-        return "bg-purple-500/10 text-purple-600";
+        return { variant: "accent", accentColor: "purple" };
       case "mentor":
-        return "bg-blue-500/10 text-sakode-blue dark:text-sky-400";
+        return { variant: "accent", accentColor: "blue" };
       case "extracurricular":
-        return "bg-teal-500/10 text-teal-650";
+        return { variant: "accent", accentColor: "cyan" };
       case "system":
       default:
-        return "bg-zinc-100 dark:bg-zinc-800 text-zinc-650 dark:text-zinc-400";
+        return { variant: "default" };
     }
   };
 
@@ -284,17 +284,23 @@ export default function LogsPage() {
                     </span>
                   </td>
                   <td className="p-3 text-center">
-                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${getCategoryBadgeColor(log.category)}`}>
+                    <UI.Badge
+                      {...getCategoryBadgeProps(log.category)}
+                      className="text-[9px]! font-black! uppercase tracking-wider"
+                    >
                       {log.category}
-                    </span>
+                    </UI.Badge>
                   </td>
                   <td className="p-3 text-left font-sans font-semibold text-zinc-700 dark:text-zinc-300 max-w-md">
                     {log.action}
                   </td>
                   <td className="p-3 text-center">
-                    <span className={`inline-block px-2 py-0.5 rounded text-[9.5px] font-black uppercase tracking-wide ${getStatusBadgeColor(log.status)}`}>
+                    <UI.Badge
+                      {...getStatusBadgeProps(log.status)}
+                      className="text-[9.5px]! font-black! uppercase tracking-wide"
+                    >
                       {log.status}
-                    </span>
+                    </UI.Badge>
                   </td>
                   <td className="p-3 text-center text-zinc-450 font-bold">
                     {log.ipAddress}

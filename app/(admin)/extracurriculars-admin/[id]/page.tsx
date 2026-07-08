@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
+import { getBorderRadiusClass } from "@/UI/shared/color-utils";
 import { ExtracurricularOrganization, ExtracurricularMember } from "../_types/extracurricular";
 import {
   getStoredOrganizations,
@@ -390,12 +391,12 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               </div>
             </div>
 
-            {/* SAKODE Mentor */}
+             {/* SAKODE Mentor */}
             <div className="space-y-2">
               <span className="text-[9.5px] text-zinc-400 font-bold block uppercase tracking-wider">
                 Mentor Pendamping SAKODE:
               </span>
-              <div className="bg-blue-500/5 border border-blue-500/15 p-3 rounded-2xl flex items-center gap-2.5 text-xs">
+              <div className={getSubElementClass("card-item") + " flex items-center gap-2.5 text-xs p-3!"}>
                 <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-sakode-blue dark:text-sky-400 font-bold text-sm shrink-0">
                   M
                 </div>
@@ -418,7 +419,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               </span>
 
               {school.mouFileName ? (
-                <div className="bg-zinc-50 dark:bg-zinc-950/20 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2">
+                <div className={getSubElementClass("card-item") + " flex flex-col gap-2 p-3!"}>
                   <div className="flex items-center justify-between gap-2 text-zinc-800 dark:text-zinc-250">
                     <div className="flex items-center gap-2 min-w-0">
                       <Icons.BookOpen className="w-5 h-5 text-rose-505 shrink-0" />
@@ -437,7 +438,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
                   </div>
                   <div className="flex justify-between text-[10px] text-zinc-455 border-t border-zinc-150/40 pt-2 mt-1">
                     <span>Tanggal MoU:</span>
-                    <span className="font-bold text-zinc-700 dark:text-zinc-300">
+                    <span className="font-bold text-zinc-700 dark:text-zinc-350">
                       {school.mouSignedDate || "N/A"}
                     </span>
                   </div>
@@ -449,7 +450,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               {/* Upload Dropzone Simulator */}
               <div
                 onClick={handleSimulateFileUpload}
-                className="border border-dashed border-zinc-200 dark:border-zinc-800 hover:border-sakode-blue dark:hover:border-sky-400 bg-zinc-50/50 dark:bg-zinc-950/10 p-4 rounded-2xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5"
+                className={`border border-dashed hover:border-sakode-blue dark:hover:border-sky-400 bg-zinc-50/50 dark:bg-zinc-950/10 p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5 ${getBorderRadiusClass(selectedStyle)} ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900 shadow-[2px_2px_0px_rgba(0,0,0,1)]" : "border-zinc-200 dark:border-zinc-800"}`}
               >
                 {uploadProgress !== null ? (
                   <div className="w-full space-y-1">

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
-import { getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
+import { getBgClass, getTextClass, getBgOpacity10Class, getBorderRadiusClass } from "@/UI/shared/color-utils";
 
 interface MetricItem {
   label: string;
@@ -134,7 +134,7 @@ export function AdminWidget() {
           {quickActions.map((act, idx) => (
             <UI.Card key={idx} accentColor={selectedColor} className="h-full cursor-pointer hover:-translate-y-0.5 transition-transform duration-200">
               <div className="p-4 flex items-center gap-3.5 text-left h-full">
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${getBgOpacity10Class(selectedColor)}`}>
+                <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${getBorderRadiusClass(selectedStyle)} ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900 dark:border-white" : ""} ${getBgOpacity10Class(selectedColor)}`}>
                   {renderIcon(act.icon as keyof typeof Icons, `w-4.5 h-4.5 ${getTextClass(selectedColor)}`)}
                 </div>
                 <div className="min-w-0 flex-1">

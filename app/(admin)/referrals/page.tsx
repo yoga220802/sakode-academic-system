@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
-import { getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
+import { getTextClass, getBgOpacity10Class, getBorderRadiusClass } from "@/UI/shared/color-utils";
 
 interface ReferralProgram {
 	id: string;
@@ -825,7 +825,7 @@ export default function ReferralManagementPage() {
 											<div
 												key={prg.id}
 												onClick={() => setSelectedProgramId(prg.id)}
-												className={`p-4 border rounded-2xl transition-all duration-200 cursor-pointer flex flex-col gap-3 relative overflow-hidden group ${
+												className={`p-4 border transition-all duration-200 cursor-pointer flex flex-col gap-3 relative overflow-hidden group ${getBorderRadiusClass(selectedStyle)} ${
 													isSelected ?
 														"bg-zinc-50/80 dark:bg-zinc-800/40 border-sakode-blue dark:border-sakode-blue/80 shadow-3xs"
 													:	"bg-transparent hover:bg-zinc-50/40 dark:hover:bg-zinc-800/20 border-zinc-200/60 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700"
@@ -945,19 +945,25 @@ export default function ReferralManagementPage() {
 
 												<div className='flex justify-between items-center mt-1'>
 													<span className='text-zinc-400 font-medium'>Target Bootcamp:</span>
-													<span className='font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-50 dark:bg-zinc-800/80 px-2.5 py-0.5 rounded-md border border-zinc-200/50 dark:border-zinc-700/50'>
+													<UI.Badge
+														variant="default"
+														className="text-[11px]! font-semibold!"
+													>
 														{selectedProgram.targetProgram}
-													</span>
+													</UI.Badge>
 												</div>
 												<div className='flex justify-between items-center mt-1'>
 													<span className='text-zinc-400 font-medium'>
 														Jadwal Tanggal Payout Bulanan:
 													</span>
-													<span className='font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-50 dark:bg-zinc-800/80 px-2.5 py-0.5 rounded-md border border-zinc-200/50 dark:border-zinc-700/50 flex items-center gap-1'>
+													<UI.Badge
+														variant="default"
+														className="text-[11px]! font-semibold! flex items-center gap-1"
+													>
 														<Icons.Calendar className='w-3.5 h-3.5 text-purple-500' />
 														Tanggal {selectedProgram.payoutStartDay} s/d{" "}
 														{selectedProgram.payoutEndDay}
-													</span>
+													</UI.Badge>
 												</div>
 												{/* Active Status Actions */}
 												<div className='flex gap-2 mt-2'>
@@ -1066,7 +1072,7 @@ export default function ReferralManagementPage() {
 																	</div>
 
 																	{/* Link Preview Share Panel (visually separate from promo discount details) */}
-																	<div className='bg-zinc-50 dark:bg-zinc-905/30 border border-zinc-200 dark:border-zinc-800/80 rounded-lg p-2.5 flex flex-col gap-1.5 mt-1 font-sans'>
+																	<div className={getSubElementClass("inner-card") + " flex flex-col gap-1.5 mt-1 font-sans p-2.5!"}>
 																		<span className='text-[8.5px] text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block font-bold'>
 																			Link Canonical Pendaftaran (Non-Discount Tracking URL)
 																		</span>
@@ -1131,14 +1137,14 @@ export default function ReferralManagementPage() {
 												</h4>
 
 												{conversions.length === 0 ?
-													<div className='text-center py-6 px-4 bg-zinc-50 dark:bg-zinc-900/10 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-400'>
+													<div className={`text-center py-6 px-4 ${getBorderRadiusClass(selectedStyle)} ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900" : "border border-dashed border-zinc-200 dark:border-zinc-800"} bg-zinc-50/50 dark:bg-zinc-900/10 text-xs text-zinc-400`}>
 														Belum ada pendaftaran siswa yang teratribusi ke kode program ini.
 													</div>
 												:	<div className='flex flex-col gap-2.5'>
 														{conversions.map((conv) => (
 															<div
 																key={conv.id}
-																className='p-3 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/50 dark:border-zinc-800/80 rounded-xl flex flex-col gap-2'>
+																className={getSubElementClass("inner-card") + " flex flex-col gap-2 p-3!"}>
 																<div className='flex justify-between items-start gap-2'>
 																	<div>
 																		<span className='font-bold text-xs text-zinc-800 dark:text-zinc-100 block'>

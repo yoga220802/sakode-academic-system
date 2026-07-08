@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
-import { getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
+import { getTextClass, getBgOpacity10Class, getBorderRadiusClass } from "@/UI/shared/color-utils";
 
 interface ReferrerAccount {
 	id: string;
@@ -1021,10 +1021,10 @@ export default function ReferrerAccountsPage() {
 														<div
 															key={acc.id}
 															onClick={() => setSelectedAccountId(acc.id)}
-															className={`p-4 border rounded-2xl transition-all duration-200 cursor-pointer flex flex-col gap-3 relative overflow-hidden group ${
+															className={`p-4 border transition-all duration-200 cursor-pointer flex flex-col gap-3 relative overflow-hidden group ${getBorderRadiusClass(selectedStyle)} ${
 																isSelected ?
-																	"bg-zinc-50/80 dark:bg-zinc-800/40 border-sakode-blue dark:border-sakode-blue/80 shadow-3xs"
-																:	"bg-transparent hover:bg-zinc-50/40 dark:hover:bg-zinc-800/20 border-zinc-200/60 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700"
+																	"bg-zinc-55/80 dark:bg-zinc-800/40 border-sakode-blue dark:border-sakode-blue/80 shadow-3xs"
+																:	"bg-transparent hover:bg-zinc-55/40 dark:hover:bg-zinc-800/20 border-zinc-200/60 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700"
 															}`}>
 															<div className='flex justify-between items-start gap-3'>
 																<div>

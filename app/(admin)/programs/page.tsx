@@ -585,13 +585,20 @@ export default function ProgramsPage() {
                   <div className="flex justify-between items-center w-full border-t border-zinc-100 dark:border-zinc-800/40 pt-2 text-[10px] font-bold">
                     <span className="text-zinc-400 dark:text-zinc-500">Pilihan Kelompok:</span>
                     {p.hasGroupOption ? (
-                      <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded flex items-center gap-0.5">
+                      <UI.Badge
+                        variant="accent"
+                        accentColor="purple"
+                        className="text-[10px]! font-black! px-2! py-0.5! flex items-center gap-0.5"
+                      >
                         👥 Aktif ({p.minGroupSize || 2}-{p.maxGroupSize || 5} Anak)
-                      </span>
+                      </UI.Badge>
                     ) : (
-                      <span className="text-zinc-400 bg-zinc-100 dark:bg-zinc-850 px-2 py-0.5 rounded">
+                      <UI.Badge
+                        variant="default"
+                        className="text-[10px]! px-2! py-0.5!"
+                      >
                         👤 Individu Saja
-                      </span>
+                      </UI.Badge>
                     )}
                   </div>
                 </div>

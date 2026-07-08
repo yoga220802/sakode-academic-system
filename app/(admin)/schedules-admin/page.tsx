@@ -348,7 +348,7 @@ export default function SchedulesAdminPage() {
         if (type === "divider")
           return "h-0.5 bg-zinc-900 dark:bg-white my-4";
         if (type === "calendar-cell")
-          return "border border-zinc-900 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 min-h-32 relative font-mono";
+          return "border border-zinc-900 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 min-h-24 relative font-mono";
         if (type === "calendar-card")
           return "bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white p-2 text-[10px] font-mono shadow-[1.5px_1.5px_0_#000] mb-2";
         return "";
@@ -363,7 +363,7 @@ export default function SchedulesAdminPage() {
         if (type === "divider")
           return "h-px bg-zinc-200/60 dark:bg-zinc-800/40 my-4";
         if (type === "calendar-cell")
-          return "border border-zinc-150 dark:border-zinc-850 bg-slate-50/50 dark:bg-zinc-950/20 p-2 min-h-32 rounded-xl";
+          return "border border-zinc-150 dark:border-zinc-850 bg-slate-50/50 dark:bg-zinc-950/20 p-2 min-h-24 rounded-xl";
         if (type === "calendar-card")
           return "bg-white/90 dark:bg-zinc-900/80 border border-zinc-200/50 p-2 text-[10px] rounded-xl shadow-xs mb-2";
         return "";
@@ -379,7 +379,7 @@ export default function SchedulesAdminPage() {
         if (type === "divider")
           return "h-px bg-white/10 dark:bg-zinc-800/50 my-4";
         if (type === "calendar-cell")
-          return "border border-white/5 bg-white/5 backdrop-blur-3xs p-2 min-h-32 rounded-lg";
+          return "border border-white/5 bg-white/5 backdrop-blur-3xs p-2 min-h-24 rounded-lg";
         if (type === "calendar-card")
           return "bg-white/10 border border-white/15 p-2 text-[10px] rounded-lg mb-2";
         return "";
@@ -394,7 +394,7 @@ export default function SchedulesAdminPage() {
         if (type === "divider")
           return "h-px bg-zinc-200 dark:bg-zinc-800 my-4";
         if (type === "calendar-cell")
-          return "border border-zinc-200 dark:border-zinc-800 bg-white p-2 min-h-32";
+          return "border border-zinc-200 dark:border-zinc-800 bg-white p-2 min-h-24";
         if (type === "calendar-card")
           return "bg-white dark:bg-zinc-900 border border-zinc-200 p-2 text-[10px] mb-2";
         return "";
@@ -407,11 +407,11 @@ export default function SchedulesAdminPage() {
         if (type === "panel-card")
           return "bg-white dark:bg-zinc-900/60 border border-zinc-200/65 dark:border-zinc-800/80 p-5 rounded-3xl shadow-sm";
         if (type === "tab-button")
-          return "rounded-xl py-1.5 px-4 font-bold border border-zinc-200/60 dark:border-zinc-800";
+          return "rounded-xl py-1.5 px-4 font-bold border border-zinc-200/60 dark:border-zinc-805";
         if (type === "divider")
           return "h-px bg-zinc-200 dark:bg-zinc-800 my-4";
         if (type === "calendar-cell")
-          return "border border-zinc-200/40 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/20 p-2.5 min-h-32 rounded-2xl";
+          return "border border-zinc-200/40 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/20 p-2.5 min-h-24 rounded-2xl";
         if (type === "calendar-card")
           return "bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-805 p-2 text-[10px] rounded-xl shadow-xs mb-2";
         return "";
@@ -815,7 +815,7 @@ export default function SchedulesAdminPage() {
                           {slotSession ? (
                             <div
                               onClick={() => handleOpenEditModal(slotSession)}
-                              className={`p-2 rounded-xl text-left cursor-pointer flex flex-col justify-between h-full border ${
+                              className={`${getSubElementClass("calendar-card")} text-left cursor-pointer flex flex-col justify-between h-full border ${
                                 slotSession.status === "completed"
                                   ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-800 dark:text-emerald-450"
                                   : slotSession.status === "cancelled"
@@ -829,7 +829,13 @@ export default function SchedulesAdminPage() {
                                     {slotSession.studentName}
                                   </span>
                                   {slotSession.isGroup && (
-                                    <span className="bg-purple-500/10 text-purple-700 text-[6.5px] font-black px-1 py-0.5 rounded shrink-0">GP</span>
+                                    <UI.Badge
+                                      variant="accent"
+                                      accentColor="purple"
+                                      className="text-[6.5px]! font-black! px-1! py-0.5! shrink-0"
+                                    >
+                                      GP
+                                    </UI.Badge>
                                   )}
                                 </div>
                                 <span className="text-[8.5px] font-bold text-zinc-500 dark:text-zinc-400 block truncate mt-0.5">

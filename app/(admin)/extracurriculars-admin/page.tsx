@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
+import { getBorderRadiusClass } from "@/UI/shared/color-utils";
 import { ExtracurricularOrganization, ExtracurricularRegistration } from "./_types/extracurricular";
 import {
   getStoredOrganizations,
@@ -490,7 +491,7 @@ export default function ExtracurricularsAdminPage() {
       {activeTab === "schools" ? (
         
         /* TAB 1: PARTNERSHIP SCHOOLS LIST */
-        <div className="overflow-x-auto border border-zinc-200/60 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900/30">
+        <div className={`overflow-x-auto bg-white dark:bg-zinc-900/30 ${getBorderRadiusClass(selectedStyle)} border ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900 shadow-[2px_2px_0px_rgba(0,0,0,1)]" : "border-zinc-200/60 dark:border-zinc-800"}`}>
           <table className="w-full text-xs">
             <thead>
               <tr>
@@ -521,56 +522,46 @@ export default function ExtracurricularsAdminPage() {
                   </td>
                   <td className="p-4 text-zinc-700 dark:text-zinc-300 text-left font-semibold">
                     <div className="flex flex-col">
-                      <span className="flex items-center gap-1">
-                        <Icons.Compass className="w-3.5 h-3.5 text-zinc-400" />
-                        Kec. {org.kecamatan}
-                      </span>
-                      <span className="text-[9.5px] text-zinc-450 pl-4.5 block mt-0.5">
+                      <span>Kec. {org.kecamatan}</span>
+                      <span className="text-[9.5px] text-zinc-450 block mt-0.5">
                         {org.kabupaten}, {org.provinsi}
                       </span>
                     </div>
                   </td>
                   <td className="p-4 text-left">
                     <div className="flex flex-col">
-                      <span className="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1">
-                        <Icons.User className="w-3 h-3 text-zinc-450" />
+                      <span className="font-bold text-zinc-800 dark:text-zinc-200">
                         {org.picName}
                       </span>
-                      <span className="text-[10px] text-zinc-455 pl-4 mt-0.5">{org.picEmail}</span>
+                      <span className="text-[10px] text-zinc-455 mt-0.5 block">{org.picEmail}</span>
                     </div>
                   </td>
                   <td className="p-4 text-left font-bold text-sakode-blue dark:text-sky-400">
-                    <span className="flex items-center gap-1">
-                      <Icons.User className="w-3.5 h-3.5" />
-                      {org.mentorName}
-                    </span>
+                    {org.mentorName}
                   </td>
                   <td className="p-4 text-center font-extrabold text-zinc-800 dark:text-white">
-                    <span className="flex items-center justify-center gap-1">
-                      <Icons.User className="w-3.5 h-3.5 text-zinc-400" />
-                      {org.members?.length || 0} Siswa
-                    </span>
+                    {org.members?.length || 0} Siswa
                   </td>
                   <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
-                    <span
-                      onClick={() => handleToggleSchoolStatus(org)}
-                      className={`inline-block px-2 py-0.5 rounded text-[10px] font-black select-none transition-all ${
-                        org.status === "active"
-                          ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-                          : "bg-zinc-100 text-zinc-455 hover:bg-zinc-200"
-                      }`}
-                      title="Klik untuk ubah status"
-                    >
-                      {org.status === "active" ? "Aktif" : "Nonaktif"}
+                    <span onClick={() => handleToggleSchoolStatus(org)} className="cursor-pointer" title="Klik untuk ubah status">
+                      <UI.Badge
+                        variant={org.status === "active" ? "success" : "default"}
+                        accentColor={org.status === "active" ? "green" : undefined}
+                        className="text-[10px]! font-black! select-none"
+                      >
+                        {org.status === "active" ? "Aktif" : "Nonaktif"}
+                      </UI.Badge>
                     </span>
                   </td>
                   <td className="p-4 text-center pr-4" onClick={(e) => e.stopPropagation()}>
-                    <button
+                    <UI.Button
                       onClick={() => router.push(`/extracurriculars-admin/${org.id}`)}
-                      className="bg-sakode-blue/10 text-sakode-blue dark:bg-sky-400/10 dark:text-sky-400 hover:bg-sakode-blue hover:text-white dark:hover:bg-sky-400 dark:hover:text-zinc-950 font-black text-[10px] px-2.5 py-1 rounded-lg transition-all cursor-pointer"
+                      variant="secondary"
+                      accentColor={selectedColor}
+                      className="text-[10px]! py-1! px-2.5! font-black! cursor-pointer"
                     >
-                      Kelola Anggota & Detail
-                    </button>
+                      Detail
+                    </UI.Button>
                   </td>
                 </tr>
               ))}

@@ -9,6 +9,7 @@ import {
 	getBgClass,
 	getTextClass,
 	getBgOpacity10Class,
+	getBorderRadiusClass,
 } from "@/UI/shared/color-utils";
 
 interface InstallmentTerm {
@@ -1233,7 +1234,7 @@ export default function RegistrationReviewPage() {
 									<UI.Card accentColor={selectedColor}>
 										<div className='p-8 text-center flex flex-col items-center justify-center gap-4 py-20'>
 											<div
-												className={`w-12 h-12 rounded-full ${getBgOpacity10Class(selectedColor)} flex items-center justify-center ${getTextClass(selectedColor)}`}>
+												className={`w-12 h-12 flex items-center justify-center ${getBorderRadiusClass(selectedStyle)} ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900 dark:border-white" : ""} ${getBgOpacity10Class(selectedColor)} ${getTextClass(selectedColor)}`}>
 												<Icons.Info className='w-5 h-5' />
 											</div>
 											<div className='flex flex-col gap-1'>
@@ -1328,9 +1329,14 @@ export default function RegistrationReviewPage() {
 														</span>
 														<div className='flex flex-wrap gap-1.5'>
 															{selectedItem.groupMembers.map((member, mIdx) => (
-																<span key={mIdx} className='bg-purple-500/10 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 px-2 py-0.5 rounded text-[10px] font-bold'>
+																<UI.Badge
+																	key={mIdx}
+																	variant="accent"
+																	accentColor="purple"
+																	className="text-[10px]! font-bold!"
+																>
 																	{member}
-																</span>
+																</UI.Badge>
 															))}
 														</div>
 													</div>
@@ -1465,18 +1471,18 @@ export default function RegistrationReviewPage() {
 												{selectedItem.isGroup && selectedItem.groupPaymentMode === "individual" ? (
 													<div className="flex flex-col gap-2">
 														{selectedItem.groupMemberPayments && selectedItem.groupMemberPayments.map((p, pIdx) => (
-															<div key={pIdx} className="bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2 text-xs">
+															<div key={pIdx} className={getSubElementClass("inner-card") + " flex flex-col gap-2 text-xs"}>
 																<div className="flex justify-between items-center">
 																	<span className="font-bold text-zinc-800 dark:text-zinc-200">
 																		{p.memberName}
 																	</span>
-																	<span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
-																		p.status === "paid"
-																			? "bg-emerald-500/10 text-emerald-600"
-																			: "bg-rose-500/10 text-rose-600"
-																	}`}>
+																	<UI.Badge
+																		variant={p.status === "paid" ? "success" : "warning"}
+																		accentColor={p.status === "paid" ? "green" : "orange"}
+																		className="text-[9px]! font-black! px-2! py-0.5!"
+																	>
 																		{p.status === "paid" ? "Lunas" : "Belum Bayar"}
-																	</span>
+																	</UI.Badge>
 																</div>
 																
 																<div className="flex justify-between text-[10px] text-zinc-450 border-b border-zinc-150/40 pb-1.5 mt-0.5">
@@ -1525,18 +1531,18 @@ export default function RegistrationReviewPage() {
 												) : selectedItem.paymentType === "cicil" ? (
 													<div className="flex flex-col gap-2">
 														{selectedItem.installments && selectedItem.installments.map((term, tIdx) => (
-															<div key={tIdx} className="bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2 text-xs">
+															<div key={tIdx} className={getSubElementClass("inner-card") + " flex flex-col gap-2 text-xs"}>
 																<div className="flex justify-between items-center">
 																	<span className="font-bold text-zinc-800 dark:text-zinc-200">
 																		{term.termName}
 																	</span>
-																	<span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
-																		term.status === "paid"
-																			? "bg-emerald-500/10 text-emerald-600"
-																			: "bg-rose-500/10 text-rose-600"
-																	}`}>
+																	<UI.Badge
+																		variant={term.status === "paid" ? "success" : "warning"}
+																		accentColor={term.status === "paid" ? "green" : "orange"}
+																		className="text-[9px]! font-black! px-2! py-0.5!"
+																	>
 																		{term.status === "paid" ? "Lunas" : "Belum Bayar"}
-																	</span>
+																	</UI.Badge>
 																</div>
 																
 																<div className="flex justify-between text-[10px] text-zinc-450 border-b border-zinc-150/40 pb-1.5 mt-0.5">
@@ -1584,7 +1590,7 @@ export default function RegistrationReviewPage() {
 													</div>
 												) : (
 													selectedItem.paymentReceiptUrl ? (
-														<div className='bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2.5 text-xs text-left'>
+														<div className={getSubElementClass("inner-card") + " flex flex-col gap-2.5 text-xs text-left"}>
 															<div className='flex items-center justify-between gap-2 text-zinc-800 dark:text-zinc-250'>
 																<div className='flex items-center gap-2 min-w-0'>
 																	<Icons.BookOpen className="w-5 h-5 text-amber-500 shrink-0" />
@@ -1613,7 +1619,7 @@ export default function RegistrationReviewPage() {
 															</div>
 														</div>
 													) : (
-														<div className="bg-rose-500/5 border border-rose-500/10 p-4 rounded-2xl text-center text-xs">
+														<div className={`p-4 text-center text-xs ${getBorderRadiusClass(selectedStyle)} ${selectedStyle === "neobrutalism" ? "border-2 border-zinc-900" : "border"} border-rose-500/20 bg-rose-500/5`}>
 															<span className="text-rose-500 font-bold block mb-2 text-left pl-1">Bukti transfer belum diunggah</span>
 															<button
 																type="button"
