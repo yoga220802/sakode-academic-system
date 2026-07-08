@@ -5,7 +5,7 @@ import { PaletteColorKey, getBgClass, getBgOpacity90Class, getBgHoverClass, getF
 
 export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
-    className={`bg-white/70 dark:bg-white/8 backdrop-blur-md border border-zinc-200 dark:border-white/15 rounded-2xl p-6 shadow-xl text-zinc-800 dark:text-white ${className}`}
+    className={`bg-white/70 dark:bg-white/8 backdrop-blur-md border border-zinc-200 dark:border-white/15 rounded-2xl p-6 shadow-md text-zinc-800 dark:text-white ${className}`}
     {...props}
   >
     {children}
@@ -139,7 +139,7 @@ export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
 }> = ({ steps, accentColor = "blue" }) => {
-  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-900" : "text-white";
   return (
     <div className="relative pl-6 border-l border-white/25 dark:border-white/10 space-y-6">
       {steps.map((item, idx) => (
@@ -167,9 +167,9 @@ export const Badge: React.FC<{
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-white/30 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 border-white/20 dark:border-white/10",
-    accent: `${getBgOpacity90Class(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border-white/30 dark:border-white/15`,
-    success: "bg-emerald-100/40 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-350 border-emerald-500/20 dark:border-emerald-500/10",
-    warning: "bg-amber-100/40 text-amber-800 dark:bg-amber-950/20 dark:text-amber-350 border-amber-500/20 dark:border-amber-500/10",
+    accent: `${getBgOpacity90Class(accentColor)} ${isDarkText ? "text-zinc-900" : "text-white"} border-white/30 dark:border-white/15`,
+    success: "bg-emerald-100/40 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-300 border-emerald-500/20 dark:border-emerald-500/10",
+    warning: "bg-amber-100/40 text-amber-800 dark:bg-amber-950/20 dark:text-amber-300 border-amber-500/20 dark:border-amber-500/10",
   };
 
   return (
@@ -185,7 +185,7 @@ export const AvatarGroup: React.FC<{
   extraCount: number;
   accentColor?: PaletteColorKey;
 }> = ({ initials, extraCount, accentColor = "blue" }) => {
-  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  const extraTextColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-900" : "text-white";
   return (
     <div className="flex items-center gap-3">
       <div className="flex -space-x-2.5 overflow-hidden p-0.5">

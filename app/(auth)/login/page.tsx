@@ -23,7 +23,10 @@ export default function LoginPage() {
 	// Form state
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [emailError, setEmailError] = useState("");
+	const [passwordError, setPasswordError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [rememberMe, setRememberMe] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [alertMsg, setAlertMsg] = useState<{ type: "warning" | "info"; title: string; desc: string } | null>(null);
 
@@ -41,13 +44,61 @@ export default function LoginPage() {
 
 	const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
+	const validateForm = () => {
+		let isValid = true;
+		setEmailError("");
+		setPasswordError("");
+
+		// Email validation
+		const cleanedEmail = email.trim();
+		if (!cleanedEmail) {
+			setEmailError("Email wajib diisi");
+			isValid = false;
+		} else if (!/\S+@\S+\.\S+/.test(cleanedEmail)) {
+			setEmailError("Format email tidak valid");
+			isValid = false;
+		}
+
+		// Password validation
+		if (!password) {
+			setPasswordError("Password wajib diisi");
+			isValid = false;
+		} else if (password.length < 6) {
+			setPasswordError("Kata sandi minimal 6 karakter");
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
 	const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!email || !password) {
+		
+		const cleanedEmail = email.trim();
+		
+		// If both fields are empty
+		if (!cleanedEmail && !password) {
+			setEmailError("Email wajib diisi");
+			setPasswordError("Password wajib diisi");
 			setAlertMsg({
 				type: "warning",
 				title: "Validasi Gagal",
-				desc: "Email dan password wajib diisi.",
+				desc: "Email & Password wajib diisi.",
+			});
+			return;
+		}
+
+		if (!validateForm()) {
+			let descMsg = "Silakan periksa kembali kolom input Anda.";
+			if (!cleanedEmail) {
+				descMsg = "Email wajib diisi.";
+			} else if (!password) {
+				descMsg = "Password wajib diisi.";
+			}
+			setAlertMsg({
+				type: "warning",
+				title: "Validasi Gagal",
+				desc: descMsg,
 			});
 			return;
 		}
@@ -56,39 +107,73 @@ export default function LoginPage() {
 		setAlertMsg(null);
 
 		setTimeout(() => {
-			setIsLoading(false);
+			const cleanedEmailLower = email.toLowerCase().trim();
+			
+			// Mock credentials validation mapping
+			const demoAccounts: Record<string, UserRole> = {
+				"admin@sakode.com": "admin",
+				"hamzah@sakode.com": "mentor_lead",
+				"udin@sakode.com": "mentor",
+				"panjul@gmail.com": "murid",
+				"sudarsono@sekolah.sch.id": "school_principal"
+			};
+
+			const isDemoEmail = cleanedEmailLower in demoAccounts;
+			const isCorrectPassword = password === "password123";
+
+			if (!isDemoEmail || !isCorrectPassword) {
+				setIsLoading(false);
+				setAlertMsg({
+					type: "warning",
+					title: "Autentikasi Gagal",
+					desc: "Email & Password mungkin salah.",
+				});
+				return;
+			}
+
 			setAlertMsg({
 				type: "info",
 				title: "Login Sukses!",
-				desc: "Selamat datang kembali di Sakode Academic System.",
+				desc: "Selamat datang kembali. Mengalihkan ke dashboard...",
 			});
-			// Mock redirect
-			setTimeout(() => {
-				let resolvedRole: UserRole = "murid";
-				const cleanedEmail = email.toLowerCase().trim();
-				if (cleanedEmail === "admin@sakode.com") {
-					resolvedRole = "admin";
-				} else if (cleanedEmail === "hamzah@sakode.com") {
-					resolvedRole = "mentor_lead";
-				} else if (cleanedEmail === "udin@sakode.com") {
-					resolvedRole = "mentor";
-				} else if (cleanedEmail === "sudarsono@sekolah.sch.id") {
-					resolvedRole = "school_principal";
-				} else if (cleanedEmail === "panjul@gmail.com") {
-					resolvedRole = "murid";
-				}
 
-				login(resolvedRole);
+			setTimeout(() => {
+				setIsLoading(false);
+				const role = demoAccounts[cleanedEmailLower];
+				login(role);
+				if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
+					router.push("/dashboard");
+				} else if (role === "mentor") {
+					router.push("/mentor/dashboard");
+				} else {
+					router.push("/student/dashboard");
+				}
+			}, 1000);
+		}, 1200);
+	};
+
+	const handleQuickLogin = (role: UserRole, demoEmail: string) => {
+		setEmail(demoEmail);
+		setPassword("password123");
+		setAlertMsg(null);
+		setEmailError("");
+		setPasswordError("");
+		
+		setIsLoading(true);
+		setTimeout(() => {
+			setIsLoading(false);
+			login(role);
+			if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
 				router.push("/dashboard");
-			}, 1500);
-		}, 1500);
+			} else if (role === "mentor") {
+				router.push("/mentor/dashboard");
+			} else {
+				router.push("/student/dashboard");
+			}
+		}, 800);
 	};
 
 	if (!mounted) return null;
-
-	const isGlassBg = selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass";
-
-
 
 	return (
 		<div className='relative min-h-screen w-full flex flex-col justify-between items-center bg-background text-foreground overflow-hidden font-sans transition-colors duration-300'>
@@ -99,7 +184,12 @@ export default function LoginPage() {
 
 			{/* Navbar Header */}
 			<header className='w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-900/50 z-20 relative'>
-				<button onClick={() => router.push("/")} aria-label="Kembali ke Beranda" className="bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center cursor-pointer">
+				<button 
+					onClick={() => !isLoading && router.push("/")} 
+					disabled={isLoading}
+					aria-label="Kembali ke Beranda" 
+					className={`bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center ${isLoading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+				>
 					<Image
 						src='/assets/logo/sakode.svg'
 						alt='Sakode Academy Logo'
@@ -135,13 +225,13 @@ export default function LoginPage() {
 				>
 					<UI.Card accentColor={selectedColor}>
 						<div className="p-2 sm:p-6 flex flex-col gap-6">
-							{/* Form Title & Switcher */}
+							{/* Form Title */}
 							<div className="text-center">
 								<UI.Heading className="text-2xl! font-extrabold! mb-1! text-zinc-900 dark:text-white font-sans">
 									Selamat Datang
 								</UI.Heading>
 								<p className="text-xs text-zinc-550 dark:text-zinc-400 font-medium">
-									Masuk untuk mengakses materi pembelajaran Sakode
+									Masuk untuk mengakses portal akademik Sakode Academy
 								</p>
 							</div>
 
@@ -170,9 +260,18 @@ export default function LoginPage() {
 										type="email"
 										placeholder="nama@domain.com"
 										value={email}
-										onChange={(e) => setEmail(e.target.value)}
+										onChange={(e) => {
+											setEmail(e.target.value);
+											if (emailError) setEmailError("");
+										}}
+										hasError={!!emailError}
 										disabled={isLoading}
 									/>
+									{emailError && (
+										<span className="text-[10.5px] font-bold text-rose-500 mt-1 block">
+											⚠️ {emailError}
+										</span>
+									)}
 								</div>
 
 								<div>
@@ -183,14 +282,19 @@ export default function LoginPage() {
 											type={showPassword ? "text" : "password"}
 											placeholder="••••••••"
 											value={password}
-											onChange={(e) => setPassword(e.target.value)}
+											onChange={(e) => {
+												setPassword(e.target.value);
+												if (passwordError) setPasswordError("");
+											}}
+											hasError={!!passwordError}
 											disabled={isLoading}
 											className="pr-12"
 										/>
 										<button
 											type="button"
-											onClick={() => setShowPassword(!showPassword)}
-											className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-555 hover:text-zinc-650 dark:hover:text-zinc-350 transition-colors focus:outline-hidden cursor-pointer"
+											onClick={() => !isLoading && setShowPassword(!showPassword)}
+											disabled={isLoading}
+											className={`absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-555 hover:text-zinc-650 dark:hover:text-zinc-350 transition-colors focus:outline-hidden ${isLoading ? "cursor-not-allowed opacity-55" : "cursor-pointer"}`}
 											tabIndex={-1}
 										>
 											{showPassword ? (
@@ -200,10 +304,34 @@ export default function LoginPage() {
 											)}
 										</button>
 									</div>
+									{passwordError && (
+										<span className="text-[10.5px] font-bold text-rose-500 mt-1 block">
+											⚠️ {passwordError}
+										</span>
+									)}
 								</div>
 
-								<div className="flex justify-end">
-									<span className="text-xs font-semibold text-zinc-450 dark:text-zinc-555 hover:underline cursor-pointer">
+								{/* Remember Me and Forgot Password Container */}
+								<div className="flex items-center justify-between mt-1 mb-2">
+									<div className="flex items-center gap-2">
+										<UI.Toggle
+											checked={rememberMe}
+											onChange={() => !isLoading && setRememberMe(!rememberMe)}
+											accentColor={selectedColor}
+											aria-label="Ingat Saya"
+										/>
+										<span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 select-none">
+											Ingat Saya
+										</span>
+									</div>
+									<span 
+										onClick={() => !isLoading && setAlertMsg({
+											type: "info",
+											title: "Lupa Kata Sandi",
+											desc: "Silakan hubungi administrator IT Sakode untuk mengatur ulang kata sandi Anda."
+										})}
+										className={`text-xs font-semibold text-zinc-450 dark:text-zinc-555 hover:underline ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+									>
 										Lupa kata sandi?
 									</span>
 								</div>
@@ -228,19 +356,54 @@ export default function LoginPage() {
 									Akses Uji Coba Demo (Quick Login)
 								</span>
 								<div className="grid grid-cols-2 gap-2">
-									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("admin"); router.push("/dashboard"); }}>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
+										onClick={() => handleQuickLogin("admin", "admin@sakode.com")}
+									>
 										Admin
 									</UI.Button>
-									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("mentor_lead"); router.push("/dashboard"); }}>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
+										onClick={() => handleQuickLogin("mentor_lead", "hamzah@sakode.com")}
+									>
 										Mentor Lead
 									</UI.Button>
-									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("mentor"); router.push("/dashboard"); }}>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
+										onClick={() => handleQuickLogin("mentor", "udin@sakode.com")}
+									>
 										Mentor
 									</UI.Button>
-									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" onClick={() => { login("murid"); router.push("/dashboard"); }}>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
+										onClick={() => handleQuickLogin("murid", "panjul@gmail.com")}
+									>
 										Murid
 									</UI.Button>
-									<UI.Button type="button" variant="secondary" accentColor={selectedColor} className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer col-span-2" onClick={() => { login("school_principal"); router.push("/dashboard"); }}>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer col-span-2" 
+										onClick={() => handleQuickLogin("school_principal", "sudarsono@sekolah.sch.id")}
+									>
 										Kepala Sekolah (Principal)
 									</UI.Button>
 								</div>
@@ -250,14 +413,15 @@ export default function LoginPage() {
 							<div className="text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 border-t border-zinc-150/40 dark:border-zinc-800/40 pt-4">
 								<span>
 									Belum bergabung?{" "}
-									<span
+									<button
+										disabled={isLoading}
 										onClick={() => {
 											router.push("/register");
 										}}
-										className={`${getTextClass(selectedColor)} hover:underline font-bold cursor-pointer ml-1`}
+										className={`${getTextClass(selectedColor)} hover:underline font-bold ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ml-1 bg-transparent border-0`}
 									>
 										Daftar Gratis
-									</span>
+									</button>
 								</span>
 							</div>
 						</div>

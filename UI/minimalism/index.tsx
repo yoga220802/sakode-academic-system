@@ -112,14 +112,14 @@ export const Accordion: React.FC<{
           <button
             type="button"
             onClick={() => onToggle(item.id)}
-            className="w-full flex items-center justify-between py-3 font-semibold text-left transition-colors hover:text-zinc-550 dark:hover:text-zinc-300"
+            className="w-full flex items-center justify-between py-3 font-semibold text-left transition-colors hover:text-zinc-500 dark:hover:text-zinc-300"
           >
             <span className="text-sm tracking-tight text-zinc-900 dark:text-zinc-100">{item.q}</span>
-            <span className="text-zinc-400 dark:text-zinc-550 transform transition-transform duration-200">
+            <span className="text-zinc-400 dark:text-zinc-500 transform transition-transform duration-200">
               {isOpen ? (
-                <span className="text-sm font-light text-zinc-650 dark:text-zinc-405">—</span>
+                <span className="text-sm font-light text-zinc-600 dark:text-zinc-400">—</span>
               ) : (
-                <span className="text-sm font-light text-zinc-405 dark:text-zinc-550">+</span>
+                <span className="text-sm font-light text-zinc-400 dark:text-zinc-500">+</span>
               )}
             </span>
           </button>

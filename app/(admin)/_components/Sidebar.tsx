@@ -63,6 +63,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
             groupName: "Manajemen Pendaftaran",
             items: [
               { label: "Review Pendaftaran", href: "/registration-review", icon: "ClipboardCheck" },
+              { label: "Repositori Murid", href: "/students", icon: "Users" },
               { label: "Program & Paket", href: "/programs", icon: "BookOpen" },
               { label: "Manajemen Trial", href: "/trials", icon: "Sparkles" }
             ]
@@ -78,13 +79,15 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           },
           {
             groupName: "Program Akuisisi",
-            items: [{ label: "Program Referral", href: "/referrals", icon: "Gift" }]
+            items: [
+              { label: "Program Referral", href: "/referrals", icon: "Gift" },
+              { label: "Akun Referral", href: "/referrals/accounts", icon: "Users" }
+            ]
           },
           {
             groupName: "Ekstrakurikuler",
             items: [
-              { label: "Organisasi Ekskul", href: "/extracurriculars-admin", icon: "AcademicCap" },
-              { label: "Keanggotaan Kepsek", href: "/principal-membership", icon: "ShieldCheck" }
+              { label: "Organisasi Ekskul", href: "/extracurriculars-admin", icon: "AcademicCap" }
             ]
           },
           {
@@ -266,7 +269,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
             <div key={groupIdx} className="flex flex-col gap-1">
               {/* Group Name Header */}
               {(!currentCollapsed || isMobile) ? (
-                <span className="text-[9px] font-black text-zinc-400 dark:text-zinc-550 uppercase tracking-widest px-3 mb-1 mt-2 block select-none">
+                <span className={`text-[9px] text-zinc-400 dark:text-zinc-550 uppercase tracking-widest px-3 mb-1 mt-2 block select-none ${selectedStyle === "neobrutalism" ? "font-bold" : "font-semibold"}`}>
                   {group.groupName}
                 </span>
               ) : (
@@ -276,10 +279,14 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
               {/* Group Items */}
               <div className="flex flex-col gap-1">
                 {group.items.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
+                  const isActive = pathname === item.href || (
+                    item.href !== "/dashboard" && 
+                    item.href !== "/referrals" && 
+                    pathname?.startsWith(item.href)
+                  );
                   
                   // Dynamic item styling
-                  let itemClass = "relative flex items-center rounded-xl text-xs font-extrabold transition-all cursor-pointer ";
+                  let itemClass = "relative flex items-center rounded-xl text-xs transition-all cursor-pointer ";
                   if (currentCollapsed && !isMobile) {
                     itemClass += "justify-center p-2.5 ";
                   } else {
@@ -287,6 +294,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
                   }
 
                   if (isActive) {
+                    itemClass += "font-bold ";
                     if (selectedStyle === "neobrutalism") {
                       itemClass += "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none";
                     } else if (selectedStyle === "claymorphism") {
@@ -297,7 +305,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
                       itemClass += "bg-zinc-200/50 dark:bg-zinc-800/60 text-zinc-900 dark:text-white";
                     }
                   } else {
-                    itemClass += "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40";
+                    itemClass += "font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40";
                     if (selectedStyle === "neobrutalism") {
                       itemClass += " border-2 border-transparent rounded-none";
                     }
@@ -333,7 +341,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
           <UI.Button
             variant="secondary"
             accentColor={selectedColor}
-            className="w-full text-xs! font-extrabold! py-2! cursor-pointer"
+            className="w-full text-xs! font-semibold! py-2! cursor-pointer"
             onClick={handleLogout}
           >
             Keluar Akun

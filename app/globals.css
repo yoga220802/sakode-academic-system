@@ -25,7 +25,7 @@
 }
 
 .dark {
-  --background: #030307;
+  --background: #1c253b;
   --foreground: #f4f4f5;
 }
 
@@ -102,11 +102,11 @@ body {
     color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1,
 .font-kalam {
   font-family: "Kalam", cursive !important;
 }
 
+h1,
 h2,
 h3,
 h4,

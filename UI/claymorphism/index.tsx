@@ -19,7 +19,7 @@ import {
 // 1. Card Component
 export const Card: React.FC<React.HTMLAttributes<HTMLDivElement> & { accentColor?: PaletteColorKey }> = ({ className = "", accentColor, children, ...props }) => (
   <div
-    className={`bg-slate-50/90 dark:bg-zinc-800/40 rounded-3xl p-6 shadow-[inset_-6px_-6px_12px_rgba(0,0,0,0.06),_inset_6px_6px_12px_rgba(255,255,255,0.9),_8px_8px_20px_rgba(0,0,0,0.1)] dark:shadow-[inset_-6px_-6px_12px_rgba(0,0,0,0.3),_inset_6px_6px_12px_rgba(255,255,255,0.08),_8px_8px_20px_rgba(0,0,0,0.4)] border border-slate-100 dark:border-zinc-800/10 text-slate-800 dark:text-zinc-100 ${className}`}
+    className={`bg-slate-50/90 dark:bg-zinc-800/40 rounded-3xl p-6 shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.04),_inset_4px_4px_8px_rgba(255,255,255,0.8),_4px_4px_10px_rgba(0,0,0,0.05)] dark:shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.25),_inset_4px_4px_8px_rgba(255,255,255,0.05),_4px_4px_10px_rgba(0,0,0,0.25)] border border-slate-100 dark:border-zinc-800/10 text-slate-800 dark:text-zinc-100 ${className}`}
     {...props}
   >
     {children}
@@ -161,7 +161,7 @@ export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
 }> = ({ steps, accentColor = "blue" }) => {
-  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-955" : "text-white";
+  const textColor = (accentColor === "yellow" || accentColor === "cyan") ? "text-zinc-900" : "text-white";
   return (
     <div className="relative pl-6 border-l-2 border-zinc-200 dark:border-zinc-800 space-y-6">
       {steps.map((item, idx) => (
@@ -189,9 +189,9 @@ export const Badge: React.FC<{
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-slate-100 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.9),_2px_2px_4px_rgba(0,0,0,0.05)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.3),_inset_2px_2px_4px_rgba(255,255,255,0.06),_2px_2px_4px_rgba(0,0,0,0.2)]",
-    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border-white/20 dark:border-black/10 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.2),_inset_2px_2px_4px_rgba(255,255,255,0.4),_2px_2px_4px_rgba(0,0,0,0.08)]`,
-    success: "bg-emerald-50 dark:bg-zinc-800/80 text-emerald-800 dark:text-emerald-350 border-emerald-300/40 dark:border-emerald-800/25 shadow-[inset_-2px_-2px_4px_rgba(0,100,50,0.06),_inset_2px_2px_4px_rgba(255,255,255,0.8),_2px_2px_4px_rgba(0,0,0,0.04)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.3),_inset_2px_2px_4px_rgba(255,255,255,0.06)]",
-    warning: "bg-amber-50 dark:bg-zinc-800/80 text-amber-800 dark:text-amber-350 border-amber-300/40 dark:border-amber-800/25 shadow-[inset_-2px_-2px_4px_rgba(100,50,0,0.06),_inset_2px_2px_4px_rgba(255,255,255,0.8),_2px_2px_4px_rgba(0,0,0,0.04)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.3),_inset_2px_2px_4px_rgba(255,255,255,0.06)]",
+    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-900" : "text-white"} border-white/20 dark:border-black/10 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.2),_inset_2px_2px_4px_rgba(255,255,255,0.4),_2px_2px_4px_rgba(0,0,0,0.08)]`,
+    success: "bg-emerald-50 dark:bg-zinc-800/80 text-emerald-800 dark:text-emerald-300 border-emerald-300/40 dark:border-emerald-800/25 shadow-[inset_-2px_-2px_4px_rgba(0,100,50,0.06),_inset_2px_2px_4px_rgba(255,255,255,0.8),_2px_2px_4px_rgba(0,0,0,0.04)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.3),_inset_2px_2px_4px_rgba(255,255,255,0.06)]",
+    warning: "bg-amber-50 dark:bg-zinc-800/80 text-amber-800 dark:text-amber-300 border-amber-300/40 dark:border-amber-800/25 shadow-[inset_-2px_-2px_4px_rgba(100,50,0,0.06),_inset_2px_2px_4px_rgba(255,255,255,0.8),_2px_2px_4px_rgba(0,0,0,0.04)] dark:shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.3),_inset_2px_2px_4px_rgba(255,255,255,0.06)]",
   };
 
   return (
@@ -278,7 +278,7 @@ export const Table: React.FC<{
                 <span className={
                   item.status === "Selesai"
                     ? "inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-slate-100 text-slate-500 dark:bg-zinc-800 dark:text-zinc-450 border border-slate-200/50 dark:border-zinc-700/50 shadow-[inset_-1.5px_-1.5px_3px_rgba(0,0,0,0.05),_inset_1.5px_1.5px_3px_rgba(255,255,255,0.9)]"
-                    : `inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full ${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border border-white/20 dark:border-black/10 shadow-[inset_-1.5px_-1.5px_3px_rgba(0,0,0,0.2),_inset_1.5px_1.5px_3px_rgba(255,255,255,0.45),_1.5px_1.5px_3px_rgba(0,0,0,0.05)]`
+                    : `inline-block px-2.5 py-1 text-[10px] font-extrabold rounded-full ${getBgClass(accentColor)} ${isDarkText ? "text-zinc-900" : "text-white"} border border-white/20 dark:border-black/10 shadow-[inset_-1.5px_-1.5px_3px_rgba(0,0,0,0.2),_inset_1.5px_1.5px_3px_rgba(255,255,255,0.45),_1.5px_1.5px_3px_rgba(0,0,0,0.05)]`
                 }>
                   {item.status}
                 </span>

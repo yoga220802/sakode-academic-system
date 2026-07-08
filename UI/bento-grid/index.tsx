@@ -119,7 +119,7 @@ export const Accordion: React.FC<{
             }`}
           >
             <span className="text-sm font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">{item.q}</span>
-            <span className={`w-6 h-6 rounded-lg flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/45 dark:border-zinc-705/45 text-zinc-500 dark:text-zinc-400 transform transition-transform duration-200 ${isOpen ? "rotate-45 bg-zinc-250 dark:bg-zinc-750 text-zinc-805 dark:text-zinc-195" : ""}`}>
+            <span className={`w-6 h-6 rounded-lg flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/45 dark:border-zinc-700/45 text-zinc-500 dark:text-zinc-400 transform transition-transform duration-200 ${isOpen ? "rotate-45 bg-zinc-200 dark:bg-zinc-750 text-zinc-800 dark:text-zinc-200" : ""}`}>
               <Icons.Plus className="w-3.5 h-3.5" />
             </span>
           </button>
@@ -147,7 +147,7 @@ export const Timeline: React.FC<{
           <span className={`absolute -left-9.5 top-0.5 w-6.5 h-6.5 rounded-lg flex items-center justify-center text-[10px] font-black ${textColor} ${getBgClass(accentColor)} border border-zinc-300/10 dark:border-zinc-850 shadow-xs`}>
             {item.step}
           </span>
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/65 dark:border-zinc-800/65 p-3.5 rounded-xl shadow-3xs hover:border-zinc-305 dark:hover:border-zinc-695 transition-all">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/65 dark:border-zinc-800/65 p-3.5 rounded-xl shadow-3xs hover:border-zinc-300 dark:hover:border-zinc-700 transition-all">
             <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-tight">{item.title}</h4>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{item.desc}</p>
           </div>
@@ -167,9 +167,9 @@ export const Badge: React.FC<{
   const isDarkText = accentColor === "yellow" || accentColor === "cyan";
   const badgeColors = {
     default: "bg-zinc-100 text-zinc-800 dark:bg-zinc-850 dark:text-zinc-300 border-zinc-200/80 dark:border-zinc-700/50",
-    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-955" : "text-white"} border-zinc-900/10 dark:border-white/10`,
+    accent: `${getBgClass(accentColor)} ${isDarkText ? "text-zinc-900" : "text-white"} border-zinc-900/10 dark:border-white/10`,
     success: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30",
-    warning: "bg-amber-50 text-amber-700 dark:bg-amber-955/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+    warning: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
   };
 
   return (

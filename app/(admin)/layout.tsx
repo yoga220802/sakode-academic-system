@@ -7,7 +7,7 @@ import { Sidebar } from "./_components/Sidebar";
 import { Header } from "./_components/Header";
 import { AestheticBackground } from "../_components/AestheticBackground";
 import { motion, AnimatePresence } from "framer-motion";
-import { DashboardLockSystem } from "./_components/DashboardLockSystem";
+// import { DashboardLockSystem } from "./_components/DashboardLockSystem";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { session } = useAuth();
@@ -22,6 +22,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // If not logged in, redirect to login page
     if (!session) {
       router.push("/login");
+    } else if (
+      session.role !== "admin" &&
+      session.role !== "mentor_lead" &&
+      session.role !== "school_principal"
+    ) {
+      // Redirect non-admin/staff roles to their respective workspaces
+      if (session.role === "mentor") {
+        router.push("/mentor/dashboard");
+      } else {
+        router.push("/student/dashboard");
+      }
     }
   }, [session, router]);
 
@@ -42,7 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <AestheticBackground mode="dashboard" />
 
       {/* Premium Dashboard Lock & Trial Countdown System */}
-      <DashboardLockSystem />
+      {/* <DashboardLockSystem /> */}
 
       {/* Mobile Drawer (Overlay backdrop & sliding panel) */}
       <AnimatePresence>
