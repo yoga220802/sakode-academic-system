@@ -32,6 +32,7 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
   const [isEditMemberOpen, setIsEditMemberOpen] = useState(false);
   const [isDeleteMemberConfirmOpen, setIsDeleteMemberConfirmOpen] = useState(false);
+  const [isPdfOpen, setIsPdfOpen] = useState(false);
 
   // 3. Form States
   const [memberForm, setMemberForm] = useState({
@@ -418,11 +419,21 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
 
               {school.mouFileName ? (
                 <div className="bg-zinc-50 dark:bg-zinc-950/20 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-250">
-                    <Icons.BookOpen className="w-5 h-5 text-rose-505 shrink-0" />
-                    <span className="font-bold truncate w-full" title={school.mouFileName}>
-                      {school.mouFileName}
-                    </span>
+                  <div className="flex items-center justify-between gap-2 text-zinc-800 dark:text-zinc-250">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icons.BookOpen className="w-5 h-5 text-rose-505 shrink-0" />
+                      <span className="font-bold truncate" title={school.mouFileName}>
+                        {school.mouFileName}
+                      </span>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setIsPdfOpen(true)}
+                      className="text-sakode-blue dark:text-sky-400 hover:underline font-bold text-[10px] shrink-0 cursor-pointer"
+                    >
+                      Lihat PDF
+                    </button>
                   </div>
                   <div className="flex justify-between text-[10px] text-zinc-455 border-t border-zinc-150/40 pt-2 mt-1">
                     <span>Tanggal MoU:</span>
@@ -816,6 +827,155 @@ export default function ExtracurricularDetailPage({ params }: DetailPageProps) {
               </div>
             </UI.Card>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 7. SIMULATED PDF MOU VIEWER DIALOG */}
+      <AnimatePresence>
+        {isPdfOpen && (
+          <div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-3xl relative my-8"
+            >
+              <UI.Card>
+                <div className="flex flex-col gap-4 text-left">
+                  
+                  {/* Header bar of the reader */}
+                  <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-600">
+                        <Icons.BookOpen className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-black uppercase tracking-wider text-zinc-805 dark:text-white">
+                          Pratinjau MoU Kerja Sama
+                        </h3>
+                        <span className="text-[9.5px] text-zinc-400 font-bold block mt-0.5">
+                          {school.mouFileName}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => showToast("Simulasi download berhasil dijalankan.")}
+                        className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-500 hover:text-zinc-700 cursor-pointer"
+                        title="Unduh PDF"
+                      >
+                        <Icons.ArrowRight className="w-4 h-4 rotate-90" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsPdfOpen(false)}
+                        className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-500 hover:text-zinc-700 cursor-pointer"
+                        title="Tutup"
+                      >
+                        <Icons.X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Simulated PDF document page container */}
+                  <div className="bg-zinc-100 dark:bg-zinc-950/80 p-6 rounded-2xl max-h-[500px] overflow-y-auto border border-zinc-200 dark:border-zinc-800 flex justify-center">
+                    
+                    {/* Simulated white sheet page */}
+                    <div className="bg-white text-zinc-900 w-full max-w-2xl p-8 sm:p-12 shadow-md border border-zinc-200 rounded-xs font-serif text-[11px] leading-relaxed relative selection:bg-blue-100">
+                      
+                      {/* Ribbon banner simulator */}
+                      <div className="absolute top-0 right-0 bg-emerald-600 text-white font-sans text-[8px] font-black uppercase px-2 py-0.5 tracking-wider rounded-bl-sm">
+                        Resmi & Ditandatangani
+                      </div>
+
+                      {/* Letterhead */}
+                      <div className="text-center border-b-2 border-double border-zinc-900 pb-4 mb-6">
+                        <span className="font-sans font-black text-xs tracking-wider uppercase block">SAKODE ACADEMY INDONESIA</span>
+                        <span className="font-sans text-[8.5px] text-zinc-500 block mt-0.5">Website: www.sakode.com | Email: partnership@sakode.com</span>
+                      </div>
+
+                      {/* Title */}
+                      <div className="text-center font-bold uppercase underline tracking-wide mb-6">
+                        MEMORANDUM OF UNDERSTANDING (MoU)<br />
+                        <span className="text-[10px]">NOMOR: SAKODE/MOU/2026/{school.id.replace("ORG-", "")}</span>
+                      </div>
+
+                      <p className="mb-4">
+                        Pada hari ini, tanggal <strong className="font-sans">{school.mouSignedDate || "15 Januari 2026"}</strong>, yang bertanda tangan di bawah ini:
+                      </p>
+
+                      <div className="space-y-4 mb-6 pl-4">
+                        <div>
+                          <strong>1. SAKODE ACADEMY INDONESIA</strong>, yang dalam hal ini diwakili oleh <strong>Super Admin Sakode</strong>, selanjutnya disebut sebagai <strong>PIHAK PERTAMA</strong>.
+                        </div>
+                        <div>
+                          <strong>2. {school.name}</strong>, berkedudukan di {school.streetAddress}, Kec. {school.kecamatan}, yang dalam hal ini diwakili oleh <strong>{school.picName}</strong>, selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong>.
+                        </div>
+                      </div>
+
+                      <p className="mb-4">
+                        Kedua belah pihak sepakat untuk menjalin kerja sama kemitraan dalam penyelenggaraan program kelas belajar ekstrakurikuler teknologi dan pemrograman untuk murid-murid di lingkungan {school.name} dengan ketentuan sebagai berikut:
+                      </p>
+
+                      <div className="space-y-3 mb-6 pl-4">
+                        <div>
+                          <strong>PASAL 1: RUANG LINGKUP</strong><br />
+                          PIHAK PERTAMA menyediakan kurikulum, platform modul pembelajaran online, serta menugaskan mentor pendamping SAKODE untuk melaksanakan bimbingan club ekskul teknologi secara terjadwal.
+                        </div>
+                        <div>
+                          <strong>PASAL 2: PERAN & TANGGUNG JAWAB</strong><br />
+                          PIHAK KEDUA menyediakan fasilitas ruang lab komputer/ruang belajar pendukung, serta menugaskan Guru Pendamping untuk memantau kehadiran dan roster aktivitas murid secara tertib.
+                        </div>
+                      </div>
+
+                      <p className="mb-8">
+                        Demikian nota kesepahaman ini dibuat dalam rangkap dua, bermaterai cukup, dan ditandatangani oleh kedua belah pihak dalam keadaan sadar dan tanpa paksaan.
+                      </p>
+
+                      {/* Signature Blocks */}
+                      <div className="grid grid-cols-2 gap-8 text-center pt-4 border-t border-zinc-100">
+                        <div>
+                          <span className="block text-[10px] font-sans font-bold text-zinc-400 uppercase tracking-wider mb-8">PIHAK PERTAMA</span>
+                          <span className="font-bold underline block">Super Admin Sakode</span>
+                          <span className="text-[9px] font-sans text-zinc-500 block">SAKODE Academy Representative</span>
+                          <div className="mx-auto w-16 h-12 bg-blue-500/5 border border-blue-500/10 rounded-lg flex items-center justify-center text-[7px] text-blue-500 font-sans font-black uppercase tracking-widest mt-2 rotate-[-4deg]">
+                            DITANDATANGANI
+                          </div>
+                        </div>
+                        <div>
+                          <span className="block text-[10px] font-sans font-bold text-zinc-400 uppercase tracking-wider mb-8">PIHAK KEDUA</span>
+                          <span className="font-bold underline block">{school.picName}</span>
+                          <span className="text-[9px] font-sans text-zinc-500 block">Representatif {school.name}</span>
+                          <div className="mx-auto w-16 h-12 bg-emerald-500/5 border border-emerald-500/10 rounded-lg flex items-center justify-center text-[7px] text-emerald-600 font-sans font-black uppercase tracking-widest mt-2 rotate-[5deg] relative">
+                            <span className="absolute inset-0 flex items-center justify-center border-2 border-emerald-500/30 rounded-md m-1 font-bold text-[6px]">MATERAI</span>
+                            SELESAI
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* Footer options */}
+                  <div className="flex justify-between items-center border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2">
+                    <span className="text-[9.5px] text-zinc-400 font-bold">
+                      Halaman 1 dari 1 (Dokumen Sah)
+                    </span>
+                    <UI.Button
+                      onClick={() => setIsPdfOpen(false)}
+                      variant="primary"
+                      accentColor={selectedColor}
+                      className="text-xs! py-2! px-5! font-bold! cursor-pointer"
+                    >
+                      Tutup Pratinjau
+                    </UI.Button>
+                  </div>
+
+                </div>
+              </UI.Card>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
