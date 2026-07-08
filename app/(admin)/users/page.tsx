@@ -32,6 +32,8 @@ export default function UsersPage() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [targetId, setTargetId] = useState<string | null>(null);
   const [targetName, setTargetName] = useState("");
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [resetTargetUser, setResetTargetUser] = useState<UserAccount | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   const [simulationState, setSimulationState] = useState<"default" | "loading" | "empty" | "error">("default");
@@ -105,6 +107,18 @@ export default function UsersPage() {
     saveStoredUsers(updated);
     setIsDeleteConfirmOpen(false);
     showToast(`Sukses menghapus pengguna ${targetName}.`);
+  };
+
+  // Reset Password handlers
+  const handleOpenResetPassword = (user: UserAccount) => {
+    setResetTargetUser(user);
+    setIsResetPasswordOpen(true);
+  };
+
+  const handleResetPasswordSubmit = () => {
+    if (!resetTargetUser) return;
+    setIsResetPasswordOpen(false);
+    showToast(`Kata sandi ${resetTargetUser.name} berhasil di-reset ke default 'academy@sakode'.`);
   };
 
   // Role translation helper
@@ -403,6 +417,12 @@ export default function UsersPage() {
                         Ubah Peran
                       </button>
                       <button
+                        onClick={() => handleOpenResetPassword(user)}
+                        className="text-zinc-450 hover:text-amber-600 font-bold text-[10px] cursor-pointer"
+                      >
+                        Reset Sandi
+                      </button>
+                      <button
                         onClick={() => handleOpenDeleteConfirm(user)}
                         className="text-zinc-450 hover:text-rose-600 font-bold text-[10px] cursor-pointer"
                       >
@@ -475,6 +495,67 @@ export default function UsersPage() {
                       className="text-xs! py-2! px-5! font-bold! cursor-pointer bg-rose-600! hover:bg-rose-700!"
                     >
                       Ya, Hapus Akun
+                    </UI.Button>
+                  </div>
+                </div>
+              </UI.Card>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* RESET PASSWORD CONFIRMATION DIALOG */}
+      <AnimatePresence>
+        {isResetPasswordOpen && resetTargetUser && (
+          <div className="fixed inset-0 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm relative my-8"
+            >
+              <UI.Card accentColor="yellow">
+                <div className="flex flex-col gap-4 text-left">
+                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1.5">
+                      <Icons.AlertCircle className="w-4 h-4 text-amber-500" />
+                      Reset Kata Sandi
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setIsResetPasswordOpen(false)}
+                      className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
+                      title="Tutup"
+                    >
+                      <Icons.X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div>
+                    <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-350 leading-normal block">
+                      Apakah Anda yakin ingin me-reset kata sandi akun <span className="font-extrabold text-zinc-900 dark:text-white">{resetTargetUser.name}</span>?
+                    </span>
+                    <span className="text-[10px] text-zinc-455 mt-2 block">
+                      Kata sandi akan dikembalikan ke nilai bawaan akademi: <strong className="font-mono text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">academy@sakode</strong>.
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2 border-t border-zinc-150 dark:border-zinc-800 pt-3 mt-2 justify-end">
+                    <UI.Button
+                      onClick={() => setIsResetPasswordOpen(false)}
+                      variant="secondary"
+                      accentColor={selectedColor}
+                      className="text-xs! py-2! font-bold! cursor-pointer"
+                    >
+                      Batal
+                    </UI.Button>
+                    <UI.Button
+                      onClick={handleResetPasswordSubmit}
+                      variant="primary"
+                      accentColor="yellow"
+                      className="text-xs! py-2! px-5! font-bold! cursor-pointer bg-amber-550! hover:bg-amber-650! text-zinc-950!"
+                    >
+                      Ya, Reset Sandi
                     </UI.Button>
                   </div>
                 </div>
