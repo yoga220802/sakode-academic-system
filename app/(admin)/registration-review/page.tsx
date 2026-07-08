@@ -11,6 +11,24 @@ import {
 	getBgOpacity10Class,
 } from "@/UI/shared/color-utils";
 
+interface InstallmentTerm {
+	termNumber: number;
+	termName: string;
+	dueDate: string;
+	amount: number;
+	status: "paid" | "pending_upload" | "pending_review" | "overdue";
+	receiptUrl?: string;
+	receiptUploadedDate?: string;
+}
+
+interface GroupMemberPayment {
+	memberName: string;
+	amount: number;
+	status: "paid" | "pending_upload" | "pending_review";
+	receiptUrl?: string;
+	receiptUploadedDate?: string;
+}
+
 interface RegistrationItem {
 	id: string;
 	name: string;
@@ -36,6 +54,11 @@ interface RegistrationItem {
 	isGroup: boolean;
 	groupMembers?: string[] | null;
 	pricePerParticipant?: number | null;
+	paymentReceiptUrl?: string;
+	paymentReceiptUploadedDate?: string;
+	installments?: InstallmentTerm[];
+	groupPaymentMode?: "merged" | "individual";
+	groupMemberPayments?: GroupMemberPayment[];
 }
 
 export default function RegistrationReviewPage() {
@@ -58,6 +81,9 @@ export default function RegistrationReviewPage() {
 		type: "approve" | "reject";
 		item: RegistrationItem;
 	} | null>(null);
+	const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+	const [selectedInstallmentTerm, setSelectedInstallmentTerm] = useState<InstallmentTerm | null>(null);
+	const [selectedGroupMemberPayment, setSelectedGroupMemberPayment] = useState<GroupMemberPayment | null>(null);
 	const [toastMessage, setToastMessage] = useState<{
 		type: "success" | "error";
 		text: string;
@@ -110,7 +136,9 @@ export default function RegistrationReviewPage() {
 			address: "Cabang Jakarta Selatan - Jl. Kemang Raya No. 12",
 			paymentType: "lunas",
 			paymentConfirmed: true,
-			isGroup: false
+			isGroup: false,
+			paymentReceiptUrl: "bukti_transfer_dzulkifli_bca.jpg",
+			paymentReceiptUploadedDate: "13 Mar 2026 16:35 WIB"
 		},
 		{
 			id: "REG-002",
@@ -145,7 +173,11 @@ export default function RegistrationReviewPage() {
 			address: "Cabang Bandung - Jl. Dago No. 45",
 			paymentType: "cicil",
 			paymentConfirmed: false,
-			isGroup: false
+			isGroup: false,
+			installments: [
+				{ termNumber: 1, termName: "Cicilan 1 - DP (50%)", dueDate: "14 Mar 2026", amount: 1400000, status: "pending_upload" },
+				{ termNumber: 2, termName: "Cicilan 2 - Pelunasan (50%)", dueDate: "14 Apr 2026", amount: 1400000, status: "pending_upload" }
+			]
 		},
 		{
 			id: "REG-003",
@@ -181,7 +213,9 @@ export default function RegistrationReviewPage() {
 			paymentConfirmed: true,
 			isConversion: true,
 			trialPricePaid: 50000,
-			isGroup: false
+			isGroup: false,
+			paymentReceiptUrl: "bukti_trf_rian_bni.png",
+			paymentReceiptUploadedDate: "12 Mar 2026 18:15 WIB"
 		},
 		{
 			id: "REG-004",
@@ -209,10 +243,16 @@ export default function RegistrationReviewPage() {
 			],
 			address: "Cabang Yogyakarta - Jl. Kaliurang KM 5",
 			paymentType: "lunas",
-			paymentConfirmed: true,
+			paymentConfirmed: false,
 			isGroup: true,
 			groupMembers: ["Charles Go", "Dendi Kurniawan", "Eka Prasetya"],
-			pricePerParticipant: 250000
+			pricePerParticipant: 250000,
+			groupPaymentMode: "individual",
+			groupMemberPayments: [
+				{ memberName: "Charles Go", amount: 250000, status: "paid", receiptUrl: "bukti_charles_go_bca.jpg", receiptUploadedDate: "11 Mar 2026 09:40 WIB" },
+				{ memberName: "Dendi Kurniawan", amount: 250000, status: "pending_upload" },
+				{ memberName: "Eka Prasetya", amount: 250000, status: "paid", receiptUrl: "bukti_eka_prasetya_mandiri.jpg", receiptUploadedDate: "11 Mar 2026 09:45 WIB" }
+			]
 		},
 		{
 			id: "REG-005",
@@ -241,7 +281,12 @@ export default function RegistrationReviewPage() {
 			address: "Cabang Semarang - Jl. Pandanaran No. 10",
 			paymentType: "cicil",
 			paymentConfirmed: true,
-			isGroup: false
+			isGroup: false,
+			installments: [
+				{ termNumber: 1, termName: "Cicilan 1 - DP (40%)", dueDate: "11 Mar 2026", amount: 1600000, status: "paid", receiptUrl: "bukti_cicil1_joko_bca.jpg", receiptUploadedDate: "10 Mar 2026 09:30 WIB" },
+				{ termNumber: 2, termName: "Cicilan 2 - Termin 2 (30%)", dueDate: "11 Apr 2026", amount: 1200000, status: "pending_upload" },
+				{ termNumber: 3, termName: "Cicilan 3 - Pelunasan (30%)", dueDate: "11 Mei 2026", amount: 1200000, status: "pending_upload" }
+			]
 		},
 	]);
 
@@ -447,6 +492,197 @@ export default function RegistrationReviewPage() {
 		});
 	};
 
+	const handleSimulateReceiptUpload = (item: RegistrationItem) => {
+		const receiptName = `bukti_transfer_${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_bca.jpg`;
+		const uploadTime = new Date().toLocaleDateString("id-ID", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		}) +
+		" " +
+		new Date().toLocaleTimeString("id-ID", {
+			hour: "2-digit",
+			minute: "2-digit",
+		}) +
+		" WIB";
+
+		setItems((prev) =>
+			prev.map((i) => {
+				if (i.id === item.id) {
+					const newTimeline = [
+						...i.timeline,
+						{
+							title: "Bukti Transfer Diunggah",
+							time: uploadTime,
+							desc: `Siswa mengunggah bukti transfer: ${receiptName}.`
+						}
+					];
+					return {
+						...i,
+						paymentReceiptUrl: receiptName,
+						paymentReceiptUploadedDate: uploadTime,
+						timeline: newTimeline
+					};
+				}
+				return i;
+			})
+		);
+
+		setToastMessage({
+			type: "success",
+			text: `Bukti transfer untuk ${item.name} berhasil disimulasikan unggah oleh pendaftar!`
+		});
+	};
+
+	const handleSimulateInstallmentUpload = (item: RegistrationItem, term: InstallmentTerm) => {
+		const receiptName = `bukti_transfer_${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_cicilan_${term.termNumber}.jpg`;
+		const uploadTime = new Date().toLocaleDateString("id-ID", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		}) +
+		" " +
+		new Date().toLocaleTimeString("id-ID", {
+			hour: "2-digit",
+			minute: "2-digit",
+		}) +
+		" WIB";
+
+		setItems((prev) =>
+			prev.map((i) => {
+				if (i.id === item.id && i.installments) {
+					const updatedInstallments = i.installments.map((t) => {
+						if (t.termNumber === term.termNumber) {
+							return {
+								...t,
+								status: "paid" as const,
+								receiptUrl: receiptName,
+								receiptUploadedDate: uploadTime
+							};
+						}
+						return t;
+					});
+
+					const newTimeline = [
+						...i.timeline,
+						{
+							title: `Pembayaran ${term.termName} Diunggah`,
+							time: uploadTime,
+							desc: `Siswa mengunggah bukti pembayaran cicilan: ${receiptName}.`
+						}
+					];
+
+					// Check if all installments are paid, to update the main paymentConfirmed status!
+					const allPaid = updatedInstallments.every((t) => t.status === "paid");
+
+					return {
+						...i,
+						installments: updatedInstallments,
+						paymentConfirmed: allPaid,
+						timeline: newTimeline
+					};
+				}
+				return i;
+			})
+		);
+
+		setToastMessage({
+			type: "success",
+			text: `Pembayaran untuk ${term.termName} berhasil disimulasikan lunas!`
+		});
+	};
+
+	const handleSimulateGroupMemberUpload = (item: RegistrationItem, memberName: string) => {
+		const receiptName = `bukti_transfer_${memberName.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_bca.jpg`;
+		const uploadTime = new Date().toLocaleDateString("id-ID", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		}) +
+		" " +
+		new Date().toLocaleTimeString("id-ID", {
+			hour: "2-digit",
+			minute: "2-digit",
+		}) +
+		" WIB";
+
+		setItems((prev) =>
+			prev.map((i) => {
+				if (i.id === item.id && i.groupMemberPayments) {
+					const updatedPayments = i.groupMemberPayments.map((p) => {
+						if (p.memberName === memberName) {
+							return {
+								...p,
+								status: "paid" as const,
+								receiptUrl: receiptName,
+								receiptUploadedDate: uploadTime
+							};
+						}
+						return p;
+					});
+
+					const newTimeline = [
+						...i.timeline,
+						{
+							title: `Pembayaran ${memberName} Diunggah`,
+							time: uploadTime,
+							desc: `Anggota kelompok ${memberName} mengunggah bukti pembayaran: ${receiptName}.`
+						}
+					];
+
+					// Check if all members have paid
+					const allPaid = updatedPayments.every((p) => p.status === "paid");
+
+					return {
+						...i,
+						groupMemberPayments: updatedPayments,
+						paymentConfirmed: allPaid,
+						timeline: newTimeline
+					};
+				}
+				return i;
+			})
+		);
+
+		setToastMessage({
+			type: "success",
+			text: `Pembayaran individu untuk ${memberName} berhasil disimulasikan lunas!`
+		});
+	};
+
+	const handleToggleGroupPaymentMode = (item: RegistrationItem, mode: "merged" | "individual") => {
+		setItems((prev) =>
+			prev.map((i) => {
+				if (i.id === item.id) {
+					let allPaid = false;
+					if (mode === "merged") {
+						allPaid = !!i.paymentReceiptUrl;
+					} else {
+						const members = i.groupMembers || [];
+						const memberPayments = i.groupMemberPayments || members.map((m) => ({
+							memberName: m,
+							amount: i.pricePerParticipant || 0,
+							status: "pending_upload" as const
+						}));
+						allPaid = memberPayments.every((p) => p.status === "paid");
+					}
+
+					return {
+						...i,
+						groupPaymentMode: mode,
+						paymentConfirmed: allPaid
+					};
+				}
+				return i;
+			})
+		);
+
+		setToastMessage({
+			type: "success",
+			text: `Mode pembayaran kelompok diubah ke: ${mode === "merged" ? "Transfer Kolektif" : "Transfer Individu"}`
+		});
+	};
+
 	const resetAllScenarios = () => {
 		setItems([
 			{
@@ -494,7 +730,9 @@ export default function RegistrationReviewPage() {
 				address: "Cabang Jakarta Selatan - Jl. Kemang Raya No. 12",
 				paymentType: "lunas",
 				paymentConfirmed: true,
-				isGroup: false
+				isGroup: false,
+				paymentReceiptUrl: "bukti_transfer_dzulkifli_bca.jpg",
+				paymentReceiptUploadedDate: "13 Mar 2026 16:35 WIB"
 			},
 			{
 				id: "REG-002",
@@ -529,7 +767,11 @@ export default function RegistrationReviewPage() {
 				address: "Cabang Bandung - Jl. Dago No. 45",
 				paymentType: "cicil",
 				paymentConfirmed: false,
-				isGroup: false
+				isGroup: false,
+				installments: [
+					{ termNumber: 1, termName: "Cicilan 1 - DP (50%)", dueDate: "14 Mar 2026", amount: 1400000, status: "pending_upload" },
+					{ termNumber: 2, termName: "Cicilan 2 - Pelunasan (50%)", dueDate: "14 Apr 2026", amount: 1400000, status: "pending_upload" }
+				]
 			},
 			{
 				id: "REG-003",
@@ -565,7 +807,9 @@ export default function RegistrationReviewPage() {
 				paymentConfirmed: true,
 				isConversion: true,
 				trialPricePaid: 50000,
-				isGroup: false
+				isGroup: false,
+				paymentReceiptUrl: "bukti_trf_rian_bni.png",
+				paymentReceiptUploadedDate: "12 Mar 2026 18:15 WIB"
 			},
 			{
 				id: "REG-004",
@@ -593,10 +837,16 @@ export default function RegistrationReviewPage() {
 				],
 				address: "Cabang Yogyakarta - Jl. Kaliurang KM 5",
 				paymentType: "lunas",
-				paymentConfirmed: true,
+				paymentConfirmed: false,
 				isGroup: true,
 				groupMembers: ["Charles Go", "Dendi Kurniawan", "Eka Prasetya"],
-				pricePerParticipant: 250000
+				pricePerParticipant: 250000,
+				groupPaymentMode: "individual",
+				groupMemberPayments: [
+					{ memberName: "Charles Go", amount: 250000, status: "paid", receiptUrl: "bukti_charles_go_bca.jpg", receiptUploadedDate: "11 Mar 2026 09:40 WIB" },
+					{ memberName: "Dendi Kurniawan", amount: 250000, status: "pending_upload" },
+					{ memberName: "Eka Prasetya", amount: 250000, status: "paid", receiptUrl: "bukti_eka_prasetya_mandiri.jpg", receiptUploadedDate: "11 Mar 2026 09:45 WIB" }
+				]
 			},
 			{
 				id: "REG-005",
@@ -625,7 +875,12 @@ export default function RegistrationReviewPage() {
 				address: "Cabang Semarang - Jl. Pandanaran No. 10",
 				paymentType: "cicil",
 				paymentConfirmed: true,
-				isGroup: false
+				isGroup: false,
+				installments: [
+					{ termNumber: 1, termName: "Cicilan 1 - DP (40%)", dueDate: "11 Mar 2026", amount: 1600000, status: "paid", receiptUrl: "bukti_cicil1_joko_bca.jpg", receiptUploadedDate: "10 Mar 2026 09:30 WIB" },
+					{ termNumber: 2, termName: "Cicilan 2 - Termin 2 (30%)", dueDate: "11 Apr 2026", amount: 1200000, status: "pending_upload" },
+					{ termNumber: 3, termName: "Cicilan 3 - Pelunasan (30%)", dueDate: "11 Mei 2026", amount: 1200000, status: "pending_upload" }
+				]
 			},
 		]);
 			setSelectedItemId(null);
@@ -1162,6 +1417,218 @@ export default function RegistrationReviewPage() {
 
 											<div className={getSubElementClass("divider")} />
 
+											{selectedItem.isGroup && (
+												<>
+													{/* Mode Pembayaran Kelompok Switcher */}
+													<div className="bg-zinc-50 dark:bg-zinc-950/20 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2 mb-3">
+														<span className="text-[9.5px] text-zinc-400 dark:text-zinc-400 font-bold block uppercase tracking-wider">Mode Pembayaran Kelompok</span>
+														<div className="flex gap-2 mt-1">
+															<button
+																type="button"
+																onClick={() => handleToggleGroupPaymentMode(selectedItem, "individual")}
+																className={`flex-1 text-[10px] font-black py-1.5 px-3 rounded-lg transition-all cursor-pointer text-center ${
+																	selectedItem.groupPaymentMode === "individual"
+																		? "bg-sakode-blue text-white shadow-3xs"
+																		: "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/60 dark:hover:bg-zinc-800"
+																}`}
+															>
+																Transfer Satuan
+															</button>
+															<button
+																type="button"
+																onClick={() => handleToggleGroupPaymentMode(selectedItem, "merged")}
+																className={`flex-1 text-[10px] font-black py-1.5 px-3 rounded-lg transition-all cursor-pointer text-center ${
+																	selectedItem.groupPaymentMode !== "individual"
+																		? "bg-sakode-blue text-white shadow-3xs"
+																		: "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/60 dark:hover:bg-zinc-800"
+																}`}
+															>
+																Transfer Kolektif
+															</button>
+														</div>
+													</div>
+													<div className={getSubElementClass("divider")} />
+												</>
+											)}
+
+											{/* Bukti Pembayaran Section */}
+											<div className='flex flex-col gap-2.5'>
+												<h4 className='text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider'>
+													{selectedItem.isGroup && selectedItem.groupPaymentMode === "individual"
+														? "Pembayaran Anggota Kelompok"
+														: selectedItem.paymentType === "cicil"
+														? "Termin Pembayaran Cicilan"
+														: "Bukti Pembayaran / Transfer"
+													}
+												</h4>
+												
+												{selectedItem.isGroup && selectedItem.groupPaymentMode === "individual" ? (
+													<div className="flex flex-col gap-2">
+														{selectedItem.groupMemberPayments && selectedItem.groupMemberPayments.map((p, pIdx) => (
+															<div key={pIdx} className="bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2 text-xs">
+																<div className="flex justify-between items-center">
+																	<span className="font-bold text-zinc-800 dark:text-zinc-200">
+																		{p.memberName}
+																	</span>
+																	<span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+																		p.status === "paid"
+																			? "bg-emerald-500/10 text-emerald-600"
+																			: "bg-rose-500/10 text-rose-600"
+																	}`}>
+																		{p.status === "paid" ? "Lunas" : "Belum Bayar"}
+																	</span>
+																</div>
+																
+																<div className="flex justify-between text-[10px] text-zinc-450 border-b border-zinc-150/40 pb-1.5 mt-0.5">
+																	<span>Nominal Transfer:</span>
+																	<span className="font-extrabold text-zinc-700 dark:text-zinc-350">
+																		Rp {p.amount.toLocaleString("id-ID")}
+																	</span>
+																</div>
+
+																<div className="flex justify-between items-center mt-1">
+																	{p.status === "paid" ? (
+																		<>
+																			<span className="text-[9.5px] text-zinc-400 font-medium truncate max-w-[150px]" title={p.receiptUrl}>
+																				{p.receiptUrl}
+																			</span>
+																			<button
+																				type="button"
+																				onClick={() => {
+																					setSelectedGroupMemberPayment(p);
+																					setSelectedInstallmentTerm(null);
+																					setIsReceiptModalOpen(true);
+																				}}
+																				className="text-sakode-blue dark:text-sky-400 hover:underline font-bold text-[10px] cursor-pointer"
+																			>
+																				Lihat Bukti
+																			</button>
+																		</>
+																	) : (
+																		<>
+																			<span className="text-[9.5px] text-rose-500/80 italic font-medium">
+																				Menunggu Transfer
+																			</span>
+																			<button
+																				type="button"
+																				onClick={() => handleSimulateGroupMemberUpload(selectedItem, p.memberName)}
+																				className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-[9.5px] px-2.5 py-1 rounded transition-all cursor-pointer"
+																			>
+																				Simulasikan Bayar
+																			</button>
+																		</>
+																	)}
+																</div>
+															</div>
+														))}
+													</div>
+												) : selectedItem.paymentType === "cicil" ? (
+													<div className="flex flex-col gap-2">
+														{selectedItem.installments && selectedItem.installments.map((term, tIdx) => (
+															<div key={tIdx} className="bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2 text-xs">
+																<div className="flex justify-between items-center">
+																	<span className="font-bold text-zinc-800 dark:text-zinc-200">
+																		{term.termName}
+																	</span>
+																	<span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+																		term.status === "paid"
+																			? "bg-emerald-500/10 text-emerald-600"
+																			: "bg-rose-500/10 text-rose-600"
+																	}`}>
+																		{term.status === "paid" ? "Lunas" : "Belum Bayar"}
+																	</span>
+																</div>
+																
+																<div className="flex justify-between text-[10px] text-zinc-450 border-b border-zinc-150/40 pb-1.5 mt-0.5">
+																	<span>Jatuh Tempo: {term.dueDate}</span>
+																	<span className="font-extrabold text-zinc-700 dark:text-zinc-350">
+																		Rp {term.amount.toLocaleString("id-ID")}
+																	</span>
+																</div>
+
+																<div className="flex justify-between items-center mt-1">
+																	{term.status === "paid" ? (
+																		<>
+																			<span className="text-[9.5px] text-zinc-400 font-medium truncate max-w-[150px]" title={term.receiptUrl}>
+																				{term.receiptUrl}
+																			</span>
+																			<button
+																				type="button"
+																				onClick={() => {
+																					setSelectedInstallmentTerm(term);
+																					setSelectedGroupMemberPayment(null);
+																					setIsReceiptModalOpen(true);
+																				}}
+																				className="text-sakode-blue dark:text-sky-400 hover:underline font-bold text-[10px] cursor-pointer"
+																			>
+																				Lihat Bukti
+																			</button>
+																		</>
+																	) : (
+																		<>
+																			<span className="text-[9.5px] text-rose-500/80 italic font-medium">
+																				Menunggu Transfer
+																			</span>
+																			<button
+																				type="button"
+																				onClick={() => handleSimulateInstallmentUpload(selectedItem, term)}
+																				className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-[9.5px] px-2.5 py-1 rounded transition-all cursor-pointer"
+																			>
+																				Simulasikan Bayar
+																			</button>
+																		</>
+																	)}
+																</div>
+															</div>
+														))}
+													</div>
+												) : (
+													selectedItem.paymentReceiptUrl ? (
+														<div className='bg-zinc-55 dark:bg-zinc-950/20 p-3 rounded-2xl border border-zinc-200/50 dark:border-zinc-850 flex flex-col gap-2.5 text-xs text-left'>
+															<div className='flex items-center justify-between gap-2 text-zinc-800 dark:text-zinc-250'>
+																<div className='flex items-center gap-2 min-w-0'>
+																	<Icons.BookOpen className="w-5 h-5 text-amber-500 shrink-0" />
+																	<span className="font-bold truncate" title={selectedItem.paymentReceiptUrl}>
+																		{selectedItem.paymentReceiptUrl}
+																	</span>
+																</div>
+																
+																<button
+																	type="button"
+																	onClick={() => {
+																		setSelectedInstallmentTerm(null);
+																		setSelectedGroupMemberPayment(null);
+																		setIsReceiptModalOpen(true);
+																	}}
+																	className="text-sakode-blue dark:text-sky-400 hover:underline font-bold text-[10px] shrink-0 cursor-pointer"
+																>
+																	Lihat Bukti
+																</button>
+															</div>
+															<div className="flex justify-between text-[10px] text-zinc-450 border-t border-zinc-150/40 pt-2">
+																<span>Diunggah pada:</span>
+																<span className="font-bold text-zinc-700 dark:text-zinc-300">
+																	{selectedItem.paymentReceiptUploadedDate || "13 Mar 2026 16:35 WIB"}
+																</span>
+															</div>
+														</div>
+													) : (
+														<div className="bg-rose-500/5 border border-rose-500/10 p-4 rounded-2xl text-center text-xs">
+															<span className="text-rose-500 font-bold block mb-2 text-left pl-1">Bukti transfer belum diunggah</span>
+															<button
+																type="button"
+																onClick={() => handleSimulateReceiptUpload(selectedItem)}
+																className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10.5px] px-3.5 py-2 rounded-lg transition-all cursor-pointer shadow-3xs"
+															>
+																Simulasikan Upload Bukti Transfer
+															</button>
+														</div>
+													)
+												)}
+											</div>
+
+											<div className={getSubElementClass("divider")} />
+
 											{/* Timeline of Application */}
 											<div className='flex flex-col gap-3'>
 												<h4 className='text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider'>
@@ -1406,6 +1873,149 @@ export default function RegistrationReviewPage() {
 					</motion.div>
 				)}
 			</AnimatePresence>
+
+			{/* 7. SIMULATED RECEIPT PREVIEW DIALOG */}
+			<AnimatePresence>
+				{isReceiptModalOpen && selectedItem && (
+					<div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
+						<motion.div
+							initial={{ scale: 0.95, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.95, opacity: 0 }}
+							className="w-full max-w-sm relative my-8 font-sans text-left"
+						>
+							<UI.Card>
+								<div className="flex flex-col gap-4">
+									
+									{/* Title header */}
+									<div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+										<div className="flex items-center gap-2">
+											<div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600">
+												<Icons.Sparkles className="w-5 h-5" />
+											</div>
+											<div>
+												<h3 className="text-xs font-black uppercase tracking-wider text-zinc-800 dark:text-white leading-tight">
+													Pratinjau Bukti Transfer
+												</h3>
+												<span className="text-[9.5px] text-zinc-400 font-bold block mt-0.5">
+													{selectedGroupMemberPayment
+														? selectedGroupMemberPayment.receiptUrl
+														: selectedInstallmentTerm
+														? selectedInstallmentTerm.receiptUrl
+														: selectedItem.paymentReceiptUrl}
+												</span>
+											</div>
+										</div>
+										<button
+											type="button"
+											onClick={() => setIsReceiptModalOpen(false)}
+											className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-450 hover:text-zinc-700 cursor-pointer"
+											title="Tutup"
+										>
+											<Icons.X className="w-4 h-4" />
+										</button>
+									</div>
+
+									{/* Simulated Bank Receipt Sheet */}
+									<div className="bg-zinc-100 dark:bg-zinc-950/80 p-5 rounded-2xl border border-zinc-200 dark:border-zinc-850 flex justify-center">
+										<div className="bg-white text-zinc-900 w-full max-w-[280px] p-5 rounded-xl shadow-xs border border-zinc-150 relative text-[10px] leading-relaxed">
+											
+											{/* Top bar header */}
+											<div className="text-center border-b border-dashed border-zinc-200 pb-3 mb-3">
+												<span className="font-sans font-black text-xs text-blue-800 tracking-wider block">
+													m-Transfer BCA
+												</span>
+												<span className="font-bold text-[8.5px] text-emerald-650 bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-1">
+													TRANSAKSI BERHASIL
+												</span>
+											</div>
+
+											{/* Info fields */}
+											<div className="space-y-2">
+												<div className="flex justify-between border-b border-zinc-50 pb-1">
+													<span className="text-zinc-400 font-bold">TANGGAL:</span>
+													<span className="font-extrabold text-zinc-800">
+														{selectedGroupMemberPayment
+															? selectedGroupMemberPayment.receiptUploadedDate
+															: selectedInstallmentTerm
+															? selectedInstallmentTerm.receiptUploadedDate
+															: (selectedItem.paymentReceiptUploadedDate || "13 Mar 2026")}
+													</span>
+												</div>
+												<div className="flex justify-between border-b border-zinc-50 pb-1">
+													<span className="text-zinc-400 font-bold">REK ASAL:</span>
+													<span className="font-extrabold text-zinc-800 truncate max-w-[140px]" title={selectedGroupMemberPayment ? selectedGroupMemberPayment.memberName.toUpperCase() : selectedItem.name.toUpperCase()}>
+														{selectedGroupMemberPayment ? selectedGroupMemberPayment.memberName.toUpperCase() : selectedItem.name.toUpperCase()}
+													</span>
+												</div>
+												<div className="flex justify-between border-b border-zinc-50 pb-1">
+													<span className="text-zinc-400 font-bold">REK TUJUAN:</span>
+													<span className="font-extrabold text-zinc-800 text-right">
+														8023192031<br />
+														SAKODE ACADEMY IND
+													</span>
+												</div>
+												<div className="flex justify-between border-b border-zinc-50 pb-1">
+													<span className="text-zinc-400 font-bold">NOMINAL:</span>
+													<span className="font-black text-blue-800 text-xs">
+														Rp {(selectedGroupMemberPayment
+															? selectedGroupMemberPayment.amount
+															: selectedInstallmentTerm
+															? selectedInstallmentTerm.amount
+															: selectedItem.finalPrice
+														).toLocaleString("id-ID")}
+													</span>
+												</div>
+												<div className="flex justify-between pb-1">
+													<span className="text-zinc-400 font-bold">BERITA:</span>
+													<span className="font-extrabold text-zinc-800 truncate max-w-[140px]" title={selectedGroupMemberPayment ? `${selectedItem.id} - ${selectedGroupMemberPayment.memberName}` : selectedInstallmentTerm ? `${selectedItem.id} - ${selectedInstallmentTerm.termName}` : `Bootcamp ${selectedItem.program.substring(0, 15)}`}>
+														{selectedGroupMemberPayment
+															? `${selectedItem.id} - ${selectedGroupMemberPayment.memberName}`
+															: selectedInstallmentTerm
+															? `${selectedItem.id} - ${selectedInstallmentTerm.termName}`
+															: `Bootcamp ${selectedItem.program.substring(0, 15)}`
+														}
+													</span>
+												</div>
+											</div>
+
+											{/* Footer reference stamp */}
+											<div className="text-center border-t border-dashed border-zinc-200 pt-3 mt-3 text-[8px] text-zinc-400 font-mono">
+												NO REFERENSI: TRF-{selectedItem.id.replace("REG-", "882030")}
+												{selectedGroupMemberPayment
+													? `-M${selectedItem.groupMembers?.indexOf(selectedGroupMemberPayment.memberName) || 0}`
+													: selectedInstallmentTerm
+													? `-C${selectedInstallmentTerm.termNumber}`
+													: ""
+												}-SAKODE
+											</div>
+
+										</div>
+									</div>
+
+									{/* Footer controls */}
+									<div className="flex justify-between items-center border-t border-zinc-150 dark:border-zinc-850 pt-3 mt-2">
+										<span className="text-[9.5px] text-zinc-400 font-bold">
+											Transfer Mandiri/BCA/BNI E-Receipt
+										</span>
+										<UI.Button
+											onClick={() => setIsReceiptModalOpen(false)}
+											variant="primary"
+											accentColor={selectedColor}
+											className="text-xs! py-2! px-5! font-bold! cursor-pointer"
+										>
+											Tutup Pratinjau
+										</UI.Button>
+									</div>
+
+								</div>
+							</UI.Card>
+						</motion.div>
+					</div>
+				)}
+			</AnimatePresence>
+
 		</div>
 	);
 }
+
