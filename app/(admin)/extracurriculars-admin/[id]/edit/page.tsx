@@ -14,6 +14,7 @@ import {
 import { getStoredMentors } from "../../../mentors/_services/mentor-mock";
 import { Mentor } from "../../../mentors/_types/mentor";
 import SearchableSelect from "../../_components/SearchableSelect";
+import PhoneInput from "../../_components/PhoneInput";
 
 interface ApiRegion {
   id: string;
@@ -47,7 +48,6 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
     name: "",
     picName: "",
     picEmail: "",
-    picPhone: "",
     provinsi: "",
     kabupaten: "",
     kecamatan: "",
@@ -59,6 +59,10 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
     mouFileName: "",
     mouSignedDate: "2026-07-07"
   });
+
+  // Separate states for country code selector
+  const [picPhoneCode, setPicPhoneCode] = useState("+62");
+  const [picPhoneNumber, setPicPhoneNumber] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -85,6 +89,19 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
     return organizations.find((o) => o.id === schoolId) || null;
   }, [organizations, schoolId]);
 
+  // Helper to parse phone into code and number
+  const parsePhone = (fullPhone: string) => {
+    if (!fullPhone) return { code: "+62", number: "" };
+    const match = fullPhone.match(/^(\+\d+)\s*(.*)$/);
+    if (match) {
+      return { code: match[1], number: match[2].replace(/\D/g, "") };
+    }
+    if (fullPhone.startsWith("0")) {
+      return { code: "+62", number: fullPhone.substring(1).replace(/\D/g, "") };
+    }
+    return { code: "+62", number: fullPhone.replace(/\D/g, "") };
+  };
+
   // Prefill initial form
   useEffect(() => {
     if (school) {
@@ -92,7 +109,6 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
         name: school.name,
         picName: school.picName,
         picEmail: school.picEmail,
-        picPhone: school.picPhone,
         provinsi: school.provinsi || "",
         kabupaten: school.kabupaten || "",
         kecamatan: school.kecamatan || "",
@@ -104,6 +120,10 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
         mouFileName: school.mouFileName || "",
         mouSignedDate: school.mouSignedDate || "2026-07-07"
       });
+
+      const parsed = parsePhone(school.picPhone);
+      setPicPhoneCode(parsed.code);
+      setPicPhoneNumber(parsed.number);
     }
   }, [school]);
 
@@ -225,7 +245,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
       !schoolForm.name ||
       !schoolForm.picName ||
       !schoolForm.picEmail ||
-      !schoolForm.picPhone ||
+      !picPhoneNumber ||
       !schoolForm.provinsi ||
       !schoolForm.kabupaten ||
       !schoolForm.kecamatan ||
@@ -251,6 +271,8 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
       return;
     }
 
+    const combinedPhone = `${picPhoneCode} ${picPhoneNumber}`;
+
     const updated = organizations.map((o) =>
       o.id === schoolId
         ? {
@@ -258,7 +280,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
             name: schoolForm.name,
             picName: schoolForm.picName,
             picEmail: schoolForm.picEmail,
-            picPhone: schoolForm.picPhone,
+            picPhone: combinedPhone,
             provinsi: schoolForm.provinsi,
             kabupaten: schoolForm.kabupaten,
             kecamatan: schoolForm.kecamatan,
@@ -281,7 +303,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
   if (!school) {
     return (
       <div className="py-16 text-center text-xs text-zinc-400 font-medium border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center gap-2">
-        <Icons.AlertCircle className="w-8 h-8 text-rose-500" />
+        <Icons.AlertCircle className="w-8 h-8 text-rose-505" />
         <span>Ekskul Sekolah tidak ditemukan.</span>
         <button
           onClick={() => router.push("/extracurriculars-admin")}
@@ -336,7 +358,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
         
         {/* Panel 1: Profil Sekolah & SAKODE Mentor (Left Side) */}
         <div className="lg:col-span-2 space-y-6">
-          <UI.Card>
+          <UI.Card className="relative z-10">
             <div className="p-5 flex flex-col gap-5 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 1. Rincian Sekolah & Mentor
@@ -387,7 +409,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
           </UI.Card>
 
           {/* Panel 2: Alamat Lengkap Administrasi Wilayah */}
-          <UI.Card>
+          <UI.Card className="relative z-30">
             <div className="p-5 flex flex-col gap-5 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 2. Alamat Lengkap Wilayah
@@ -461,7 +483,7 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
         <div className="lg:col-span-1 space-y-6">
           
           {/* Guru Pendamping */}
-          <UI.Card>
+          <UI.Card className="relative z-20">
             <div className="p-5 flex flex-col gap-4 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 3. Guru Pendamping
@@ -489,21 +511,18 @@ export default function EditExtracurricularPage({ params }: EditPageProps) {
                 />
               </div>
 
-              <div>
-                <UI.Label>No WhatsApp Guru</UI.Label>
-                <UI.Input
-                  type="text"
-                  value={schoolForm.picPhone}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchoolForm({ ...schoolForm, picPhone: e.target.value })}
-                  accentColor={selectedColor}
-                  className="text-xs! py-2!"
-                />
-              </div>
+              <PhoneInput
+                label="No WhatsApp Guru"
+                phoneCodeValue={picPhoneCode}
+                phoneNumberValue={picPhoneNumber}
+                onPhoneCodeChange={setPicPhoneCode}
+                onPhoneNumberChange={setPicPhoneNumber}
+              />
             </div>
           </UI.Card>
 
           {/* MoU Document Edit & Upload */}
-          <UI.Card>
+          <UI.Card className="relative z-10">
             <div className="p-5 flex flex-col gap-4 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 4. Dokumen Kerja Sama (MoU)

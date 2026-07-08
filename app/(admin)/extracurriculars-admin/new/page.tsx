@@ -14,6 +14,7 @@ import {
 import { getStoredMentors } from "../../mentors/_services/mentor-mock";
 import { Mentor } from "../../mentors/_types/mentor";
 import SearchableSelect from "../_components/SearchableSelect";
+import PhoneInput from "../_components/PhoneInput";
 
 interface ApiRegion {
   id: string;
@@ -40,7 +41,6 @@ export default function NewExtracurricularPage() {
     name: "",
     picName: "",
     picEmail: "",
-    picPhone: "",
     provinsi: "",
     kabupaten: "",
     kecamatan: "",
@@ -52,6 +52,10 @@ export default function NewExtracurricularPage() {
     mouFileName: "",
     mouSignedDate: "2026-07-07"
   });
+
+  // Separate states for country code selector
+  const [picPhoneCode, setPicPhoneCode] = useState("+62");
+  const [picPhoneNumber, setPicPhoneNumber] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -175,7 +179,7 @@ export default function NewExtracurricularPage() {
       !schoolForm.name ||
       !schoolForm.picName ||
       !schoolForm.picEmail ||
-      !schoolForm.picPhone ||
+      !picPhoneNumber ||
       !schoolForm.provinsi ||
       !schoolForm.kabupaten ||
       !schoolForm.kecamatan ||
@@ -204,13 +208,15 @@ export default function NewExtracurricularPage() {
       return;
     }
 
+    const combinedPhone = `${picPhoneCode} ${picPhoneNumber}`;
+
     const newId = `ORG-${Math.floor(104 + Math.random() * 900)}`;
     const newOrg: ExtracurricularOrganization = {
       id: newId,
       name: schoolForm.name,
       picName: schoolForm.picName,
       picEmail: schoolForm.picEmail,
-      picPhone: schoolForm.picPhone,
+      picPhone: combinedPhone,
       provinsi: schoolForm.provinsi,
       kabupaten: schoolForm.kabupaten,
       kecamatan: schoolForm.kecamatan,
@@ -273,7 +279,7 @@ export default function NewExtracurricularPage() {
         
         {/* Panel 1: Profil Sekolah & Mentor (Left Side) */}
         <div className="lg:col-span-2 space-y-6">
-          <UI.Card>
+          <UI.Card className="relative z-10">
             <div className="p-5 flex flex-col gap-5 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 1. Rincian Sekolah & Mentor
@@ -325,7 +331,7 @@ export default function NewExtracurricularPage() {
           </UI.Card>
 
           {/* Panel 2: Alamat Lengkap Administrasi Wilayah */}
-          <UI.Card>
+          <UI.Card className="relative z-30">
             <div className="p-5 flex flex-col gap-5 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 2. Alamat Lengkap Wilayah
@@ -401,7 +407,7 @@ export default function NewExtracurricularPage() {
         <div className="lg:col-span-1 space-y-6">
           
           {/* Guru Pendamping */}
-          <UI.Card>
+          <UI.Card className="relative z-20">
             <div className="p-5 flex flex-col gap-4 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 3. Guru Pendamping
@@ -431,22 +437,18 @@ export default function NewExtracurricularPage() {
                 />
               </div>
 
-              <div>
-                <UI.Label>No WhatsApp Guru</UI.Label>
-                <UI.Input
-                  type="text"
-                  placeholder="+62 8xx-xxxx-xxxx"
-                  value={schoolForm.picPhone}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchoolForm({ ...schoolForm, picPhone: e.target.value })}
-                  accentColor={selectedColor}
-                  className="text-xs! py-2!"
-                />
-              </div>
+              <PhoneInput
+                label="No WhatsApp Guru"
+                phoneCodeValue={picPhoneCode}
+                phoneNumberValue={picPhoneNumber}
+                onPhoneCodeChange={setPicPhoneCode}
+                onPhoneNumberChange={setPicPhoneNumber}
+              />
             </div>
           </UI.Card>
 
           {/* MoU Document Upload */}
-          <UI.Card>
+          <UI.Card className="relative z-10">
             <div className="p-5 flex flex-col gap-4 text-left">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 4. Dokumen Kerja Sama (MoU)
