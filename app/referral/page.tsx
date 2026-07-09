@@ -129,7 +129,8 @@ export default function ReferralLandingPage() {
 
       {/* Navbar Header */}
       <header className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-900/50 z-20 relative">
-        <button 
+        <button
+        title="Kembali ke Beranda"
           onClick={() => router.push("/")} 
           className="bg-[#030307] py-2.5 px-4 rounded-xl border border-zinc-800/80 shadow-md flex items-center justify-center cursor-pointer"
         >
@@ -262,68 +263,119 @@ export default function ReferralLandingPage() {
           </UI.Card>
         </section>
 
-        {/* 3. Payout rules & Program workflow */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-          {/* Payout Rules */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-sm font-black text-zinc-850 dark:text-white uppercase tracking-wider">
-              Aturan & Ketentuan Pencairan Dana
-            </h3>
-            <div className="flex flex-col gap-3 text-xs font-medium text-zinc-650 dark:text-zinc-400">
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
-                <Icons.Briefcase className="w-5 h-5 text-sakode-blue shrink-0" />
-                <div>
-                  <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Batas Minimal Pencairan (Threshold)</h4>
-                  Komisi Anda akan diproses jika akumulasi pendapatan rujukan telah mencapai minimal <strong>Rp 500.000</strong>.
+        {/* 3. Aturan & Tata Cara */}
+        <section className="flex flex-col gap-8 mt-2">
+          {/* Rules Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Payout Rules */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-sm font-black text-zinc-850 dark:text-white uppercase tracking-wider">
+                Aturan & Ketentuan Pencairan Dana
+              </h3>
+              <div className="flex flex-col gap-3 text-xs font-medium text-zinc-650 dark:text-zinc-400">
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Briefcase className="w-5 h-5 text-sakode-blue shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Tidak Ada Batas Minimal (No Threshold)</h4>
+                    Berapapun pendapatan komisi Anda akan dicairkan sebulan sekali. Jika pencairan tidak diajukan, saldo otomatis diakumulasikan ke bulan-bulan berikutnya.
+                  </div>
+                </div>
+
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Calendar className="w-5 h-5 text-sakode-orange shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Jadwal Pencairan Fleksibel</h4>
+                    Tanggal pencairan bervariasi per program, namun secara umum dibuka pada <strong>tanggal 25 hingga 30/31 setiap bulannya</strong>. Info detail ada pada masing-masing program promo.
+                  </div>
+                </div>
+
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Gift className="w-5 h-5 text-sakode-yellow shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Harga Komisi Bervariasi</h4>
+                    Komisi satuan rujukan berbeda-beda di setiap program pembelajaran. Pastikan Anda membaca informasi detail program sebelum menyebarkan link.
+                  </div>
+                </div>
+
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Award className="w-5 h-5 text-sakode-green shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Metode Transfer Bebas</h4>
+                    Pencairan dana fleksibel ke rekening bank/e-wallet mana pun, dengan catatan seluruh biaya transfer administrasi ditanggung oleh penerima komisi.
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
-                <Icons.Calendar className="w-5 h-5 text-sakode-orange shrink-0" />
-                <div>
-                  <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Jadwal Pengiriman (Payout Schedule)</h4>
-                  Pencairan dana dikirim secara otomatis ke rekening Anda setiap <strong>tanggal 5 setiap bulannya</strong>.
+            {/* Referrer Rules */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-sm font-black text-zinc-850 dark:text-white uppercase tracking-wider">
+                Aturan & Kode Etik Mitra Referrer
+              </h3>
+              <div className="flex flex-col gap-3 text-xs font-medium text-zinc-650 dark:text-zinc-400">
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Sparkles className="w-5 h-5 text-sakode-blue shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Self-Referral Diperbolehkan</h4>
+                    Mitra diperbolehkan mendaftar program bootcamp dengan link rujukan sendiri. Komisi akan tetap dihitung setelah status pembayaran kelas berhasil diverifikasi.
+                  </div>
                 </div>
-              </div>
 
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
-                <Icons.Award className="w-5 h-5 text-sakode-green shrink-0" />
-                <div>
-                  <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Metode Transfer Kompatibel</h4>
-                  Mendukung transfer ke bank-bank nasional terbesar tanpa potongan administrasi: <strong>BCA, Mandiri, BNI, dan BRI</strong>.
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Clipboard className="w-5 h-5 text-sakode-blue shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Promosikan Informasi Secara Jujur</h4>
+                    Wajib memberikan informasi yang benar tentang program Sakode. Dilarang menyebarkan hoax, memanipulasi diskon, atau spamming massal.
+                  </div>
+                </div>
+
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.Users className="w-5 h-5 text-purple-500 shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Kepatuhan Konten Media</h4>
+                    Dilarang menyebarkan tautan rujukan di platform atau komunitas yang memuat konten ilegal, SARA, perjudian, atau kekerasan.
+                  </div>
+                </div>
+
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/55 dark:border-zinc-850/50 rounded-xl flex gap-3">
+                  <Icons.DocumentText className="w-5 h-5 text-sakode-green shrink-0" />
+                  <div>
+                    <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Validitas Data Rekening</h4>
+                    Referrer bertanggung jawab penuh atas kebenaran info rekening. Sakode tidak bertanggung jawab atas kesalahan transfer akibat salah input data.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Guidelines / Sign-up workflow */}
-          <div className="flex flex-col gap-4">
+          {/* Tata Cara (Full width below) */}
+          <div className="flex flex-col gap-4 mt-4 text-center">
             <h3 className="text-sm font-black text-zinc-850 dark:text-white uppercase tracking-wider">
               Tata Cara Pendaftaran & Kemitraan
             </h3>
-            <div className="relative border-l border-zinc-250 dark:border-zinc-800 pl-5 ml-2.5 flex flex-col gap-6 text-xs text-zinc-650 dark:text-zinc-400">
-              <div className="relative">
-                <div className="absolute -left-[30px] top-0 w-5.5 h-5.5 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-[10px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-zinc-650 dark:text-zinc-400 mt-2 text-left">
+              <div className="p-5 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/40 dark:border-zinc-850/30 rounded-2xl flex flex-col gap-2 relative">
+                <div className="w-6 h-6 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-xs">
                   1
                 </div>
-                <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Registrasi Akun Kemitraan</h4>
-                Isi data diri lengkap Anda beserta nomor rekening bank pada formulir pendaftaran di bawah ini.
+                <h4 className="font-black text-zinc-850 dark:text-zinc-200">Registrasi Akun Kemitraan</h4>
+                Isi data diri lengkap Anda beserta informasi bank/e-wallet untuk pencairan dana pada formulir pendaftaran di bawah ini.
               </div>
 
-              <div className="relative">
-                <div className="absolute -left-[30px] top-0 w-5.5 h-5.5 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-[10px]">
+              <div className="p-5 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/40 dark:border-zinc-850/30 rounded-2xl flex flex-col gap-2 relative">
+                <div className="w-6 h-6 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-xs">
                   2
                 </div>
-                <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Dapatkan Link Rujukan Kanonis</h4>
-                Gunakan link unik promosi program bootcamp yang tersedia di Dashboard Akun Referrer Anda.
+                <h4 className="font-black text-zinc-850 dark:text-zinc-200">Dapatkan Link Rujukan Kanonis</h4>
+                Salin link promosi program bootcamp yang tersedia langsung di dashboard akun Referrer Anda setelah masuk log.
               </div>
 
-              <div className="relative">
-                <div className="absolute -left-[30px] top-0 w-5.5 h-5.5 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-[10px]">
+              <div className="p-5 bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/40 dark:border-zinc-850/30 rounded-2xl flex flex-col gap-2 relative">
+                <div className="w-6 h-6 rounded-full bg-sakode-blue text-white flex items-center justify-center font-black text-xs">
                   3
                 </div>
-                <h4 className="font-black text-zinc-850 dark:text-zinc-200 mb-0.5">Promosikan & Terima Komisi</h4>
-                Sebarkan link di media sosial/blog. Komisi dihitung otomatis setelah pendaftar melakukan checkout pembayaran.
+                <h4 className="font-black text-zinc-850 dark:text-zinc-200">Promosikan & Terima Komisi</h4>
+                Sebarkan link rujukan Anda. Komisi secara otomatis tercatat dan siap dicairkan ketika murid baru terverifikasi.
               </div>
             </div>
           </div>

@@ -21,6 +21,25 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
   const { resolvedTheme, setTheme } = useTheme();
   const { selectedStyle } = useUIStyle();
 
+  const [originalRole, setOriginalRole] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOriginalRole(localStorage.getItem("sakode-original-role"));
+    }
+  }, [session.role]);
+
+  const handleSwitchToReferrer = () => {
+    localStorage.setItem("sakode-original-role", session.role);
+    login("referrer");
+  };
+
+  const handleSwitchToOriginal = () => {
+    const roleToRestore = originalRole || "murid";
+    localStorage.removeItem("sakode-original-role");
+    login(roleToRestore as any);
+  };
+
   const getPageTitle = (path: string) => {
     if (!path || path === "/dashboard") return "Ringkasan Dasbor";
     const segments = path.split("/");
@@ -182,7 +201,7 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
                   Daftar Referrer
                 </button>
                 <button
-                  onClick={() => login("referrer")}
+                  onClick={handleSwitchToReferrer}
                   className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-zinc-100/80 hover:bg-zinc-200/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/80 text-zinc-750 dark:text-zinc-200 border border-zinc-200/50 dark:border-zinc-700/50 cursor-pointer shadow-3xs transition-all active:scale-95"
                   title="Pindah ke Portal Referrer"
                 >
@@ -190,13 +209,25 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
                 </button>
               </React.Fragment>
             ) : (
-              <button
-                onClick={() => login("murid")}
-                className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-sakode-orange/10 text-sakode-orange border border-sakode-orange/20 hover:bg-sakode-orange/20 cursor-pointer shadow-3xs transition-all active:scale-95"
-                title="Kembali ke Portal Utama"
-              >
-                Portal Utama
-              </button>
+              <React.Fragment>
+                {originalRole ? (
+                  <button
+                    onClick={handleSwitchToOriginal}
+                    className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-sakode-orange/10 text-sakode-orange border border-sakode-orange/20 hover:bg-sakode-orange/20 cursor-pointer shadow-3xs transition-all active:scale-95"
+                    title="Kembali ke Portal Utama"
+                  >
+                    Portal Utama
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => router.push("/")}
+                    className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 border border-zinc-200/40 dark:border-zinc-700/40 cursor-pointer shadow-3xs transition-all active:scale-95"
+                    title="Kembali ke Landing Page Utama"
+                  >
+                    Ke Beranda
+                  </button>
+                )}
+              </React.Fragment>
             )}
           </div>
         )}
