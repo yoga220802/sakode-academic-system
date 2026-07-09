@@ -8,6 +8,7 @@ import { MentorWidget } from "../_components/MentorWidget";
 import { MentorLeadWidget } from "../_components/MentorLeadWidget";
 import { AdminWidget } from "../_components/AdminWidget";
 import { SchoolPrincipalWidget } from "../_components/SchoolPrincipalWidget";
+import { ReferrerWidget } from "../_components/ReferrerWidget";
 
 export default function DashboardPage() {
   const { session } = useAuth();
@@ -43,6 +44,7 @@ export default function DashboardPage() {
           {session.role === "mentor_lead" && <MentorLeadWidget />}
           {session.role === "mentor" && <MentorWidget />}
           {session.role === "school_principal" && <SchoolPrincipalWidget />}
+          {session.role === "referrer" && <ReferrerWidget />}
           {session.role === "murid" && <StudentWidget />}
         </motion.div>
       </AnimatePresence>

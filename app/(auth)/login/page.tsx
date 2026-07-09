@@ -401,6 +401,16 @@ export default function LoginPage() {
 										variant="secondary" 
 										accentColor={selectedColor} 
 										disabled={isLoading}
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
+										onClick={() => handleQuickLogin("referrer", "rudi@referrer.com")}
+									>
+										Referrer Account
+									</UI.Button>
+									<UI.Button 
+										type="button" 
+										variant="secondary" 
+										accentColor={selectedColor} 
+										disabled={isLoading}
 										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer col-span-2" 
 										onClick={() => handleQuickLogin("school_principal", "sudarsono@sekolah.sch.id")}
 									>

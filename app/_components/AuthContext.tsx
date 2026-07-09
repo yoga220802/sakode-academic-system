@@ -50,6 +50,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (role === "school_principal") {
       name = "Kepsek Sudarsono";
       email = "sudarsono@sekolah.sch.id";
+    } else if (role === "referrer") {
+      name = "Rudi Referrer";
+      email = "rudi@referrer.com";
     } else {
       name = "Panjul Siswa Baru";
       email = "panjul@gmail.com";
