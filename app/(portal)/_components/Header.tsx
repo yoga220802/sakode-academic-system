@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
+import { useAuth } from "@/app/_components/AuthContext";
 import { UserSession } from "@/app/_types/auth";
 
 interface HeaderProps {
@@ -15,8 +16,29 @@ interface HeaderProps {
 
 export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { login } = useAuth();
   const { resolvedTheme, setTheme } = useTheme();
   const { selectedStyle } = useUIStyle();
+
+  const [originalRole, setOriginalRole] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOriginalRole(localStorage.getItem("sakode-original-role"));
+    }
+  }, [session.role]);
+
+  const handleSwitchToReferrer = () => {
+    localStorage.setItem("sakode-original-role", session.role);
+    login("referrer");
+  };
+
+  const handleSwitchToOriginal = () => {
+    const roleToRestore = originalRole || "murid";
+    localStorage.removeItem("sakode-original-role");
+    login(roleToRestore as any);
+  };
 
   const getPageTitle = (path: string) => {
     if (!path || path === "/dashboard") return "Ringkasan Dasbor";
@@ -166,6 +188,50 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
 
       {/* Right: Actions & User Info */}
       <div className="flex items-center gap-3">
+        {/* Referrer Switcher / CTA */}
+        {session.role !== "admin" && (
+          <div className="flex items-center gap-2">
+            {session.role !== "referrer" ? (
+              <React.Fragment>
+                <button
+                  onClick={() => router.push("/referral")}
+                  className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-sakode-blue/10 text-sakode-blue border border-sakode-blue/20 hover:bg-sakode-blue/20 cursor-pointer shadow-3xs transition-all active:scale-95"
+                  title="Daftar Program Referral"
+                >
+                  Daftar Referrer
+                </button>
+                <button
+                  onClick={handleSwitchToReferrer}
+                  className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-zinc-100/80 hover:bg-zinc-200/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/80 text-zinc-750 dark:text-zinc-200 border border-zinc-200/50 dark:border-zinc-700/50 cursor-pointer shadow-3xs transition-all active:scale-95"
+                  title="Pindah ke Portal Referrer"
+                >
+                  Portal Referrer
+                </button>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {originalRole ? (
+                  <button
+                    onClick={handleSwitchToOriginal}
+                    className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-sakode-orange/10 text-sakode-orange border border-sakode-orange/20 hover:bg-sakode-orange/20 cursor-pointer shadow-3xs transition-all active:scale-95"
+                    title="Kembali ke Portal Utama"
+                  >
+                    Portal Utama
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => router.push("/")}
+                    className="text-[10px] font-black uppercase px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 border border-zinc-200/40 dark:border-zinc-700/40 cursor-pointer shadow-3xs transition-all active:scale-95"
+                    title="Kembali ke Landing Page Utama"
+                  >
+                    Ke Beranda
+                  </button>
+                )}
+              </React.Fragment>
+            )}
+          </div>
+        )}
+
         {/* Theme Toggle Button */}
         <button
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
