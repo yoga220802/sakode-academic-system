@@ -28,7 +28,7 @@ function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [agreeTerms, setAgreeTerms] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	
+
 	// Error states
 	const [nameError, setNameError] = useState("");
 	const [emailError, setEmailError] = useState("");
@@ -117,9 +117,7 @@ function RegisterForm() {
 		setTimeout(() => {
 			setIsLoading(false);
 			
-			// Show success message and redirect
 			const hasAcquisitionContext = !!(program || ref);
-			
 			setAlertMsg({
 				type: "info",
 				title: "Registrasi Berhasil!",
@@ -127,10 +125,8 @@ function RegisterForm() {
 					? "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman pemilihan paket..."
 					: "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman login...",
 			});
-
 			setTimeout(() => {
 				if (hasAcquisitionContext) {
-					// Route to enrollment flow (FE-SLICE-007) and preserve query context
 					router.push(`/register/enroll?program=${program}&ref=${ref}`);
 				} else {
 					router.push("/login");
@@ -194,15 +190,30 @@ function RegisterForm() {
 								<UI.Heading className="text-2xl! font-extrabold! mb-1! text-zinc-900 dark:text-white font-sans">
 									Daftar Akun Baru
 								</UI.Heading>
-								<p className="text-xs text-zinc-550 dark:text-zinc-400 font-medium">
+								<p className="text-xs text-zinc-555 dark:text-zinc-400 font-medium">
 									Buat akun gratis untuk memulai perjalanan coding Anda
 								</p>
+							</div>
+
+							{/* Referral Program Banner */}
+							<div className="p-3 bg-sakode-blue/5 border border-sakode-blue/20 rounded-xl flex gap-2.5 items-start text-xs font-semibold text-zinc-650 dark:text-zinc-400">
+								<Icons.Gift className="w-4 h-4 text-sakode-blue shrink-0 mt-0.5" />
+								<div>
+									Tertarik menjadi <strong className="font-extrabold text-zinc-900 dark:text-white">Mitra Referrer</strong>? Dapatkan komisi dengan merekomendasikan Sakode.{" "}
+									<button 
+										type="button" 
+										onClick={() => router.push("/referral")}
+										className="text-sakode-blue hover:underline font-extrabold cursor-pointer block mt-1 bg-transparent border-none p-0 text-left font-sans"
+									>
+										Daftar & Pelajari Program Referral →
+									</button>
+								</div>
 							</div>
 
 							{/* Acquisition Summary Context (Preserved Context Indicator) */}
 							{(program || ref) && (
 								<div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/35 border border-zinc-200/50 dark:border-zinc-800/80 flex flex-col gap-2.5 text-xs">
-									<div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 dark:text-zinc-550 uppercase tracking-widest">
+									<div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 dark:text-zinc-555 uppercase tracking-widest">
 										<Icons.Sparkles className="w-3.5 h-3.5 text-sakode-yellow" />
 										Konteks Pembelian Terdeteksi
 									</div>
@@ -269,7 +280,9 @@ function RegisterForm() {
 								</div>
 
 								<div>
-									<UI.Label htmlFor="email-input">Email Akademik</UI.Label>
+									<UI.Label htmlFor="email-input">
+										Email Akademik
+									</UI.Label>
 									<UI.Input
 										id="email-input"
 										type="email"
@@ -361,7 +374,7 @@ function RegisterForm() {
 										accentColor={selectedColor} 
 									/>
 									<span className={`text-xs font-semibold select-none mt-0.5 ${agreeError ? "text-rose-500 font-bold" : "text-zinc-500 dark:text-zinc-400"}`}>
-										Saya menyetujui <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Syarat & Ketentuan</span> serta <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Kebijakan Privasi</span> Sakode Academy.
+										Saya menyetujui <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Syarat & Ketentuan</span> serta <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Kebijakan Layanan</span> Sakode Academy.
 									</span>
 								</div>
 

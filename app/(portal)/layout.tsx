@@ -22,17 +22,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // If not logged in, redirect to login page
     if (!session) {
       router.push("/login");
-    } else if (
-      session.role !== "admin" &&
-      session.role !== "mentor_lead" &&
-      session.role !== "school_principal"
-    ) {
-      // Redirect non-admin/staff roles to their respective workspaces
-      if (session.role === "mentor") {
-        router.push("/mentor/dashboard");
-      } else {
-        router.push("/student/dashboard");
-      }
     }
   }, [session, router]);
 

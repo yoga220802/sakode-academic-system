@@ -145,6 +145,20 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
             ]
           }
         ];
+      case "referrer":
+        return [
+          {
+            groupName: "Dasbor Utama",
+            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+          },
+          {
+            groupName: "Portal Kemitraan",
+            items: [
+              { label: "Riwayat Konversi", href: "/conversions", icon: "Activity" },
+              { label: "Pencairan Dana", href: "/payouts", icon: "Gift" }
+            ]
+          }
+        ];
       case "murid":
       default:
         return [
@@ -219,6 +233,7 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
       case "mentor_lead": return "Mentor Lead";
       case "mentor": return "Mentor Mode";
       case "school_principal": return "Kepala Sekolah";
+      case "referrer": return "Mitra Referrer";
       case "murid": default: return "Siswa Baru";
     }
   };
