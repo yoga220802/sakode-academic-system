@@ -21,9 +21,6 @@ function RegisterForm() {
 	const program = searchParams.get("program") || "";
 	const ref = searchParams.get("ref") || "";
 
-	// Tab state
-	const [activeTab, setActiveTab] = useState<"siswa" | "referrer">("siswa");
-
 	// Form state
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -31,17 +28,11 @@ function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [agreeTerms, setAgreeTerms] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	
-	// Referrer specific form fields
-	const [promoMethod, setPromoMethod] = useState("Social Media");
-	const [payoutBank, setPayoutBank] = useState("BCA");
-	const [payoutAccount, setPayoutAccount] = useState("");
 
 	// Error states
 	const [nameError, setNameError] = useState("");
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
-	const [payoutAccountError, setPayoutAccountError] = useState("");
 	const [agreeError, setAgreeError] = useState(false);
 	const [alertMsg, setAlertMsg] = useState<{ type: "warning" | "info"; title: string; desc: string } | null>(null);
 
@@ -68,30 +59,11 @@ function RegisterForm() {
 	const hasNumber = /\d/.test(password);
 	const hasUppercase = /[A-Z]/.test(password);
 
-	const getTabClass = (tab: "siswa" | "referrer") => {
-		const isActive = activeTab === tab;
-		const base = "flex-1 text-center py-2 text-xs font-bold transition-all cursor-pointer ";
-		if (isActive) {
-			if (selectedStyle === "neobrutalism") {
-				return base + "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-2 border-zinc-900 dark:border-white shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_rgba(255,255,255,1)] rounded-none";
-			} else if (selectedStyle === "claymorphism") {
-				return base + "bg-white dark:bg-zinc-800 text-sakode-blue shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.05),_inset_2px_2px_4px_rgba(255,255,255,0.3)] border border-slate-100/50 rounded-xl";
-			} else if (selectedStyle === "glassmorphism" || selectedStyle === "liquid-glass") {
-				return base + "bg-white/20 dark:bg-white/10 text-zinc-900 dark:text-white border border-white/20 backdrop-blur-xs rounded-lg";
-			} else {
-				return base + "bg-zinc-200/60 dark:bg-zinc-800/80 text-zinc-900 dark:text-white rounded-lg";
-			}
-		} else {
-			return base + "text-zinc-450 hover:text-zinc-650 dark:text-zinc-500 dark:hover:text-zinc-300";
-		}
-	};
-
 	const validateForm = () => {
 		let isValid = true;
 		setNameError("");
 		setEmailError("");
 		setPasswordError("");
-		setPayoutAccountError("");
 		setAgreeError(false);
 
 		// Name validation
@@ -117,14 +89,6 @@ function RegisterForm() {
 		} else if (!hasMinLength || !hasNumber || !hasUppercase) {
 			setPasswordError("Kata sandi belum memenuhi kriteria keamanan");
 			isValid = false;
-		}
-
-		// Referrer Account validation
-		if (activeTab === "referrer") {
-			if (!payoutAccount.trim()) {
-				setPayoutAccountError("Nomor rekening wajib diisi");
-				isValid = false;
-			}
 		}
 
 		// Terms validation
@@ -153,32 +117,21 @@ function RegisterForm() {
 		setTimeout(() => {
 			setIsLoading(false);
 			
-			if (activeTab === "referrer") {
-				setAlertMsg({
-					type: "info",
-					title: "Registrasi Referrer Berhasil!",
-					desc: "Akun Mitra Referrer Anda berhasil didaftarkan. Mengalihkan ke halaman login...",
-				});
-				setTimeout(() => {
+			const hasAcquisitionContext = !!(program || ref);
+			setAlertMsg({
+				type: "info",
+				title: "Registrasi Berhasil!",
+				desc: hasAcquisitionContext
+					? "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman pemilihan paket..."
+					: "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman login...",
+			});
+			setTimeout(() => {
+				if (hasAcquisitionContext) {
+					router.push(`/register/enroll?program=${program}&ref=${ref}`);
+				} else {
 					router.push("/login");
-				}, 1800);
-			} else {
-				const hasAcquisitionContext = !!(program || ref);
-				setAlertMsg({
-					type: "info",
-					title: "Registrasi Berhasil!",
-					desc: hasAcquisitionContext
-						? "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman pemilihan paket..."
-						: "Akun Anda berhasil didaftarkan. Mengalihkan ke halaman login...",
-				});
-				setTimeout(() => {
-					if (hasAcquisitionContext) {
-						router.push(`/register/enroll?program=${program}&ref=${ref}`);
-					} else {
-						router.push("/login");
-					}
-				}, 1800);
-			}
+				}
+			}, 1800);
 		}, 1500);
 	};
 
@@ -235,43 +188,30 @@ function RegisterForm() {
 							{/* Form Title */}
 							<div className="text-center">
 								<UI.Heading className="text-2xl! font-extrabold! mb-1! text-zinc-900 dark:text-white font-sans">
-									{activeTab === "siswa" ? "Daftar Akun Baru" : "Kemitraan Mitra Referrer"}
+									Daftar Akun Baru
 								</UI.Heading>
 								<p className="text-xs text-zinc-555 dark:text-zinc-400 font-medium">
-									{activeTab === "siswa" 
-										? "Buat akun gratis untuk memulai perjalanan coding Anda" 
-										: "Bagikan kode referral Anda, bantu siswa baru belajar, dan dapatkan komisi"}
+									Buat akun gratis untuk memulai perjalanan coding Anda
 								</p>
 							</div>
 
-							{/* Tab Switcher */}
-							<div className="flex gap-2 p-1 bg-zinc-100/50 dark:bg-zinc-900/35 border border-zinc-200/40 dark:border-zinc-800/40 rounded-xl">
-								<button
-									type="button"
-									className={getTabClass("siswa")}
-									onClick={() => {
-										setActiveTab("siswa");
-										setAlertMsg(null);
-									}}
-									disabled={isLoading}
-								>
-									Calon Siswa
-								</button>
-								<button
-									type="button"
-									className={getTabClass("referrer")}
-									onClick={() => {
-										setActiveTab("referrer");
-										setAlertMsg(null);
-									}}
-									disabled={isLoading}
-								>
-									Mitra Referrer
-								</button>
+							{/* Referral Program Banner */}
+							<div className="p-3 bg-sakode-blue/5 border border-sakode-blue/20 rounded-xl flex gap-2.5 items-start text-xs font-semibold text-zinc-650 dark:text-zinc-400">
+								<Icons.Gift className="w-4 h-4 text-sakode-blue shrink-0 mt-0.5" />
+								<div>
+									Tertarik menjadi <strong className="font-extrabold text-zinc-900 dark:text-white">Mitra Referrer</strong>? Dapatkan komisi dengan merekomendasikan Sakode.{" "}
+									<button 
+										type="button" 
+										onClick={() => router.push("/referral")}
+										className="text-sakode-blue hover:underline font-extrabold cursor-pointer block mt-1 bg-transparent border-none p-0 text-left font-sans"
+									>
+										Daftar & Pelajari Program Referral →
+									</button>
+								</div>
 							</div>
 
 							{/* Acquisition Summary Context (Preserved Context Indicator) */}
-							{activeTab === "siswa" && (program || ref) && (
+							{(program || ref) && (
 								<div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/35 border border-zinc-200/50 dark:border-zinc-800/80 flex flex-col gap-2.5 text-xs">
 									<div className="flex items-center gap-1.5 text-[10px] font-black text-zinc-400 dark:text-zinc-555 uppercase tracking-widest">
 										<Icons.Sparkles className="w-3.5 h-3.5 text-sakode-yellow" />
@@ -341,7 +281,7 @@ function RegisterForm() {
 
 								<div>
 									<UI.Label htmlFor="email-input">
-										{activeTab === "siswa" ? "Email Akademik" : "Email Kontak / Bisnis"}
+										Email Akademik
 									</UI.Label>
 									<UI.Input
 										id="email-input"
@@ -426,79 +366,6 @@ function RegisterForm() {
 									)}
 								</div>
 
-								{/* Referrer-Specific Fields */}
-								{activeTab === "referrer" && (
-									<React.Fragment>
-										<div>
-											<UI.Label htmlFor="promo-method-select">Saluran Promosi Utama</UI.Label>
-											<div className="relative">
-												<UI.Select
-													id="promo-method-select"
-													value={promoMethod}
-													onChange={(e) => setPromoMethod(e.target.value)}
-													disabled={isLoading}
-												>
-													<option value="Social Media">Media Sosial (Instagram, LinkedIn, X, Facebook)</option>
-													<option value="Website / Blog">Website / Blog Pribadi</option>
-													<option value="Komunitas IT">Komunitas IT / Grup Belajar</option>
-													<option value="Rekomendasi Teman">Rekomendasi Teman / Off-line</option>
-													<option value="Lainnya">Lainnya</option>
-												</UI.Select>
-												<div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-450 dark:text-zinc-500">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
-														<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-													</svg>
-												</div>
-											</div>
-										</div>
-
-										<div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-											<div>
-												<UI.Label htmlFor="payout-bank-select">Bank Pencairan</UI.Label>
-												<div className="relative">
-													<UI.Select
-														id="payout-bank-select"
-														value={payoutBank}
-														onChange={(e) => setPayoutBank(e.target.value)}
-														disabled={isLoading}
-													>
-														<option value="BCA">Bank BCA</option>
-														<option value="Mandiri">Bank Mandiri</option>
-														<option value="BRI">Bank BRI</option>
-														<option value="BNI">Bank BNI</option>
-													</UI.Select>
-													<div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-450 dark:text-zinc-500">
-														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
-															<path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-														</svg>
-													</div>
-												</div>
-											</div>
-
-											<div>
-												<UI.Label htmlFor="payout-account-input">Nomor Rekening</UI.Label>
-												<UI.Input
-													id="payout-account-input"
-													type="text"
-													placeholder="Contoh: 8012345678"
-													value={payoutAccount}
-													onChange={(e) => {
-														setPayoutAccount(e.target.value);
-														if (payoutAccountError) setPayoutAccountError("");
-													}}
-													hasError={!!payoutAccountError}
-													disabled={isLoading}
-												/>
-												{payoutAccountError && (
-													<span className="text-[10.5px] font-bold text-rose-500 mt-1 block">
-														⚠️ {payoutAccountError}
-													</span>
-												)}
-											</div>
-										</div>
-									</React.Fragment>
-								)}
-
 								{/* Terms check */}
 								<div className="flex items-start gap-2.5 mt-2">
 									<UI.Toggle 
@@ -507,7 +374,7 @@ function RegisterForm() {
 										accentColor={selectedColor} 
 									/>
 									<span className={`text-xs font-semibold select-none mt-0.5 ${agreeError ? "text-rose-500 font-bold" : "text-zinc-500 dark:text-zinc-400"}`}>
-										Saya menyetujui <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Syarat & Ketentuan</span> serta <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Kebijakan {activeTab === "siswa" ? "Layanan" : "Kemitraan Referrer"}</span> Sakode Academy.
+										Saya menyetujui <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Syarat & Ketentuan</span> serta <span className="underline cursor-pointer hover:text-zinc-900 dark:hover:text-white">Kebijakan Layanan</span> Sakode Academy.
 									</span>
 								</div>
 
@@ -520,7 +387,7 @@ function RegisterForm() {
 										isGradient
 										className="w-full cursor-pointer"
 									>
-										{activeTab === "siswa" ? "Mulai Belajar Sekarang" : "Daftar Mitra Referrer"}
+										Mulai Belajar Sekarang
 									</UI.Button>
 								</div>
 							</form>

@@ -411,7 +411,7 @@ export default function LoginPage() {
 										variant="secondary" 
 										accentColor={selectedColor} 
 										disabled={isLoading}
-										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer col-span-2" 
+										className="text-[10px]! py-1.5! px-2! h-auto! cursor-pointer" 
 										onClick={() => handleQuickLogin("school_principal", "sudarsono@sekolah.sch.id")}
 									>
 										Kepala Sekolah (Principal)
