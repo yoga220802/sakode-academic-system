@@ -28,6 +28,10 @@ import {
   type MentorAssignedStudent,
   type MentorGradingItem,
 } from "../_mocks/mentorOverviewService";
+import {
+  fetchPersonalSessions,
+  type PersonalSession,
+} from "../(mentor)/schedules/_mocks/personalScheduleService";
 
 // ─── Loading Skeleton ────────────────────────────────────────────────────────
 
@@ -59,11 +63,21 @@ export function MentorWidget() {
   const [data, setData] = useState<MentorOverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [dismissedWelcome, setDismissedWelcome] = useState(false);
+  const [todaySessions, setTodaySessions] = useState<PersonalSession[]>([]);
+
+  const todayStr = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     getMentorOverviewData().then((res) => {
       setData(res);
       setLoading(false);
+    });
+    fetchPersonalSessions().then((sessions) => {
+      setTodaySessions(
+        sessions
+          .filter((s) => s.date === todayStr)
+          .sort((a, b) => a.startTime.localeCompare(b.startTime))
+      );
     });
   }, []);
 
@@ -180,11 +194,11 @@ export function MentorWidget() {
             </div>
 
             <div className="shrink-0 flex items-center gap-2 self-end sm:self-center">
-              <a href={nextSession.meetingLink} target="_blank" rel="noopener noreferrer">
+              <Link href="/schedules">
                 <UI.Button variant="primary" accentColor={selectedColor} className="text-xs! py-2.5! px-5! h-auto! cursor-pointer font-black!">
-                  Mulai Kelas Zoom
+                  Lihat Jadwal
                 </UI.Button>
-              </a>
+              </Link>
             </div>
           </div>
         </UI.Card>
@@ -226,6 +240,80 @@ export function MentorWidget() {
           </UI.Card>
         ))}
       </div>
+
+      {/* ── Today's Schedule ─────────────────────────────────────────────── */}
+      <section aria-labelledby="today-heading">
+        <div className="flex items-center justify-between mb-3">
+          <h3 id="today-heading" className="text-xs font-black text-zinc-700 dark:text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-sakode-blue/10 text-sakode-blue text-[10px] font-black">📅</span>
+            Jadwal Hari Ini
+            {todaySessions.length > 0 && (
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full text-white ${getBgClass(selectedColor)}`}>
+                {todaySessions.length}
+              </span>
+            )}
+          </h3>
+          <Link href="/schedules?filter=today" className={`text-[10px] font-black ${getTextClass(selectedColor)} hover:underline`}>
+            Lihat Semua Jadwal →
+          </Link>
+        </div>
+
+        {todaySessions.length === 0 ? (
+          <div className={`${innerCard()} p-6 flex items-center gap-3 text-xs text-zinc-400`}>
+            <Icons.Calendar className="w-5 h-5 text-zinc-300 dark:text-zinc-700" />
+            <span>Tidak ada jadwal mengajar untuk hari ini. Selamat beristirahat! 🌟</span>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {todaySessions.map((session) => (
+              <div key={session.id} id={`today-session-${session.id}`} className={`${innerCard()} p-4 flex items-center gap-4`}>
+
+                {/* Time block */}
+                <div className="shrink-0 w-16 flex flex-col items-center justify-center bg-sakode-blue/8 border border-sakode-blue/15 rounded-xl py-2.5 text-sakode-blue">
+                  <span className="text-[10px] font-extrabold leading-tight">{session.startTime}</span>
+                  <span className="text-[8px] text-zinc-400 font-bold my-0.5">s/d</span>
+                  <span className="text-[10px] font-extrabold leading-tight">{session.endTime}</span>
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={`text-[7.5px] font-black uppercase px-1.5 py-0.5 rounded border ${
+                      session.status === "Berlangsung" ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                      : session.status === "Selesai" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20"
+                    }`}>
+                      {session.status === "Berlangsung" ? "🔴 Berlangsung" : session.status}
+                    </span>
+                    <span className="text-[8.5px] text-zinc-400 font-bold">{session.mode === "Kelompok" ? "Kelas Kelompok" : "Kelas Private"}</span>
+                  </div>
+                  <p className="text-[11px] font-black text-zinc-800 dark:text-zinc-100 truncate">{session.studentName}</p>
+                  <p className="text-[9.5px] text-zinc-500 truncate mt-0.5">{session.course}</p>
+                  {session.topic && session.status !== "Terjadwal" && (
+                    <p className="text-[9px] text-zinc-400 mt-0.5 truncate">📚 {session.topic}</p>
+                  )}
+                </div>
+
+                {/* Maps link */}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(session.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 flex flex-col items-center gap-1 text-zinc-400 hover:text-sakode-blue transition-colors p-2"
+                  aria-label={`Buka Maps untuk ${session.studentName}`}
+                >
+                  <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S12 17.642 12 10.5a7.5 7.5 0 1 1 15 0Z" />
+                  </svg>
+                  <span className="text-[8px] font-bold">Maps</span>
+                </a>
+
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* ── Assigned Students & Grading Columns ──────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
