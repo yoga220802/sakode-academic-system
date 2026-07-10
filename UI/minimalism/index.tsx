@@ -24,8 +24,8 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ c
   </label>
 );
 
-export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, ...props }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "blue", ...props }, ref) => (
     <input
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white ${
@@ -37,8 +37,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 );
 Input.displayName = "Input";
 
-export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean }>(
-  ({ className = "", hasError, children, ...props }, ref) => (
+export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement> & { hasError?: boolean; accentColor?: PaletteColorKey }>(
+  ({ className = "", hasError, accentColor = "blue", children, ...props }, ref) => (
     <select
       ref={ref}
       className={`w-full bg-transparent border-b border-zinc-200 dark:border-zinc-800 py-2.5 px-1 focus:border-zinc-900 dark:focus:border-zinc-100 focus:outline-hidden rounded-none text-sm transition-all text-zinc-900 dark:text-white appearance-none cursor-pointer bg-white dark:bg-zinc-900 ${
@@ -52,7 +52,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
 );
 Select.displayName = "Select";
 
-export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "pink", ...props }) => (
+export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentColor?: PaletteColorKey; "aria-label"?: string }> = ({ checked, onChange, accentColor = "blue", ...props }) => (
   <button
     type="button"
     role="switch"
@@ -73,13 +73,13 @@ export const Toggle: React.FC<{ checked: boolean; onChange: () => void; accentCo
   </button>
 );
 
-export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean }>(
-  ({ className = "", children, variant = "primary", accentColor = "pink", isLoading, ...props }, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, Omit<HTMLMotionProps<"button">, "ref" | "children"> & { children?: React.ReactNode; } & { variant?: "primary" | "secondary"; accentColor?: PaletteColorKey; isLoading?: boolean; isGradient?: boolean }>(
+  ({ className = "", children, variant = "primary", accentColor = "blue", isLoading, isGradient, ...props }, ref) => {
     let btnClass = "";
     if (variant === "primary") {
       btnClass = `bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-medium py-2.5 px-5 rounded-none transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0 border border-zinc-900 dark:border-zinc-100 ${getBorderHoverClass(accentColor)}`;
     } else {
-      btnClass = "bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-medium py-2.5 px-5 rounded-none hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0";
+      btnClass = `bg-transparent border border-zinc-200 dark:border-zinc-800 ${getTextClass(accentColor)} font-medium py-2.5 px-5 rounded-none hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors uppercase tracking-[0.15em] text-[10px] shrink-0`;
     }
 
     return (
@@ -112,14 +112,14 @@ export const Accordion: React.FC<{
           <button
             type="button"
             onClick={() => onToggle(item.id)}
-            className="w-full flex items-center justify-between py-3 font-semibold text-left transition-colors hover:text-zinc-550 dark:hover:text-zinc-300"
+            className="w-full flex items-center justify-between py-3 font-semibold text-left transition-colors hover:text-zinc-500 dark:hover:text-zinc-300"
           >
             <span className="text-sm tracking-tight text-zinc-900 dark:text-zinc-100">{item.q}</span>
-            <span className="text-zinc-400 dark:text-zinc-550 transform transition-transform duration-200">
+            <span className="text-zinc-400 dark:text-zinc-500 transform transition-transform duration-200">
               {isOpen ? (
-                <span className="text-sm font-light text-zinc-650 dark:text-zinc-405">—</span>
+                <span className="text-sm font-light text-zinc-600 dark:text-zinc-400">—</span>
               ) : (
-                <span className="text-sm font-light text-zinc-405 dark:text-zinc-550">+</span>
+                <span className="text-sm font-light text-zinc-400 dark:text-zinc-500">+</span>
               )}
             </span>
           </button>
@@ -138,7 +138,7 @@ export const Accordion: React.FC<{
 export const Timeline: React.FC<{
   steps: { step: string; title: string; desc: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ steps, accentColor = "pink" }) => (
+}> = ({ steps, accentColor = "blue" }) => (
   <div className="relative pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
     {steps.map((item, idx) => (
       <div key={idx} className="relative animate-fade-in">
@@ -159,7 +159,8 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   accentColor?: PaletteColorKey;
   variant?: "accent" | "success" | "warning" | "default";
-}> = ({ children, accentColor = "pink", variant = "default" }) => {
+  className?: string;
+}> = ({ children, accentColor = "blue", variant = "default", className = "" }) => {
   const badgeColors = {
     default: "bg-zinc-50 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400 border-zinc-200/55 dark:border-zinc-850/55",
     accent: `bg-transparent ${getTextClass(accentColor)} ${getBorderClass(accentColor)}`,
@@ -168,7 +169,7 @@ export const Badge: React.FC<{
   };
 
   return (
-    <span className={`text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-sm border ${badgeColors[variant]}`}>
+    <span className={`ui-badge text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-sm border ${badgeColors[variant]} ${className}`}>
       {children}
     </span>
   );
@@ -179,7 +180,7 @@ export const AvatarGroup: React.FC<{
   initials: string[];
   extraCount: number;
   accentColor?: PaletteColorKey;
-}> = ({ initials, extraCount, accentColor = "pink" }) => (
+}> = ({ initials, extraCount, accentColor = "blue" }) => (
   <div className="flex items-center gap-2">
     <div className="flex -space-x-1.5 overflow-hidden p-0.5">
       {initials.map((initial, idx) => (
@@ -204,11 +205,16 @@ export const Alert: React.FC<{
   type?: "warning" | "info";
 }> = ({ title, children, type = "info" }) => {
   const isWarning = type === "warning";
-  const borderClass = isWarning ? "border-l-2 border-l-amber-500" : "border-l-2 border-l-zinc-500";
+  const borderClass = isWarning
+    ? "border-amber-500/10 bg-amber-500/5 text-amber-850 dark:text-amber-200"
+    : "border-sky-500/10 bg-sky-500/5 text-sky-850 dark:text-sky-200";
   return (
-    <div className={`p-4 bg-zinc-50/70 dark:bg-zinc-900/30 text-xs border-y border-r border-zinc-200/50 dark:border-zinc-800/50 ${borderClass} rounded-none`}>
-      <span className="font-bold text-zinc-900 dark:text-white uppercase tracking-wider block mb-1">{title}</span>
-      <div className="text-zinc-650 dark:text-zinc-450 leading-relaxed font-medium">{children}</div>
+    <div className={`flex items-start gap-3.5 p-3.5 rounded-lg border ${borderClass} text-xs font-medium`}>
+      {isWarning ? <Icons.AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500/80" /> : <Icons.Info className="w-4 h-4 shrink-0 mt-0.5 text-sky-500/80" />}
+      <div>
+        <span className="font-bold block mb-0.5">{title}</span>
+        <div className="leading-relaxed opacity-90">{children}</div>
+      </div>
     </div>
   );
 };
@@ -217,31 +223,30 @@ export const Alert: React.FC<{
 export const Table: React.FC<{
   schedules: { course: string; date: string; mentor: string; status: string }[];
   accentColor?: PaletteColorKey;
-}> = ({ schedules, accentColor = "pink" }) => (
+}> = ({ schedules, accentColor = "blue" }) => (
   <div className="overflow-x-auto">
     <table className="w-full text-left text-xs border-collapse">
       <thead>
-        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">
-          <th className="pb-3 pr-2 font-semibold">Kelas Kursus</th>
-          <th className="pb-3 pr-2 font-semibold">Tanggal Mentoring</th>
-          <th className="pb-3 pr-2 font-semibold">Mentor</th>
-          <th className="pb-3 text-right font-semibold">Status</th>
+        <tr className="border-b border-zinc-200 dark:border-zinc-800 font-extrabold text-zinc-400 uppercase tracking-wider">
+          <th className="pb-3 pr-2">Kelas Kursus</th>
+          <th className="pb-3 pr-2">Tanggal Mentoring</th>
+          <th className="pb-3 pr-2">Mentor</th>
+          <th className="pb-3 text-right">Status</th>
         </tr>
       </thead>
       <tbody>
         {schedules.map((item, idx) => (
-          <tr key={idx} className="border-b border-zinc-100 dark:border-zinc-850/50 hover:bg-zinc-50/30 dark:hover:bg-zinc-900/5 transition-colors">
-            <td className="py-3.5 font-bold text-zinc-800 dark:text-white pr-2">{item.course}</td>
-            <td className="py-3.5 text-zinc-500 dark:text-zinc-450 pr-2">{item.date}</td>
-            <td className="py-3.5 text-zinc-550 dark:text-zinc-400 pr-2">{item.mentor}</td>
-            <td className="py-3.5 text-right">
-              <span className={
-                item.status === "Selesai"
-                  ? "inline-block text-[9px] font-semibold uppercase tracking-wider text-zinc-400"
-                  : `inline-block text-[9px] font-semibold uppercase tracking-wider ${getTextClass(accentColor)}`
-              }>
+          <tr key={idx} className="border-b border-zinc-150/40 dark:border-zinc-800/40 hover:bg-zinc-50/20 dark:hover:bg-zinc-900/10">
+            <td className="py-3 font-extrabold text-zinc-900 dark:text-white pr-2">{item.course}</td>
+            <td className="py-3 text-zinc-500 dark:text-zinc-400 pr-2">{item.date}</td>
+            <td className="py-3 text-zinc-700 dark:text-zinc-300 pr-2">{item.mentor}</td>
+            <td className="py-3 text-right">
+              <Badge
+                variant={item.status === "Selesai" ? "default" : "accent"}
+                accentColor={accentColor}
+              >
                 {item.status}
-              </span>
+              </Badge>
             </td>
           </tr>
         ))}
@@ -257,7 +262,7 @@ export const Carousel: React.FC<{
   onPrev: () => void;
   onNext: () => void;
   accentColor?: PaletteColorKey;
-}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "pink" }) => {
+}> = ({ testimonials, activeIndex, onPrev, onNext, accentColor = "blue" }) => {
   const activeReview = testimonials[activeIndex];
   return (
     <div className="min-h-24 flex flex-col justify-between">
@@ -307,20 +312,19 @@ export const Carousel: React.FC<{
 export const Chart: React.FC<{
   bars: { label: string; val: string }[];
   accentColor?: PaletteColorKey;
-  styleName?: string;
-}> = ({ bars, accentColor = "pink" }) => (
-  <div className="h-36 w-full flex items-end justify-between gap-4 pt-6 px-1">
+}> = ({ bars, accentColor = "blue" }) => (
+  <div className="h-32 w-full flex items-end justify-between gap-3 pt-4 border-b border-zinc-100 dark:border-zinc-900">
     {bars.map((bar, idx) => (
-      <div key={idx} className="flex-1 flex flex-col items-center gap-2.5 h-full justify-end">
+      <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
         <div className="w-full relative group h-full flex items-end">
           <div
-            className={`w-full rounded-none transition-all duration-200 ${bar.val} ${getBgClass(accentColor)} hover:opacity-85`}
+            className={`w-full rounded-none transition-all duration-300 ${bar.val} ${getBgOpacity25Class(accentColor)}`}
           />
-          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-semibold bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-350 border border-zinc-200 dark:border-zinc-700/50 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-7 left-1/2 translate-x-[-50%] text-[8px] font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 rounded-sm px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {bar.val.replace("h-[", "").replace("%]", "")}%
           </span>
         </div>
-        <span className="text-[9px] font-semibold text-zinc-400 dark:text-zinc-555 tracking-wider block uppercase">{bar.label}</span>
+        <span className="text-[9px] font-medium text-zinc-400 block">{bar.label}</span>
       </div>
     ))}
   </div>
@@ -330,7 +334,7 @@ export const Chart: React.FC<{
 export const Breadcrumbs: React.FC<{
   items: { label: string; active?: boolean }[];
   accentColor?: PaletteColorKey;
-}> = ({ items, accentColor = "pink" }) => (
+}> = ({ items, accentColor = "blue" }) => (
   <nav className="flex text-xs font-semibold text-zinc-400 gap-1.5 flex-wrap items-center">
     {items.map((item, idx) => (
       <React.Fragment key={idx}>
@@ -351,7 +355,7 @@ export const Dropdown: React.FC<{
   items: { label: string; onClick: () => void }[];
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isOpen, onToggle, triggerText, items, accentColor = "pink", styleName = "minimalism" }) => (
+}> = ({ isOpen, onToggle, triggerText, items, accentColor = "blue", styleName = "minimalism" }) => (
   <div className="relative inline-block text-left z-20">
     <Button
       variant="secondary"
@@ -391,7 +395,7 @@ export const UploadZone: React.FC<{
   onRemoveFile?: (index: number) => void;
   accentColor?: PaletteColorKey;
   styleName?: string;
-}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "pink", styleName = "minimalism" }) => (
+}> = ({ isDragging, onDragOver, onDragLeave, onDrop, uploadedFiles = [], onRemoveFile, accentColor = "blue", styleName = "minimalism" }) => (
   <div>
     <div
       onDragOver={onDragOver}
