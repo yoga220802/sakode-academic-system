@@ -1,4 +1,5 @@
 import { ActiveStudent } from "../_types/student";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY = "sakode_active_students";
 
@@ -101,21 +102,8 @@ export const DEFAULT_ACTIVE_STUDENTS: ActiveStudent[] = [
   }
 ];
 
-export const getStoredActiveStudents = (): ActiveStudent[] => {
-  if (typeof window === "undefined") return DEFAULT_ACTIVE_STUDENTS;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ACTIVE_STUDENTS));
-    return DEFAULT_ACTIVE_STUDENTS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_ACTIVE_STUDENTS;
-  }
-};
+export const getStoredActiveStudents = (): ActiveStudent[] =>
+  getStoredData(STORAGE_KEY, DEFAULT_ACTIVE_STUDENTS);
 
-export const saveStoredActiveStudents = (students: ActiveStudent[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-};
+export const saveStoredActiveStudents = (students: ActiveStudent[]) =>
+  saveStoredData(STORAGE_KEY, students);
