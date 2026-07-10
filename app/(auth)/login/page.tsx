@@ -141,10 +141,8 @@ export default function LoginPage() {
 				setIsLoading(false);
 				const role = demoAccounts[cleanedEmailLower];
 				login(role);
-				if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
+				if (role === "admin" || role === "mentor_lead" || role === "school_principal" || role === "mentor") {
 					router.push("/dashboard");
-				} else if (role === "mentor") {
-					router.push("/mentor/dashboard");
 				} else {
 					router.push("/student/dashboard");
 				}
@@ -163,10 +161,8 @@ export default function LoginPage() {
 		setTimeout(() => {
 			setIsLoading(false);
 			login(role);
-			if (role === "admin" || role === "mentor_lead" || role === "school_principal") {
+			if (role === "admin" || role === "mentor_lead" || role === "school_principal" || role === "mentor") {
 				router.push("/dashboard");
-			} else if (role === "mentor") {
-				router.push("/mentor/dashboard");
 			} else {
 				router.push("/student/dashboard");
 			}
