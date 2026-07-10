@@ -1,4 +1,5 @@
 import { ExtracurricularOrganization, ExtracurricularRegistration } from "../_types/extracurricular";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY_ORGS = "sakode_extracurricular_organizations_v5";
 const STORAGE_KEY_REGS = "sakode_extracurricular_registrations_v5";
@@ -113,40 +114,14 @@ export const DEFAULT_REGISTRATIONS: ExtracurricularRegistration[] = [
   }
 ];
 
-export const getStoredOrganizations = (): ExtracurricularOrganization[] => {
-  if (typeof window === "undefined") return DEFAULT_ORGANIZATIONS;
-  const stored = localStorage.getItem(STORAGE_KEY_ORGS);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY_ORGS, JSON.stringify(DEFAULT_ORGANIZATIONS));
-    return DEFAULT_ORGANIZATIONS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_ORGANIZATIONS;
-  }
-};
+export const getStoredOrganizations = (): ExtracurricularOrganization[] =>
+  getStoredData(STORAGE_KEY_ORGS, DEFAULT_ORGANIZATIONS);
 
-export const saveStoredOrganizations = (orgs: ExtracurricularOrganization[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY_ORGS, JSON.stringify(orgs));
-};
+export const saveStoredOrganizations = (orgs: ExtracurricularOrganization[]) =>
+  saveStoredData(STORAGE_KEY_ORGS, orgs);
 
-export const getStoredRegistrations = (): ExtracurricularRegistration[] => {
-  if (typeof window === "undefined") return DEFAULT_REGISTRATIONS;
-  const stored = localStorage.getItem(STORAGE_KEY_REGS);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY_REGS, JSON.stringify(DEFAULT_REGISTRATIONS));
-    return DEFAULT_REGISTRATIONS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_REGISTRATIONS;
-  }
-};
+export const getStoredRegistrations = (): ExtracurricularRegistration[] =>
+  getStoredData(STORAGE_KEY_REGS, DEFAULT_REGISTRATIONS);
 
-export const saveStoredRegistrations = (regs: ExtracurricularRegistration[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY_REGS, JSON.stringify(regs));
-};
+export const saveStoredRegistrations = (regs: ExtracurricularRegistration[]) =>
+  saveStoredData(STORAGE_KEY_REGS, regs);

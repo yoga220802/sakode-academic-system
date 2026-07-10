@@ -1,4 +1,5 @@
 import { PrincipalMembership } from "../_types/membership";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY_MEMBERSHIPS = "sakode_principal_memberships_v1";
 
@@ -29,21 +30,8 @@ export const DEFAULT_MEMBERSHIPS: PrincipalMembership[] = [
   }
 ];
 
-export const getStoredMemberships = (): PrincipalMembership[] => {
-  if (typeof window === "undefined") return DEFAULT_MEMBERSHIPS;
-  const stored = localStorage.getItem(STORAGE_KEY_MEMBERSHIPS);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY_MEMBERSHIPS, JSON.stringify(DEFAULT_MEMBERSHIPS));
-    return DEFAULT_MEMBERSHIPS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_MEMBERSHIPS;
-  }
-};
+export const getStoredMemberships = (): PrincipalMembership[] =>
+  getStoredData(STORAGE_KEY_MEMBERSHIPS, DEFAULT_MEMBERSHIPS);
 
-export const saveStoredMemberships = (memberships: PrincipalMembership[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY_MEMBERSHIPS, JSON.stringify(memberships));
-};
+export const saveStoredMemberships = (memberships: PrincipalMembership[]) =>
+  saveStoredData(STORAGE_KEY_MEMBERSHIPS, memberships);

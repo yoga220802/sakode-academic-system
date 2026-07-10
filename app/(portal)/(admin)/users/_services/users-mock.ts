@@ -1,4 +1,5 @@
 import { UserAccount } from "../_types/user";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY_USERS = "sakode_users_directory_v1";
 
@@ -101,21 +102,8 @@ export const DEFAULT_USERS: UserAccount[] = [
   }
 ];
 
-export const getStoredUsers = (): UserAccount[] => {
-  if (typeof window === "undefined") return DEFAULT_USERS;
-  const stored = localStorage.getItem(STORAGE_KEY_USERS);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(DEFAULT_USERS));
-    return DEFAULT_USERS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_USERS;
-  }
-};
+export const getStoredUsers = (): UserAccount[] =>
+  getStoredData(STORAGE_KEY_USERS, DEFAULT_USERS);
 
-export const saveStoredUsers = (users: UserAccount[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
-};
+export const saveStoredUsers = (users: UserAccount[]) =>
+  saveStoredData(STORAGE_KEY_USERS, users);
