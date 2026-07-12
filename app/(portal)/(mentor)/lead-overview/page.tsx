@@ -1,13 +1,22 @@
 "use client";
 
 /**
- * FE-SLICE-018 — Mentor Lead Dashboard Widget (Replacement)
+ * FE-SLICE-018 — Mentor Lead Overview Page
  *
  * Scope: Mentor Lead
- * Location: Loaded directly in `/dashboard` when role === "mentor_lead"
+ * Route: /lead-overview  (accessible when role === "mentor_lead")
  *
- * This component brings the high-fidelity overview page logic, typed mock service,
- * and comprehensive details directly into the default dashboard page.
+ * Features:
+ *  - Scoped Authority Banner (domain + lead name + scope notice)
+ *  - Urgent Workload Alerts (dismissible)
+ *  - KPI Summary (queue count, mentor count, capacity %, today sessions)
+ *  - Unassigned Student Queue with priority badges & CTA
+ *  - Mentor Capacity Map (workload bars, availability, next session)
+ *  - Upcoming Session List (today + tomorrow)
+ *  - Recent Plotting Activity Timeline
+ *  - Scenario switcher (dev only) for: default | no-alerts | empty
+ *  - Full loading skeleton state
+ *  - Empty state for queue and sessions
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -23,7 +32,7 @@ import {
   type WorkloadAlertLevel,
   type MentorAvailability,
   type StudentPriority,
-} from "../(mentor)/lead-overview/_mocks/mentorLeadOverviewService";
+} from "./_mocks/mentorLeadOverviewService";
 
 // ─── Sub-component helpers ───────────────────────────────────────────────────
 
@@ -66,7 +75,7 @@ function SkeletonBlock({ className }: { className?: string }) {
 
 function MentorLeadOverviewSkeleton() {
   return (
-    <div className="flex flex-col gap-6 w-full text-left">
+    <div className="flex flex-col gap-6 w-full">
       <SkeletonBlock className="h-16 w-full" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => <SkeletonBlock key={i} className="h-24" />)}
@@ -91,9 +100,9 @@ function MentorLeadOverviewSkeleton() {
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 
-export function MentorLeadWidget() {
+export default function MentorLeadOverviewPage() {
   const { selectedStyle, selectedColor } = useUIStyle();
   const UI = UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"];
 

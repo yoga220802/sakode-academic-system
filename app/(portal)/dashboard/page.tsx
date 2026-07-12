@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/app/_components/AuthContext";
 import { StudentWidget } from "../_components/StudentWidget";
@@ -12,6 +13,7 @@ import { ReferrerWidget } from "../_components/ReferrerWidget";
 
 export default function DashboardPage() {
   const { session } = useAuth();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function DashboardPage() {
           className="w-full"
         >
           {session.role === "admin" && <AdminWidget />}
-          {session.role === "mentor_lead" && <MentorLeadWidget />}
+          {(session.role as string) === "mentor_lead" && <MentorLeadWidget />}
           {session.role === "mentor" && <MentorWidget />}
           {session.role === "school_principal" && <SchoolPrincipalWidget />}
           {session.role === "referrer" && <ReferrerWidget />}

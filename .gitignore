@@ -42,8 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # custom ignores
-/docs/
-/AI docs/
-/AGENTS.md
-/ANTIGRAVITY.md
-
+# /docs/
+# /AI docs/
+# /AGENTS.md
+# /ANTIGRAVITY.md
