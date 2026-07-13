@@ -1,51 +1,73 @@
-# Laporan Perubahan — Clean Code Segmen Admin
+# Laporan Perubahan — Refactor Portal Pages
 
 ## Ringkasan
 
-Refactoring fokus pada pengurangan duplikasi boilerplate dan pemakaian shared components yang sudah ada. Build sukses, tidak ada error.
+Refactoring struktural untuk middleware auth, shared utilities, service layer, dan page standardization. Build sukses, 53 pages + middleware compiled tanpa error.
 
 ## Perubahan
 
-### 1. Shared Utilities Baru — `app/(portal)/(admin)/_shared/`
+### 1. Middleware Auth + Role Guard
+File baru: `middleware.ts`
 
-| File                     | Fungsi                                                                                                                               |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `localStorageService.ts` | `getStoredData<T>(key, fallback)` dan `saveStoredData<T>(key, data)` — ganti 7 clones boilerplate SSR guard + JSON.parse + try/catch |
-| `Toast.tsx`              | `useToast()` hook + `<Toast>` component — extract dari ~45 baris inline pattern di tiap page                                         |
-| `SimulationStateBar.tsx` | Simulator state toggle buttons — extract dari 5+ page                                                                                |
-| `styleUtils.ts`          | `getSubElementClass(style, type)` — data-driven map ganti switch 70+ baris                                                           |
-| `index.ts`               | Barrel export                                                                                                                        |
+- Proteksi 20+ route berdasarkan role via cookie `sakode-role`
+- Rute publik: `/`, `/login`, `/register`
+- Role mapping:
+  - **Admin:** `/students`, `/programs`, `/plotting`, `/schedules-admin`, dll
+  - **Mentor/Mentor Lead:** `/my-students`, `/schedules`, `/grading`, `/plotting-queue`
+  - **Student:** `/my-classes`, `/modules`, `/my-mentor-schedule`, `/trial-registration`
+  - **Principal:** `/principal-org`, `/principal-reports`
+- Redirect: unauthenticated → `/login`, wrong role → `/dashboard`
+- AuthContext otomatis set/clear `sakode-role` cookie saat login/logout
 
-### 2. 8 Mock Services — Pakai `localStorageService`
+### 2. Route-Group Layouts (Client-side Guard)
+| File | Role |
+|------|------|
+| `app/(portal)/(admin)/layout.tsx` | admin only |
+| `app/(portal)/(mentor)/layout.tsx` | mentor / mentor_lead |
+| `app/(portal)/(student)/layout.tsx` | murid only |
 
-Mengganti boilerplate di:
+Defense-in-depth: middleware di edge + layout guard di client.
 
-- `extracurriculars-admin/_services/extracurricular-mock.ts`
-- `logs/_services/logs-mock.ts`
-- `mentors/_services/mentor-mock.ts`
-- `students/_services/student-mock.ts`
-- `plotting/_services/plotting-mock.ts`
-- `principal-membership/_services/principal-membership-mock.ts`
-- `users/_services/users-mock.ts`
-- `schedules-admin/_services/schedule-mock.ts`
+### 3. Shared Utilities — Pindah ke App Level
+Semua sebelumnya terkunci di `(admin)/_shared/`, sekarang bisa dipakai semua portal.
 
-**Dampak:** ~10 baris/file dihapus, konsistensi pattern terjaga.
+| Old Path | New Path |
+|----------|----------|
+| `(admin)/_shared/localStorageService.ts` | `app/_lib/storage.ts` |
+| `(admin)/_shared/styleUtils.ts` | `app/_utils/styleUtils.ts` |
+| `(admin)/_shared/Toast.tsx` | `app/_components/Toast.tsx` |
 
-### 3. Refactor Halaman Contoh — `extracurriculars-admin/page.tsx`
+`(admin)/_shared/index.ts` tetap ada sebagai re-export backward compat. File asli dihapus.
 
-| Inline pattern                                   | Diganti                                          |
-| ------------------------------------------------ | ------------------------------------------------ |
-| Breadcrumb + Header + tombol aksi (~30 baris)    | `PageHeader` dari `@/app/_components/PageHeader` |
-| Metrics cards (~45 baris)                        | `StatCard` × 3 dari `@/app/_components/StatCard` |
-| Simulator state bar (~50 baris)                  | `SimulationStateBar` dari `_shared`              |
-| Toast + AnimatePresence + setTimeout (~45 baris) | `useToast` + `<Toast>` dari `_shared`            |
-| `getSubElementClass` switch 70 baris             | `getSubElementClass` data-driven dari `_shared`  |
+### 4. Service Layer — `app/_services/`
+Pattern konsisten untuk data fetching, siap migrasi mock → real API.
 
-**Dampak:** Page size turun dari 755 → 555 baris (~27%), tanpa kehilangan fungsionalitas.
+| Service | Type | Konsumen |
+|---------|------|----------|
+| `student-service.ts` | `ActiveStudent` | admin/students, admin/schedules-admin |
+| `mentor-student-service.ts` | `DetailedAssignedStudent` | mentor/my-students |
 
-### 4. Bersihkan Dead Code
+### 5. Page Refactor — Standardized Pattern
+#### admin/students (771 → 410 baris)
+- Inline `getSubElementClass` → shared `@/app/_utils/styleUtils`
+- Inline loading/error/empty → `DataStateBoundary`
+- Inline header + breadcrumb → `PageHeader`
+- Inline simulator bar → `SimulationStateBar`
+- Inline toast → `useToast` + `Toast`
 
-| File                      | Perubahan                                                                             |
-| ------------------------- | ------------------------------------------------------------------------------------- |
-| `app/(portal)/layout.tsx` | Hapus import & komentar `DashboardLockSystem`                                         |
-| 16 file admin             | Hapus `/* eslint-disable react-hooks/set-state-in-effect */` (no-op, rule name palsu) |
+#### mentor/my-students (415 → 290 baris)
+- Inline skeleton → `DataStateBoundary`
+- Inline `innerCard()` → shared `getSubElementClass`
+- Inline header → `PageHeader`
+
+### 6. Dead Code Dihapus
+- `(admin)/students/_services/student-mock.ts`
+- `(admin)/students/_types/student.ts`
+- `(mentor)/my-students/_mocks/myStudentsService.ts`
+- `(admin)/_shared/localStorageService.ts`
+- `(admin)/_shared/styleUtils.ts`
+- `(admin)/_shared/Toast.tsx`
+- Empty directories
+
+### 7. Catatan Next.js 16
+Middleware terdeteksi sebagai `ƒ Proxy (Middleware)` — ada deprecation warning "middleware → proxy", masih berfungsi penuh.

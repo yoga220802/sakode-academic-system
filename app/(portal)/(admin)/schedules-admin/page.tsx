@@ -12,8 +12,7 @@ import {
   validateScheduleConflicts,
   DEFAULT_SCHEDULES
 } from "./_services/schedule-mock";
-import { getStoredActiveStudents } from "../students/_services/student-mock";
-import { ActiveStudent } from "../students/_types/student";
+import { getLocalStudents, ActiveStudent } from "@/app/_services/student-service";
 import { getStoredMentors } from "../mentors/_services/mentor-mock";
 import { Mentor } from "../mentors/_types/mentor";
 
@@ -80,7 +79,7 @@ export default function SchedulesAdminPage() {
   // Load initial data
   useEffect(() => {
     setSchedules(getStoredSchedules());
-    setStudents(getStoredActiveStudents());
+    setStudents(getLocalStudents());
     setMentors(getStoredMentors());
   }, []);
 

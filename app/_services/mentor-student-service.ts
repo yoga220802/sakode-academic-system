@@ -1,10 +1,3 @@
-/**
- * FE-SLICE-022 — Mentor Assigned Students Mock Service
- *
- * Provides a scoped database of students assigned to the logged-in mentor,
- * details of their curriculum progress, tasks, schedules, and maps-ready locations.
- */
-
 export interface StudentTaskLog {
   id: string;
   title: string;
