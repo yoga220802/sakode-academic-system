@@ -1,4 +1,5 @@
 import { Mentor } from "../_types/mentor";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY = "sakode_mentors_data";
 
@@ -83,21 +84,8 @@ export const DEFAULT_MENTORS: Mentor[] = [
   }
 ];
 
-export const getStoredMentors = (): Mentor[] => {
-  if (typeof window === "undefined") return DEFAULT_MENTORS;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_MENTORS));
-    return DEFAULT_MENTORS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_MENTORS;
-  }
-};
+export const getStoredMentors = (): Mentor[] =>
+  getStoredData(STORAGE_KEY, DEFAULT_MENTORS);
 
-export const saveStoredMentors = (mentors: Mentor[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(mentors));
-};
+export const saveStoredMentors = (mentors: Mentor[]) =>
+  saveStoredData(STORAGE_KEY, mentors);

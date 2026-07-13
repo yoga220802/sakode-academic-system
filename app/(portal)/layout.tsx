@@ -7,7 +7,6 @@ import { Sidebar } from "./_components/Sidebar";
 import { Header } from "./_components/Header";
 import { AestheticBackground } from "../_components/AestheticBackground";
 import { motion, AnimatePresence } from "framer-motion";
-// import { DashboardLockSystem } from "./_components/DashboardLockSystem";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { session } = useAuth();
@@ -40,9 +39,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="h-screen w-full flex bg-background text-foreground overflow-hidden font-sans transition-colors duration-300">
       
       <AestheticBackground mode="dashboard" />
-
-      {/* Premium Dashboard Lock & Trial Countdown System */}
-      {/* <DashboardLockSystem /> */}
 
       {/* Mobile Drawer (Overlay backdrop & sliding panel) */}
       <AnimatePresence>

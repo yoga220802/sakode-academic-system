@@ -35,6 +35,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  const setRoleCookie = (role: string | null) => {
+    if (typeof document === "undefined") return;
+    if (role) {
+      document.cookie = `sakode-role=${role};path=/;max-age=86400;samesite=lax`;
+    } else {
+      document.cookie = "sakode-role=;path=/;max-age=0";
+    }
+  };
+
+  // Sync cookie from localStorage on mount
+  useEffect(() => {
+    if (mounted && session) {
+      setRoleCookie(session.role);
+    }
+  }, [mounted, session]);
+
   const login = (role: UserRole) => {
     let name = "";
     let email = "";
@@ -60,11 +76,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newSession = { userId: `usr-${role}`, name, email, role };
     setSession(newSession);
     localStorage.setItem("sakode-session", JSON.stringify(newSession));
+    setRoleCookie(role);
   };
 
   const logout = () => {
     setSession(null);
     localStorage.removeItem("sakode-session");
+    setRoleCookie(null);
   };
 
   if (!mounted) return null;

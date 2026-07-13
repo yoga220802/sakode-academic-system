@@ -1,4 +1,25 @@
-import { ActiveStudent } from "../_types/student";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
+
+export interface ActiveStudent {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  programName: string;
+  programSlug: string;
+  address: string;
+  paymentType: "lunas" | "trial" | "cicil";
+  paymentConfirmed: boolean;
+  assignedMentorId: string | null;
+  assignedMentorName: string | null;
+  isGroup: boolean;
+  groupMembers?: string[] | null;
+  completedModulesCount: number;
+  totalModulesCount: number;
+  status: "active" | "completed" | "inactive";
+  registrationDate: string;
+  notes: string;
+}
 
 const STORAGE_KEY = "sakode_active_students";
 
@@ -90,7 +111,7 @@ export const DEFAULT_ACTIVE_STUDENTS: ActiveStudent[] = [
     address: "Cabang Bandung - Jl. Dago No. 45",
     paymentType: "cicil",
     paymentConfirmed: true,
-    assignedMentorId: null, // Belum diploting mentor!
+    assignedMentorId: null,
     assignedMentorName: null,
     isGroup: false,
     completedModulesCount: 0,
@@ -101,21 +122,19 @@ export const DEFAULT_ACTIVE_STUDENTS: ActiveStudent[] = [
   }
 ];
 
-export const getStoredActiveStudents = (): ActiveStudent[] => {
-  if (typeof window === "undefined") return DEFAULT_ACTIVE_STUDENTS;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ACTIVE_STUDENTS));
-    return DEFAULT_ACTIVE_STUDENTS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_ACTIVE_STUDENTS;
-  }
-};
+export function getLocalStudents(): ActiveStudent[] {
+  return getStoredData(STORAGE_KEY, DEFAULT_ACTIVE_STUDENTS);
+}
 
-export const saveStoredActiveStudents = (students: ActiveStudent[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-};
+export async function fetchStudents(): Promise<ActiveStudent[]> {
+  return getLocalStudents();
+}
+
+export async function persistStudents(students: ActiveStudent[]): Promise<void> {
+  saveStoredData(STORAGE_KEY, students);
+}
+
+export async function resetStudents(): Promise<ActiveStudent[]> {
+  saveStoredData(STORAGE_KEY, DEFAULT_ACTIVE_STUDENTS);
+  return DEFAULT_ACTIVE_STUDENTS;
+}

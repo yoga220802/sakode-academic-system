@@ -99,7 +99,9 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
         return [
           {
             groupName: "Dasbor Utama",
-            items: [{ label: "Ringkasan", href: "/dashboard", icon: "Home" }]
+            items: [
+              { label: "Ringkasan", href: "/dashboard", icon: "Home" },
+            ]
           },
           {
             groupName: "Plotting & Penjadwalan",

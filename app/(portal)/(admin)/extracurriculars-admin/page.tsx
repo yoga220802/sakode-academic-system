@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
@@ -8,6 +7,8 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBorderRadiusClass } from "@/UI/shared/color-utils";
+import { PageHeader } from "@/app/_components/PageHeader";
+import { StatCard } from "@/app/_components/StatCard";
 import { ExtracurricularOrganization, ExtracurricularRegistration } from "./_types/extracurricular";
 import {
   getStoredOrganizations,
@@ -17,6 +18,7 @@ import {
   DEFAULT_ORGANIZATIONS,
   DEFAULT_REGISTRATIONS
 } from "./_services/extracurricular-mock";
+import { useToast, Toast, SimulationStateBar, getSubElementClass } from "../_shared";
 
 export default function ExtracurricularsAdminPage() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -41,7 +43,7 @@ export default function ExtracurricularsAdminPage() {
   const [rejectionReason, setRejectionReason] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const { toast, showToast, setToast: closeToast } = useToast();
   const [simulationState, setSimulationState] = useState<"default" | "loading" | "empty" | "error">("default");
 
   // Load from local storage and mock service
@@ -49,11 +51,6 @@ export default function ExtracurricularsAdminPage() {
     setOrganizations(getStoredOrganizations());
     setRegistrations(getStoredRegistrations());
   }, []);
-
-  const showToast = (text: string, type: "success" | "error" = "success") => {
-    setToastMessage({ text, type });
-    setTimeout(() => setToastMessage(null), 3000);
-  };
 
   const handleResetData = () => {
     setOrganizations(DEFAULT_ORGANIZATIONS);
@@ -203,100 +200,23 @@ export default function ExtracurricularsAdminPage() {
     }
   };
 
-  // Responsive namespaces layout styling resolver
-  const getSubElementClass = (type: "card-item" | "panel-card" | "tab-button" | "divider" | "table-header") => {
-    switch (selectedStyle) {
-      case "neobrutalism":
-        if (type === "card-item")
-          return "bg-white dark:bg-zinc-900 border-3 border-zinc-900 dark:border-white p-4 font-mono shadow-[3px_3px_0_#000] dark:shadow-[3px_3px_0_#fff]";
-        if (type === "panel-card")
-          return "bg-white dark:bg-zinc-900 border-3 border-zinc-900 dark:border-white p-5 font-mono shadow-[4px_4px_0_#000] dark:shadow-[4px_4px_0_#fff]";
-        if (type === "tab-button")
-          return "border-2 border-zinc-900 dark:border-white rounded-none py-1.5 px-4 font-black";
-        if (type === "divider")
-          return "h-0.5 bg-zinc-900 dark:bg-white my-4";
-        if (type === "table-header")
-          return "border-b-2 border-zinc-900 dark:border-zinc-700 bg-zinc-100 font-black text-zinc-900 uppercase p-3 text-xs";
-        return "";
-
-      case "claymorphism":
-        if (type === "card-item")
-          return "bg-white/85 dark:bg-zinc-900/60 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4),_1px_2px_4px_rgba(0,0,0,0.04)] border border-zinc-200/50 dark:border-zinc-800/40 p-4 rounded-2xl";
-        if (type === "panel-card")
-          return "bg-slate-50 dark:bg-zinc-900 shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.05),_inset_4px_4px_8px_rgba(255,255,255,0.4),_3px_5px_15px_rgba(0,0,0,0.05)] border border-slate-200/40 dark:border-zinc-850 p-5 rounded-3xl";
-        if (type === "tab-button")
-          return "rounded-xl py-1.5 px-4 font-bold shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.02)]";
-        if (type === "divider")
-          return "h-px bg-zinc-200/60 dark:bg-zinc-800/40 my-4";
-        if (type === "table-header")
-          return "bg-slate-100 dark:bg-zinc-950 font-extrabold text-zinc-755 p-3 rounded-t-xl text-xs";
-        return "";
-
-      case "glassmorphism":
-      case "liquid-glass":
-        if (type === "card-item")
-          return "bg-white/10 dark:bg-zinc-900/20 backdrop-blur-xs border border-white/20 dark:border-zinc-900/30 p-4 rounded-xl";
-        if (type === "panel-card")
-          return "bg-white/15 dark:bg-zinc-900/35 border border-white/20 dark:border-zinc-800/50 backdrop-blur-md p-5 rounded-2xl shadow-xl";
-        if (type === "tab-button")
-          return "rounded-lg py-1.5 px-4 font-bold backdrop-blur-3xs border border-white/10";
-        if (type === "divider")
-          return "h-px bg-white/10 dark:bg-zinc-800/50 my-4";
-        if (type === "table-header")
-          return "bg-white/5 border-b border-white/10 font-bold p-3 text-xs";
-        return "";
-
-      case "minimalism":
-        if (type === "card-item")
-          return "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-none";
-        if (type === "panel-card")
-          return "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-none";
-        if (type === "tab-button")
-          return "rounded-none py-1.5 px-4 font-medium border border-zinc-200/80 dark:border-zinc-800";
-        if (type === "divider")
-          return "h-px bg-zinc-200 dark:bg-zinc-800 my-4";
-        if (type === "table-header")
-          return "border-b border-zinc-250 font-extrabold p-3 text-xs";
-        return "";
-
-      case "bento-grid":
-      case "sakode-modern":
-      default:
-        if (type === "card-item")
-          return "bg-white dark:bg-zinc-900/60 border border-zinc-200/65 dark:border-zinc-800/80 p-4 rounded-2xl shadow-sm";
-        if (type === "panel-card")
-          return "bg-white dark:bg-zinc-900/60 border border-zinc-200/65 dark:border-zinc-800/80 p-5 rounded-3xl shadow-sm";
-        if (type === "tab-button")
-          return "rounded-xl py-1.5 px-4 font-bold border border-zinc-200/60 dark:border-zinc-800";
-        if (type === "divider")
-          return "h-px bg-zinc-200 dark:bg-zinc-800 my-4";
-        if (type === "table-header")
-          return "bg-zinc-50 dark:bg-zinc-950 font-extrabold text-zinc-600 dark:text-zinc-400 p-3 text-xs";
-        return "";
-    }
-  };
+  // ponytail: data-driven style resolver via shared utility
+  const _getClass = (type: string) => getSubElementClass(selectedStyle, type);
 
   return (
     <div className="w-full flex flex-col gap-6 font-sans text-left">
       
-      {/* 1. Header and Page Metadata */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-200 dark:border-zinc-800/60 pb-5">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-355 font-bold mb-1">
-            <span>Admin</span>
-            <span>/</span>
-            <span>Program Ekstrakurikuler</span>
-          </div>
-          <h1 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-white leading-tight">
-            Kemitraan Sekolah & Ekskul
-          </h1>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-            Daftarkan ekskul sekolah mitra, upload dokumen MoU kerja sama, atur SAKODE mentor pendamping, serta review pendaftaran club murid.
-          </p>
-        </div>
-        
-        {/* Quick Action Trigger panel */}
-        <div className="flex gap-2 w-full sm:w-auto">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-355 font-bold mb-1">
+        <span>Admin</span>
+        <span>/</span>
+        <span>Program Ekstrakurikuler</span>
+      </div>
+
+      <PageHeader
+        title="Kemitraan Sekolah & Ekskul"
+        description="Daftarkan ekskul sekolah mitra, upload dokumen MoU kerja sama, atur SAKODE mentor pendamping, serta review pendaftaran club murid."
+        actions={
           <UI.Button
             onClick={() => router.push("/extracurriculars-admin/new")}
             variant="primary"
@@ -306,106 +226,15 @@ export default function ExtracurricularsAdminPage() {
             <Icons.Plus className="w-4 h-4" />
             Daftarkan Ekskul Baru
           </UI.Button>
-        </div>
-      </div>
+        }
+      />
 
-      {/* 2. Simulator State Bar */}
-      <div className="flex flex-wrap gap-2.5 items-center bg-zinc-100/80 dark:bg-zinc-900/40 p-2 rounded-xl border border-zinc-200/50 dark:border-zinc-800/80">
-        <span className="text-[10px] text-zinc-555 dark:text-zinc-300 font-bold uppercase tracking-wider pl-2 pr-1">
-          Simulator State:
-        </span>
-        <button
-          onClick={() => setSimulationState("default")}
-          className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
-            simulationState === "default"
-              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
-              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          Default (3 Ekskul)
-        </button>
-        <button
-          onClick={() => setSimulationState("loading")}
-          className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
-            simulationState === "loading"
-              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
-              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          Loading
-        </button>
-        <button
-          onClick={() => setSimulationState("empty")}
-          className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
-            simulationState === "empty"
-              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
-              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          Kosong
-        </button>
-        <button
-          onClick={() => setSimulationState("error")}
-          className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-colors cursor-pointer ${
-            simulationState === "error"
-              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-3xs border border-zinc-200/50 dark:border-zinc-800"
-              : "text-zinc-500 dark:text-zinc-450 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          API Error
-        </button>
-        <button
-          onClick={handleResetData}
-          className="p-1.5 text-zinc-450 hover:text-sakode-orange hover:bg-zinc-200/50 dark:hover:bg-zinc-800/80 rounded-lg transition-colors ml-auto cursor-pointer flex items-center gap-1 text-[10px] font-bold"
-        >
-          <Icons.Check className="w-3.5 h-3.5" />
-          Reset Data
-        </button>
-      </div>
+      <SimulationStateBar state={simulationState} onChange={setSimulationState} onReset={handleResetData} />
 
-      {/* 3. KPI Metrics Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <UI.Card>
-          <div className="p-4 flex justify-between items-center text-left">
-            <div>
-              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Kemitraan Sekolah Aktif</span>
-              <span className="text-xl font-black text-zinc-800 dark:text-white mt-1 block">
-                {metrics.activePartners} Sekolah
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <Icons.AcademicCap className="w-5 h-5" />
-            </div>
-          </div>
-        </UI.Card>
-
-        <UI.Card>
-          <div className="p-4 flex justify-between items-center text-left">
-            <div>
-              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Antrean Review Club</span>
-              <span className="text-xl font-black text-amber-500 mt-1 block">
-                {metrics.pendingReviews} Pendaftaran
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <Icons.Gift className="w-5 h-5" />
-            </div>
-          </div>
-        </UI.Card>
-
-        <UI.Card>
-          <div className="p-4 flex justify-between items-center text-left">
-            <div>
-              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Total Murid Aktif Ekskul</span>
-              <span className="text-xl font-black text-sakode-blue dark:text-sky-400 mt-1 block">
-                {metrics.totalStudents} Siswa
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-blue-500/10 text-sakode-blue dark:text-sky-400 flex items-center justify-center">
-              <Icons.User className="w-5 h-5" />
-            </div>
-          </div>
-        </UI.Card>
+        <StatCard label="Kemitraan Sekolah Aktif" value={`${metrics.activePartners} Sekolah`} />
+        <StatCard label="Antrean Review Club" value={`${metrics.pendingReviews} Pendaftaran`} />
+        <StatCard label="Total Murid Aktif Ekskul" value={`${metrics.totalStudents} Siswa`} />
       </div>
 
       {/* Tabs list & filters toolbar */}
@@ -415,7 +244,7 @@ export default function ExtracurricularsAdminPage() {
         <div className="flex gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-px">
           <button
             onClick={() => setActiveTab("schools")}
-            className={`${getSubElementClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
+            className={`${_getClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
               activeTab === "schools"
                 ? "bg-sakode-blue dark:bg-sky-400 text-white dark:text-zinc-950 border-sakode-blue"
                 : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900/35 border-transparent"
@@ -426,7 +255,7 @@ export default function ExtracurricularsAdminPage() {
           </button>
           <button
             onClick={() => setActiveTab("reviews")}
-            className={`${getSubElementClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
+            className={`${_getClass("tab-button")} cursor-pointer flex items-center gap-1.5 ${
               activeTab === "reviews"
                 ? "bg-sakode-blue dark:bg-sky-400 text-white dark:text-zinc-950 border-sakode-blue"
                 : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900/35 border-transparent"
@@ -495,13 +324,13 @@ export default function ExtracurricularsAdminPage() {
           <table className="w-full text-xs">
             <thead>
               <tr>
-                <th className={getSubElementClass("table-header") + " text-left rounded-tl-2xl pl-4"}>Sekolah / Ekskul</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Alamat Kecamatan & Kota</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Guru Pendamping</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Mentor SAKODE</th>
-                <th className={getSubElementClass("table-header") + " text-center"}>Jumlah Anggota</th>
-                <th className={getSubElementClass("table-header") + " text-center"}>Status</th>
-                <th className={getSubElementClass("table-header") + " text-center rounded-tr-2xl pr-4"}>Aksi</th>
+                <th className={_getClass("table-header") + " text-left rounded-tl-2xl pl-4"}>Sekolah / Ekskul</th>
+                <th className={_getClass("table-header") + " text-left"}>Alamat Kecamatan & Kota</th>
+                <th className={_getClass("table-header") + " text-left"}>Guru Pendamping</th>
+                <th className={_getClass("table-header") + " text-left"}>Mentor SAKODE</th>
+                <th className={_getClass("table-header") + " text-center"}>Jumlah Anggota</th>
+                <th className={_getClass("table-header") + " text-center"}>Status</th>
+                <th className={_getClass("table-header") + " text-center rounded-tr-2xl pr-4"}>Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-150 dark:divide-zinc-850">
@@ -575,12 +404,12 @@ export default function ExtracurricularsAdminPage() {
           <table className="w-full text-xs">
             <thead>
               <tr>
-                <th className={getSubElementClass("table-header") + " text-left rounded-tl-2xl pl-4"}>Nama Murid</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Sekolah Mitra</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Nama Club Ekskul</th>
-                <th className={getSubElementClass("table-header") + " text-left"}>Tanggal Masuk</th>
-                <th className={getSubElementClass("table-header") + " text-center"}>Status</th>
-                <th className={getSubElementClass("table-header") + " text-center rounded-tr-2xl pr-4"}>Aksi Review</th>
+                <th className={_getClass("table-header") + " text-left rounded-tl-2xl pl-4"}>Nama Murid</th>
+                <th className={_getClass("table-header") + " text-left"}>Sekolah Mitra</th>
+                <th className={_getClass("table-header") + " text-left"}>Nama Club Ekskul</th>
+                <th className={_getClass("table-header") + " text-left"}>Tanggal Masuk</th>
+                <th className={_getClass("table-header") + " text-center"}>Status</th>
+                <th className={_getClass("table-header") + " text-center rounded-tr-2xl pr-4"}>Aksi Review</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-150 dark:divide-zinc-850">
@@ -716,39 +545,7 @@ export default function ExtracurricularsAdminPage() {
         )}
       </AnimatePresence>
 
-      {/* Toast Alert notifications */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 max-w-sm w-full font-sans"
-          >
-            <UI.Card accentColor={toastMessage.type === "success" ? "green" : "red"}>
-              <div className="flex items-start gap-3 text-xs leading-normal">
-                <div className="shrink-0 mt-0.5">
-                  {toastMessage.type === "success" ? (
-                    <Icons.Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <Icons.AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-455" />
-                  )}
-                </div>
-                <div className="flex-1 font-bold text-zinc-800 dark:text-zinc-200">
-                  {toastMessage.text}
-                </div>
-                <button
-                  onClick={() => setToastMessage(null)}
-                  className="shrink-0 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-250 cursor-pointer"
-                  title="Tutup"
-                >
-                  <Icons.X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </UI.Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Toast toast={toast} onClose={() => closeToast(null)} />
 
     </div>
   );

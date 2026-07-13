@@ -1,4 +1,5 @@
 import { AuditLog } from "../_types/log";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY_LOGS = "sakode_audit_logs_v1";
 
@@ -75,24 +76,11 @@ export const DEFAULT_LOGS: AuditLog[] = [
   }
 ];
 
-export const getStoredLogs = (): AuditLog[] => {
-  if (typeof window === "undefined") return DEFAULT_LOGS;
-  const stored = localStorage.getItem(STORAGE_KEY_LOGS);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(DEFAULT_LOGS));
-    return DEFAULT_LOGS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_LOGS;
-  }
-};
+export const getStoredLogs = (): AuditLog[] =>
+  getStoredData(STORAGE_KEY_LOGS, DEFAULT_LOGS);
 
-export const saveStoredLogs = (logs: AuditLog[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(logs));
-};
+export const saveStoredLogs = (logs: AuditLog[]) =>
+  saveStoredData(STORAGE_KEY_LOGS, logs);
 
 // Log simulation helper
 const SIMULATION_ACTIONS = [

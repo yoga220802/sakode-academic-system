@@ -1,4 +1,5 @@
 import { MentoringSchedule, OverlapValidationResult } from "../_types/schedule";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY = "sakode_mentoring_schedules";
 
@@ -113,24 +114,11 @@ export const DEFAULT_SCHEDULES: MentoringSchedule[] = [
   }
 ];
 
-export const getStoredSchedules = (): MentoringSchedule[] => {
-  if (typeof window === "undefined") return DEFAULT_SCHEDULES;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SCHEDULES));
-    return DEFAULT_SCHEDULES;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_SCHEDULES;
-  }
-};
+export const getStoredSchedules = (): MentoringSchedule[] =>
+  getStoredData(STORAGE_KEY, DEFAULT_SCHEDULES);
 
-export const saveStoredSchedules = (schedules: MentoringSchedule[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(schedules));
-};
+export const saveStoredSchedules = (schedules: MentoringSchedule[]) =>
+  saveStoredData(STORAGE_KEY, schedules);
 
 // Helper: Check if two time slots overlap
 export const checkTimeOverlap = (

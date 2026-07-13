@@ -1,4 +1,5 @@
 import { UnassignedStudent } from "../_types/plotting";
+import { getStoredData, saveStoredData } from "../../_shared";
 
 const STORAGE_KEY = "sakode_unassigned_students";
 
@@ -101,21 +102,8 @@ export const DEFAULT_UNASSIGNED_STUDENTS: UnassignedStudent[] = [
   }
 ];
 
-export const getStoredStudents = (): UnassignedStudent[] => {
-  if (typeof window === "undefined") return DEFAULT_UNASSIGNED_STUDENTS;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_UNASSIGNED_STUDENTS));
-    return DEFAULT_UNASSIGNED_STUDENTS;
-  }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return DEFAULT_UNASSIGNED_STUDENTS;
-  }
-};
+export const getStoredStudents = (): UnassignedStudent[] =>
+  getStoredData(STORAGE_KEY, DEFAULT_UNASSIGNED_STUDENTS);
 
-export const saveStoredStudents = (students: UnassignedStudent[]) => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-};
+export const saveStoredStudents = (students: UnassignedStudent[]) =>
+  saveStoredData(STORAGE_KEY, students);
