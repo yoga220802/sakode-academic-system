@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
@@ -40,40 +41,50 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
     login(roleToRestore as any);
   };
 
-  const getPageTitle = (path: string) => {
-    if (!path || path === "/dashboard") return "Ringkasan Dasbor";
-    const segments = path.split("/");
-    const lastSegment = segments[segments.length - 1];
+  const segmentLabels: Record<string, string> = {
+    "dashboard": "Dasbor",
+    "registration-review": "Review Pendaftaran",
+    "students": "Repositori Murid",
+    "programs": "Program & Paket",
+    "trials": "Manajemen Trial",
+    "users": "Direktori Pengguna",
+    "mentors": "Direktori Mentor",
+    "plotting": "Plotting & Alokasi Mentor",
+    "schedules-admin": "Jadwal Mentoring",
+    "referrals": "Program Referral",
+    "extracurriculars-admin": "Manajemen Ekskul",
+    "principal-membership": "Keanggotaan KS",
+    "logs": "Audit Sistem",
+    "accounts": "Akun Referral",
+    "new": "Baru",
+    "edit": "Edit",
+    "demo": "Demo"
+  };
 
-    const routeTitles: Record<string, string> = {
-      "registration-review": "Review Pendaftaran",
-      "programs": "Program & Paket Belajar",
-      "trials": "Manajemen Sesi Trial",
-      "users": "Direktori Pengguna",
-      "mentors": "Direktori Mentor SAKODE",
-      "plotting": "Plotting & Alokasi Mentor",
-      "schedules-admin": "Jadwal Mentoring Global",
-      "referrals": "Program Referral",
-      "extracurriculars-admin": "Manajemen Organisasi Ekskul",
-      "principal-membership": "Keanggotaan Kepala Sekolah",
-      "logs": "Audit Sistem Log",
-      "plotting-queue": "Antrean Plotting Mentor",
-      "schedules-lead": "Kelola Jadwal Mentoring",
-      "grading": "Penilaian Bimbingan",
-      "my-students": "Siswa Bimbingan Saya",
-      "schedules": "Jadwal Kelas & Mengajar",
-      "my-classes": "Kelas Aktif Saya",
-      "modules": "Modul Belajar IT",
-      "my-mentor-schedule": "Mentor & Jadwal Mentoring Sesi",
-      "trial-registration": "Pendaftaran Sesi Trial Gratis",
-      "extracurricular-registration": "Pendaftaran Cabang Ekskul",
-      "enrollment-status": "Status Registrasi & Paket",
-      "portfolio": "Portofolio & Sertifikat",
-      "principal-org": "Organisasi Terkait Sekolah",
-      "principal-reports": "Laporan & Roster Ekskul"
-    };
+  const renderBreadcrumbs = () => {
+    if (!pathname || pathname === "/") return null;
+    const segments = pathname.split("/").filter(Boolean);
 
-    return routeTitles[lastSegment] || "Sistem Akademik";
+    return (
+      <nav className="flex items-center gap-1 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 leading-none flex-wrap">
+        {segments.map((seg, idx) => {
+          const href = "/" + segments.slice(0, idx + 1).join("/");
+          const isLast = idx === segments.length - 1;
+          const label = segmentLabels[seg] || (isNaN(Number(seg)) ? seg.charAt(0).toUpperCase() + seg.slice(1) : "Detail");
+
+          return (
+            <React.Fragment key={href}>
+              {idx > 0 && <span className="text-zinc-300 dark:text-zinc-600 mx-0.5">/</span>}
+              {isLast ? (
+                <span className="text-zinc-700 dark:text-zinc-200">{label}</span>
+              ) : (
+                <Link href={href} className="hover:text-sakode-blue transition-colors">{label}</Link>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </nav>
+    );
   };
 
   // Determine container styling based on style
@@ -177,12 +188,12 @@ export function Header({ session, onMenuClick, isCollapsed, onToggleCollapse }: 
         </button>
 
         <div className="text-left">
-          <h1 className="text-sm md:text-base font-black text-zinc-850 dark:text-zinc-100 leading-none">
-            {getPageTitle(pathname)}
-          </h1>
-          <p className="hidden md:block text-[10px] text-zinc-400 dark:text-zinc-500 font-bold mt-1.5">
-            Halo, {session.name.split(" ")[0]}! Selamat datang kembali.
-          </p>
+          <div className="flex flex-col gap-0.5">
+            {renderBreadcrumbs()}
+            <p className="hidden md:block text-[10px] text-zinc-400 dark:text-zinc-500 font-bold leading-none">
+              Halo, {session.name.split(" ")[0]}! Selamat datang kembali.
+            </p>
+          </div>
         </div>
       </div>
 
