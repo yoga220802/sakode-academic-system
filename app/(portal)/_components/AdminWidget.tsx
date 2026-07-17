@@ -313,7 +313,6 @@ export function AdminWidget() {
             </UI.Heading>
             <a
               href="/registration-review"
-              href="/registration-review"
               className="text-xs text-sakode-blue font-medium hover:underline"
             >
               Lihat Semua →
