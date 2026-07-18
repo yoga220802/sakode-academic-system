@@ -15,29 +15,7 @@ import {
 import { getLocalStudents, ActiveStudent } from "@/app/_services/student-service";
 import { getStoredMentors } from "@/app/_data/mentor-mock";
 import { Mentor } from "../mentors/_types/mentor";
-
-// Hour slots for visual calendar grid
-const TIME_SLOTS = [
-  { label: "08:00 - 10:00", start: "08:00", end: "10:00" },
-  { label: "10:00 - 12:00", start: "10:00", end: "12:00" },
-  { label: "13:00 - 15:00", start: "13:00", end: "15:00" },
-  { label: "15:00 - 17:00", start: "15:00", end: "17:00" },
-  { label: "17:00 - 19:00", start: "17:00", end: "19:00" }
-];
-
-// Days of the week for visual calendar grid
-const DAYS = [
-  { name: "Monday", label: "Senin", dateOffset: 0 },
-  { name: "Tuesday", label: "Selasa", dateOffset: 1 },
-  { name: "Wednesday", label: "Rabu", dateOffset: 2 },
-  { name: "Thursday", label: "Kamis", dateOffset: 3 },
-  { name: "Friday", label: "Jumat", dateOffset: 4 },
-  { name: "Saturday", label: "Sabtu", dateOffset: 5 },
-  { name: "Sunday", label: "Minggu", dateOffset: 6 }
-];
-
-// Reference date for the week view (July 6th to July 12th, 2026)
-const WEEK_START_DATE = new Date("2026-07-06");
+import { TIME_SLOTS, DAYS, getWeekDayDateString, getWeekDayLabel } from "@/app/_utils/calendar";
 
 export default function SchedulesAdminPage() {
   const { selectedStyle, selectedColor } = useUIStyle();
@@ -140,19 +118,6 @@ export default function SchedulesAdminPage() {
       cancelled: schedules.filter((s) => s.status === "cancelled").length
     };
   }, [schedules, simulationState]);
-
-  // Generate calendar dates for the active week (Monday, July 6, 2026 - Sunday)
-  const getWeekDayDateString = (offset: number) => {
-    const d = new Date(WEEK_START_DATE);
-    d.setDate(d.getDate() + offset);
-    return d.toISOString().split("T")[0];
-  };
-
-  const getWeekDayLabel = (offset: number) => {
-    const d = new Date(WEEK_START_DATE);
-    d.setDate(d.getDate() + offset);
-    return d.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
-  };
 
   // Check overlap schedule
   const handleOpenAddModal = () => {
@@ -961,11 +926,9 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        <option value="08:00">08:00 WIB</option>
-                        <option value="10:00">10:00 WIB</option>
-                        <option value="13:00">13:00 WIB</option>
-                        <option value="15:00">15:00 WIB</option>
-                        <option value="17:00">17:00 WIB</option>
+                        {TIME_SLOTS.map((s) => (
+                          <option key={s.start} value={s.start}>{s.start} WIB</option>
+                        ))}
                       </UI.Select>
                     </div>
 
@@ -977,11 +940,9 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        <option value="10:00">10:00 WIB</option>
-                        <option value="12:00">12:00 WIB</option>
-                        <option value="15:00">15:00 WIB</option>
-                        <option value="17:00">17:00 WIB</option>
-                        <option value="19:00">19:00 WIB</option>
+                        {TIME_SLOTS.map((s) => (
+                          <option key={s.end} value={s.end}>{s.end} WIB</option>
+                        ))}
                       </UI.Select>
                     </div>
                   </div>
@@ -1133,11 +1094,9 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        <option value="08:00">08:00 WIB</option>
-                        <option value="10:00">10:00 WIB</option>
-                        <option value="13:00">13:00 WIB</option>
-                        <option value="15:00">15:00 WIB</option>
-                        <option value="17:00">17:00 WIB</option>
+                        {TIME_SLOTS.map((s) => (
+                          <option key={s.start} value={s.start}>{s.start} WIB</option>
+                        ))}
                       </UI.Select>
                     </div>
 
@@ -1149,11 +1108,9 @@ export default function SchedulesAdminPage() {
                         accentColor={selectedColor}
                         className="text-xs!"
                       >
-                        <option value="10:00">10:00 WIB</option>
-                        <option value="12:00">12:00 WIB</option>
-                        <option value="15:00">15:00 WIB</option>
-                        <option value="17:00">17:00 WIB</option>
-                        <option value="19:00">19:00 WIB</option>
+                        {TIME_SLOTS.map((s) => (
+                          <option key={s.end} value={s.end}>{s.end} WIB</option>
+                        ))}
                       </UI.Select>
                     </div>
                   </div>
