@@ -5,7 +5,7 @@
  * for the Mentor Lead's specific domain: "Web Development (React & Next.js)".
  */
 
-import { StudentPriority, MentorAvailability } from "../../lead-overview/_mocks/mentorLeadOverviewService";
+import { StudentPriority, MentorAvailability } from "@/app/_data/mentorLeadOverviewService";
 
 export interface ScopedStudent {
   id: string;

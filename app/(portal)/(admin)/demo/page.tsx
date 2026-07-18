@@ -8,7 +8,7 @@ import { DataStateBoundary } from "@/app/_components/DataStateBoundary";
 import { ResponsiveList } from "@/app/_components/ResponsiveList";
 import { Pagination } from "@/app/_components/Pagination";
 import { ReadOnlyNotice } from "@/app/_components/ReadOnlyNotice";
-import { StudentMockService } from "@/app/_services/student-mock";
+import { StudentMockService } from "@/app/_data/student-mock";
 import { StudentViewModel } from "@/app/_types/student";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";

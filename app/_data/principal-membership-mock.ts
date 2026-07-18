@@ -1,5 +1,5 @@
-import { PrincipalMembership } from "../_types/membership";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { PrincipalMembership } from "@/app/(portal)/(admin)/principal-membership/_types/membership";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY_MEMBERSHIPS = "sakode_principal_memberships_v1";
 

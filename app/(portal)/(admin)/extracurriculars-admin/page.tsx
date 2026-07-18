@@ -17,7 +17,7 @@ import {
   saveStoredRegistrations,
   DEFAULT_ORGANIZATIONS,
   DEFAULT_REGISTRATIONS
-} from "./_services/extracurricular-mock";
+} from "@/app/_data/extracurricular-mock";
 import { useToast, Toast, SimulationStateBar, getSubElementClass } from "../_shared";
 
 export default function ExtracurricularsAdminPage() {

@@ -1,5 +1,5 @@
-import { MentoringSchedule, OverlapValidationResult } from "../_types/schedule";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { MentoringSchedule, OverlapValidationResult } from "@/app/(portal)/(admin)/schedules-admin/_types/schedule";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY = "sakode_mentoring_schedules";
 

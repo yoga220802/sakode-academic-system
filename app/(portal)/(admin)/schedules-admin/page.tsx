@@ -11,9 +11,9 @@ import {
   saveStoredSchedules,
   validateScheduleConflicts,
   DEFAULT_SCHEDULES
-} from "./_services/schedule-mock";
+} from "@/app/_data/schedule-mock";
 import { getLocalStudents, ActiveStudent } from "@/app/_services/student-service";
-import { getStoredMentors } from "../mentors/_services/mentor-mock";
+import { getStoredMentors } from "@/app/_data/mentor-mock";
 import { Mentor } from "../mentors/_types/mentor";
 
 // Hour slots for visual calendar grid

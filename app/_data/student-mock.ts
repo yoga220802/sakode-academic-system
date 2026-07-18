@@ -1,4 +1,4 @@
-import { StudentViewModel } from "../_types/student";
+import { StudentViewModel } from "@/app/_types/student";
 
 export class StudentMockService {
   private static mockData: StudentViewModel[] = [

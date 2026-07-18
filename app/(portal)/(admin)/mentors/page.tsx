@@ -7,7 +7,7 @@ import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 import { Mentor } from "./_types/mentor";
-import { getStoredMentors, saveStoredMentors, DEFAULT_MENTORS } from "./_services/mentor-mock";
+import { getStoredMentors, saveStoredMentors, DEFAULT_MENTORS } from "@/app/_data/mentor-mock";
 
 export default function MentorDirectoryPage() {
   const { selectedStyle, selectedColor } = useUIStyle();

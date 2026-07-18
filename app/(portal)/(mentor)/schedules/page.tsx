@@ -26,7 +26,7 @@ import {
   type PersonalSession,
   DEVICE_OPTIONS,
   SUBMISSION_METHODS,
-} from "./_mocks/personalScheduleService";
+} from "@/app/_data/personalScheduleService";
 
 // ─── Loading Skeleton ─────────────────────────────────────────────────────────
 

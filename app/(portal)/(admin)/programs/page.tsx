@@ -9,7 +9,7 @@ import { DataStateBoundary } from "@/app/_components/DataStateBoundary";
 import { Icons } from "@/UI/shared/Icons";
 import { getTextClass } from "@/UI/shared/color-utils";
 import { ProgramViewModel, ModuleViewModel } from "@/app/_types/program";
-import { ProgramMockService } from "./_services/program-mock";
+import { ProgramMockService } from "@/app/_data/program-mock";
 
 // Inline SVGs for missing icons
 const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (

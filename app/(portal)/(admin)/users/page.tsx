@@ -11,7 +11,7 @@ import {
   getStoredUsers,
   saveStoredUsers,
   DEFAULT_USERS
-} from "./_services/users-mock";
+} from "@/app/_data/users-mock";
 
 export default function UsersPage() {
   const { selectedStyle, selectedColor } = useUIStyle();

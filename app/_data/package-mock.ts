@@ -1,4 +1,4 @@
-import { PackageViewModel } from "../_types/package";
+import { PackageViewModel } from "@/app/_types/package";
 
 export const MOCK_PACKAGES: PackageViewModel[] = [
   {

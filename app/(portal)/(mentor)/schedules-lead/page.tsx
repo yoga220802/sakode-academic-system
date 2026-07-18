@@ -31,7 +31,7 @@ import {
   type ScopedSession,
   type CompactMentor,
   type CompactStudent,
-} from "./_mocks/schedulesLeadService";
+} from "@/app/_data/schedulesLeadService";
 
 export default function ScopedSchedulesLeadPage() {
   const { selectedStyle, selectedColor } = useUIStyle();

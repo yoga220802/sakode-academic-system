@@ -1,5 +1,5 @@
-import { UnassignedStudent } from "../_types/plotting";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { UnassignedStudent } from "@/app/(portal)/(admin)/plotting/_types/plotting";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY = "sakode_unassigned_students";
 
