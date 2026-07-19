@@ -286,24 +286,7 @@ export default function MyStudentsPage() {
                   <div className="bg-zinc-100/50 dark:bg-zinc-800/30 border border-zinc-200/25 p-3.5 rounded-xl text-xs flex flex-col gap-1.5 mt-2">
                     <div className="flex justify-between items-center w-full">
                       <span className="text-[9.5px] font-black uppercase text-zinc-450 tracking-wider flex items-center gap-1.5">
-                        <svg
-                          viewBox="0 0 24 24"
-                          strokeWidth={2.5}
-                          stroke="currentColor"
-                          fill="none"
-                          className="w-3.5 h-3.5 text-zinc-500"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z"
-                          />
-                        </svg>
+                        <Icons.MapPin className="w-3.5 h-3.5 text-zinc-500" />
                         Alamat Kunjungan Pengajaran Offline
                       </span>
                       <a
