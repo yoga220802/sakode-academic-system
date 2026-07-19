@@ -7,6 +7,7 @@ import { Icons } from "@/UI/shared/Icons";
 import { UI as UIStyles } from "@/UI";
 import {
   PaletteColorKey,
+  PALETTE_COLORS,
   getBgOpacity20Class,
   getBgOpacity10Class,
   getBgOpacity5Class,
@@ -19,16 +20,25 @@ interface ModalPreviewProps {
   primaryColor?: PaletteColorKey;
   secondaryColor?: PaletteColorKey;
   ascentColor?: PaletteColorKey;
+  selectedColor?: PaletteColorKey;
 }
 
 export default function ModalPreview({
   isOpen,
   onClose,
   style,
-  primaryColor = "cyan",
-  secondaryColor = "orange",
-  ascentColor = "green",
+  primaryColor: initialPrimaryColor = "cyan",
+  secondaryColor: initialSecondaryColor = "orange",
+  ascentColor: initialAscentColor = "green",
+  selectedColor,
 }: ModalPreviewProps) {
+  const activeColorInfo = selectedColor
+    ? (PALETTE_COLORS.find((c) => c.key === selectedColor) || PALETTE_COLORS[0])
+    : null;
+
+  const primaryColor = activeColorInfo ? activeColorInfo.key : initialPrimaryColor;
+  const secondaryColor = activeColorInfo ? activeColorInfo.secondary : initialSecondaryColor;
+  const ascentColor = initialAscentColor;
   const { resolvedTheme } = useTheme();
   
   // Resolve the visual style namespace

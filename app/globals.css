@@ -1,92 +1,385 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap");
+
 @import "tailwindcss";
 @import "@heroui/styles";
-@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+@source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* =========================================================
+   Global CSS Variables
+   ========================================================= */
+
 :root {
-  --background: #F9FCFE;
-  --foreground: #323232;
+  --background: #f9fafb;
+  --foreground: #09090b;
+
+  /*
+   * Variabel warna dinamis.
+   * Nilai ini dapat diubah melalui JavaScript untuk mengganti tema.
+   */
+  --sakode-primary-color: #71cffe;
+  --sakode-secondary-color: #f9723b;
+  --sakode-accent-color: #bc71fe;
 }
 
 .dark {
-  --background: #3E3F40;
-  --foreground: #F9FCFE;
+  --background: #1c253b;
+  --foreground: #f4f4f5;
 }
 
+/* =========================================================
+   Tailwind Theme
+   ========================================================= */
+
 @theme {
+  /* Base colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-sakode-cyan: #71CFFE;     /* Primary: Biru */
-  --color-sakode-orange: #FEA071;   /* Secondary: Oranye */
-  --color-sakode-yellow: #FCD202;   /* Warning / Kuning */
+
+  /* Dynamic brand colors */
+  --color-sakode-primary: var(--sakode-primary-color);
+  --color-sakode-secondary: var(--sakode-secondary-color);
+  --color-sakode-accent: var(--sakode-accent-color);
+
+  /* Sakode color palette */
+  --color-sakode-cyan: #71cffe;
+  --color-sakode-orange: #f9723b;
+  --color-sakode-yellow: #edac1c;
   --color-sakode-charcoal: #383838;
-  --color-sakode-green: #6EBF22;    /* Success: Hijau */
-  --color-sakode-blue: #79A2FC;     /* Information: Biru */
-  --color-sakode-red: #FF5F47;      /* Error: Merah */
-  --color-sakode-pink: #FF409F;     /* Accent: Pink Sakode */
-  --color-sakode-purple: #BC71FE;   /* Purple / Lavender */
-  --font-sans: var(--font-nunito);
-  --font-kalam: var(--font-kalam);
+  --color-sakode-green: #009670;
+  --color-sakode-blue: #54a5e4;
+  --color-sakode-red: #f94052;
+  --color-sakode-pink: #ff409f;
+  --color-sakode-purple: #bc71fe;
 
-  /* Intercept standard states (Success, Warning, Info, Error) using guidelines hexes */
-  --color-emerald-100: rgba(110, 191, 34, 0.1);
-  --color-emerald-150: rgba(110, 191, 34, 0.15);
-  --color-emerald-200: rgba(110, 191, 34, 0.2);
-  --color-emerald-300: rgba(110, 191, 34, 0.3);
-  --color-emerald-400: #6EBF22;
-  --color-emerald-500: #6EBF22;
-  --color-emerald-800: #427514;
-  --color-emerald-950: #0d2600;
+  /* Semantic colors */
+  --color-sakode-success: #6ebf22;
+  --color-sakode-warning: #fcd202;
+  --color-sakode-error: #ff5f47;
 
-  --color-amber-100: rgba(252, 210, 2, 0.15);
-  --color-amber-200: rgba(252, 210, 2, 0.2);
-  --color-amber-300: rgba(252, 210, 2, 0.3);
-  --color-amber-400: #FCD202;
-  --color-amber-500: #FCD202;
-  --color-amber-800: #9e8200;
+  /* Typography */
+  --font-sans: "Nunito", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 
-  --color-sky-100: rgba(121, 162, 252, 0.15);
-  --color-sky-200: rgba(121, 162, 252, 0.2);
-  --color-sky-300: rgba(121, 162, 252, 0.3);
-  --color-sky-400: #79A2FC;
-  --color-sky-500: #79A2FC;
-  --color-sky-800: #3b5fbd;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 
-  --color-rose-100: rgba(255, 95, 71, 0.1);
-  --color-rose-200: rgba(255, 95, 71, 0.2);
-  --color-rose-300: rgba(255, 95, 71, 0.3);
-  --color-rose-400: #FF5F47;
-  --color-rose-500: #FF5F47;
-  --color-rose-800: #ba3823;
+  --font-kalam: "Kalam", cursive;
 
-  --color-red-500: #FF5F47;
-  --color-red-800: #ba3823;
+  /* Font sizes */
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.25rem;
+}
+
+/* =========================================================
+   Base Styles
+   ========================================================= */
+
+html {
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 body {
+  min-height: 100vh;
+  margin: 0;
+
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif !important;
+
+  transition:
+    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1 {
-  font-family: var(--font-kalam), var(--font-sans), cursive, sans-serif;
+.font-kalam {
+  font-family: "Kalam", cursive !important;
 }
 
-h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+select,
+textarea,
+button {
+  font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif !important;
 }
 
-h2 {
-  font-weight: 800;
+/* =========================================================
+   1. Neobrutalism Scrollbars
+   ========================================================= */
+
+.style-neobrutalism {
+  scrollbar-color: var(--sakode-primary-color) var(--background);
+  scrollbar-width: auto;
 }
 
-h3 {
-  font-weight: 700;
+.style-neobrutalism ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-h4, h5, h6 {
-  font-weight: 600;
+.style-neobrutalism ::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 2px solid #09090b;
+}
+
+.dark .style-neobrutalism ::-webkit-scrollbar-track {
+  border-left-color: #f4f4f5;
+}
+
+.style-neobrutalism ::-webkit-scrollbar-thumb {
+  background-color: var(--sakode-primary-color);
+  border: 2px solid #09090b;
+  border-radius: 0 !important;
+}
+
+.dark .style-neobrutalism ::-webkit-scrollbar-thumb {
+  border-color: #f4f4f5;
+}
+
+.style-neobrutalism ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sakode-secondary-color);
+}
+
+/* =========================================================
+   2. Claymorphism Scrollbars
+   ========================================================= */
+
+.style-claymorphism {
+  scrollbar-color: var(--sakode-primary-color) rgba(0, 0, 0, 0.03);
+  scrollbar-width: thin;
+}
+
+.style-claymorphism ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.style-claymorphism ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+}
+
+.dark .style-claymorphism ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.style-claymorphism ::-webkit-scrollbar-thumb {
+  background-color: var(--sakode-primary-color);
+  background-clip: padding-box;
+
+  border: 2px solid transparent;
+  border-radius: 10px;
+
+  box-shadow:
+    inset -2px -2px 4px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.style-claymorphism ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sakode-secondary-color);
+}
+
+/* =========================================================
+   3. Glassmorphism and Liquid Glass Scrollbars
+   ========================================================= */
+
+.style-glassmorphism,
+.style-liquid-glass {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  scrollbar-width: thin;
+}
+
+.dark .style-glassmorphism,
+.dark .style-liquid-glass {
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.style-glassmorphism ::-webkit-scrollbar,
+.style-liquid-glass ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.style-glassmorphism ::-webkit-scrollbar-track,
+.style-liquid-glass ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.style-glassmorphism ::-webkit-scrollbar-thumb,
+.style-liquid-glass ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.14);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.dark .style-glassmorphism ::-webkit-scrollbar-thumb,
+.dark .style-liquid-glass ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.style-glassmorphism ::-webkit-scrollbar-thumb:hover,
+.style-liquid-glass ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dark .style-glassmorphism ::-webkit-scrollbar-thumb:hover,
+.dark .style-liquid-glass ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* =========================================================
+   4. Minimalism Scrollbars
+   ========================================================= */
+
+.style-minimalism {
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+  scrollbar-width: thin;
+}
+
+.dark .style-minimalism {
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.style-minimalism ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.style-minimalism ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.style-minimalism ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+
+  transition: background-color 200ms ease;
+}
+
+.dark .style-minimalism ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.style-minimalism ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark .style-minimalism ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* =========================================================
+   5. Bento Grid Scrollbars
+   ========================================================= */
+
+.style-bento-grid {
+  scrollbar-color: var(--sakode-primary-color) rgba(0, 0, 0, 0.02);
+  scrollbar-width: thin;
+}
+
+.style-bento-grid ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.style-bento-grid ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+.dark .style-bento-grid ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.style-bento-grid ::-webkit-scrollbar-thumb {
+  background: var(--sakode-primary-color);
+  border-radius: 4px;
+  opacity: 0.8;
+}
+
+.style-bento-grid ::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+/* =========================================================
+   6. Sakode Modern Scrollbars
+   ========================================================= */
+
+.style-sakode-modern {
+  scrollbar-color: var(--sakode-primary-color) rgba(0, 0, 0, 0.03);
+  scrollbar-width: thin;
+}
+
+.style-sakode-modern ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.style-sakode-modern ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 9999px;
+}
+
+.dark .style-sakode-modern ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.style-sakode-modern ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      var(--sakode-primary-color),
+      var(--sakode-secondary-color));
+
+  border-radius: 9999px;
+}
+
+.style-sakode-modern ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+      var(--sakode-secondary-color),
+      var(--sakode-accent-color));
+}
+
+/* =========================================================
+   Minimum Font Size Safety Overrides
+   ========================================================= */
+
+.text-\[8px\],
+.text-\[8\.5px\],
+.text-\[9px\],
+.text-\[9\.5px\],
+.text-\[10px\],
+.text-\[10\.5px\],
+.text-\[11px\],
+.text-\[11\.5px\],
+.text-\[12px\],
+.text-\[12\.5px\],
+.text-\[13px\],
+.text-\[13\.5px\] {
+  font-size: 14px !important;
+}
+
+/* Badge font-size specific override */
+.ui-badge {
+  font-size: 11px !important;
 }
