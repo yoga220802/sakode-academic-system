@@ -19,6 +19,8 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBgClass, getTextClass } from "@/UI/shared/color-utils";
+import { useToast, Toast } from "@/app/_components/Toast";
+import { Skeleton } from "@/app/_components/Skeleton";
 import {
   fetchWeeklySchedules,
   fetchPersonalSessions,
@@ -28,25 +30,20 @@ import {
   SUBMISSION_METHODS,
 } from "@/app/_data/personalScheduleService";
 
-// ─── Loading Skeleton ─────────────────────────────────────────────────────────
-
-function SkeletonBlock({ className }: { className?: string }) {
-  return <div className={`animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded-lg ${className ?? ""}`} />;
-}
-
+// ponytail: shared Skeleton replaces SkeletonBlock
 function SchedulesSkeleton() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-3">
-        <SkeletonBlock className="h-5 w-44" />
+        <Skeleton className="h-5 w-44" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {Array.from({ length: 3 }).map((_, i) => <SkeletonBlock key={i} className="h-40" />)}
+          {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40" />)}
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <SkeletonBlock className="h-5 w-32" />
+        <Skeleton className="h-5 w-32" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => <SkeletonBlock key={i} className="h-56" />)}
+          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-56" />)}
         </div>
       </div>
     </div>
@@ -175,7 +172,7 @@ export default function MentorSchedulesPage() {
   // ── Simulator ────────────────────────────────────────────────────────
   const [scenario, setScenario] = useState<"default" | "loading" | "empty">("default");
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState<{ text: string; type: "success" | "error" | "warning" } | null>(null);
+  const { toast, showToast, setToast } = useToast();
 
   // ── Filter ───────────────────────────────────────────────────────────
   const [filterTab, setFilterTab] = useState<"mendatang" | "terdahulu">("mendatang");
@@ -220,10 +217,7 @@ export default function MentorSchedulesPage() {
     });
   }, [scenario]);
 
-  const triggerToast = (text: string, type: "success" | "error" | "warning" = "success") => {
-    setToast({ text, type });
-    setTimeout(() => setToast(null), 4000);
-  };
+  // ponytail: useToast from shared component, 3s auto-dismiss
 
   // ── Computed ─────────────────────────────────────────────────────────
   const today = new Date().toISOString().split("T")[0];
@@ -285,8 +279,8 @@ export default function MentorSchedulesPage() {
   /** Step 1 submit: Set status Berlangsung + startedAt */
   const handleStartSession = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedModuleId) { triggerToast("Pilih modul/topik terlebih dahulu.", "error"); return; }
-    if (selectedDevices.length === 0) { triggerToast("Masukkan minimal satu perangkat.", "error"); return; }
+    if (!selectedModuleId) { showToast("Pilih modul/topik terlebih dahulu.", "error"); return; }
+    if (selectedDevices.length === 0) { showToast("Masukkan minimal satu perangkat.", "error"); return; }
     const module = preSchedule?.modules.find((m) => m.id === selectedModuleId);
     const now = new Date().toISOString();
     setSessions((prev) => prev.map((s) =>
@@ -294,7 +288,7 @@ export default function MentorSchedulesPage() {
         ? { ...s, status: "Berlangsung" as const, moduleId: selectedModuleId, topic: module?.title ?? s.topic, devices: selectedDevices, startedAt: now }
         : s
     ));
-    triggerToast("Pertemuan dimulai! Tekan 'Selesaikan' ketika sesi selesai.", "warning");
+    showToast("Pertemuan dimulai! Tekan 'Selesaikan' ketika sesi selesai.");
     setPreSessionId(null);
     setFilterTab("mendatang");
   };
@@ -310,9 +304,9 @@ export default function MentorSchedulesPage() {
   const handleCompleteSession = (e: React.FormEvent) => {
     e.preventDefault();
     if (homeworkAssigned) {
-      if (!hwTitle.trim()) { triggerToast("Isi judul tugas terlebih dahulu.", "error"); return; }
-      if (!hwMethod) { triggerToast("Pilih metode pengumpulan tugas.", "error"); return; }
-      if (!hwDeadline) { triggerToast("Isi deadline pengumpulan tugas.", "error"); return; }
+      if (!hwTitle.trim()) { showToast("Isi judul tugas terlebih dahulu.", "error"); return; }
+      if (!hwMethod) { showToast("Pilih metode pengumpulan tugas.", "error"); return; }
+      if (!hwDeadline) { showToast("Isi deadline pengumpulan tugas.", "error"); return; }
     }
     const now = new Date().toISOString();
     setSessions((prev) => prev.map((s) =>
@@ -334,7 +328,7 @@ export default function MentorSchedulesPage() {
           : ws
       ));
     }
-    triggerToast(homeworkAssigned
+    showToast(homeworkAssigned
       ? "Sesi selesai! Tugas telah dikirimkan ke murid."
       : "Sesi selesai! Log pertemuan berhasil disimpan."
     );
@@ -354,11 +348,11 @@ export default function MentorSchedulesPage() {
   const handleSendApprovalRequest = (e: React.FormEvent) => {
     e.preventDefault();
     if (requestType === "reschedule") {
-      if (!proposedDate) { triggerToast("Masukkan tanggal baru yang diusulkan.", "error"); return; }
-      if (!proposedStart || !proposedEnd) { triggerToast("Masukkan jam mulai & selesai yang diusulkan.", "error"); return; }
+      if (!proposedDate) { showToast("Masukkan tanggal baru yang diusulkan.", "error"); return; }
+      if (!proposedStart || !proposedEnd) { showToast("Masukkan jam mulai & selesai yang diusulkan.", "error"); return; }
     }
-    if (!requestReason.trim()) { triggerToast("Masukkan alasan pengajuan.", "error"); return; }
-    triggerToast(
+    if (!requestReason.trim()) { showToast("Masukkan alasan pengajuan.", "error"); return; }
+    showToast(
       requestType === "reschedule"
         ? `Permohonan Reschedule dikirim. Menunggu persetujuan Murid → Lead Mentor${rescheduleChangeType === "Online" ? " → Mentor kirim link Zoom" : ""}.`
         : "Permohonan Pembatalan dikirim ke Mentor Lead. Menunggu persetujuan.",
@@ -384,16 +378,7 @@ export default function MentorSchedulesPage() {
     <div className="flex flex-col gap-8 text-left py-4 pb-16 relative">
 
       {/* Toast */}
-      {toast && (
-        <div className={`fixed top-4 right-4 z-[100] p-4 rounded-xl shadow-lg border flex items-center gap-2.5 text-xs font-black max-w-sm ${
-          toast.type === "success" ? "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20"
-          : toast.type === "warning" ? "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/20"
-          : "bg-red-500/10 text-red-800 dark:text-red-300 border-red-500/20"
-        }`}>
-          {toast.type === "success" ? <Icons.Check className="w-4 h-4 shrink-0 text-emerald-500" /> : <Icons.AlertCircle className="w-4 h-4 shrink-0 text-amber-500" />}
-          <span>{toast.text}</span>
-        </div>
-      )}
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header */}
       <div className="flex justify-between items-start gap-4 flex-wrap">
@@ -444,7 +429,7 @@ export default function MentorSchedulesPage() {
                           <Icons.Clock className="w-3 h-3 shrink-0" />{ws.startTime} – {ws.endTime} WIB
                         </div>
                         <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ws.address)}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-1.5 text-zinc-500 hover:text-sakode-blue transition-colors">
-                          <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" className="w-3 h-3 shrink-0 mt-0.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S12 17.642 12 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                          <Icons.MapPin className="w-3 h-3 shrink-0 mt-0.5" />
                           <span className="text-[9.5px] hover:underline">{ws.address}</span>
                         </a>
                       </div>
@@ -666,7 +651,7 @@ export default function MentorSchedulesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className={`${innerCard()} max-w-md w-full p-6 flex flex-col gap-4 relative animate-fade-in max-h-[90vh] overflow-y-auto`}>
             <button type="button" onClick={() => setDetailSessionId(null)} className="absolute top-4 right-4 p-1 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer" aria-label="Tutup">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+              <Icons.X className="w-4 h-4" />
             </button>
             <div>
               <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">Detail Pertemuan ke-{detailSession.sessionNumber}</span>
@@ -754,7 +739,7 @@ export default function MentorSchedulesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <form onSubmit={handleStartSession} className={`${innerCard()} max-w-md w-full p-6 flex flex-col gap-4.5 relative animate-fade-in max-h-[90vh] overflow-y-auto`}>
             <button type="button" onClick={() => setPreSessionId(null)} className="absolute top-4 right-4 p-1 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer" aria-label="Tutup">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+              <Icons.X className="w-4 h-4" />
             </button>
 
             <div>
@@ -803,7 +788,7 @@ export default function MentorSchedulesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <form onSubmit={handleCompleteSession} className={`${innerCard()} max-w-md w-full p-6 flex flex-col gap-4 relative animate-fade-in max-h-[90vh] overflow-y-auto`}>
             <button type="button" onClick={() => setCompletionSessionId(null)} className="absolute top-4 right-4 p-1 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer" aria-label="Tutup">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+              <Icons.X className="w-4 h-4" />
             </button>
 
             <div>
@@ -879,7 +864,7 @@ export default function MentorSchedulesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <form onSubmit={handleSendApprovalRequest} className={`${innerCard()} max-w-md w-full p-6 flex flex-col gap-4 relative animate-fade-in max-h-[90vh] overflow-y-auto`}>
             <button type="button" onClick={() => setRequestModalOpen(false)} className="absolute top-4 right-4 p-1 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer" aria-label="Tutup">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+              <Icons.X className="w-4 h-4" />
             </button>
 
             <div>

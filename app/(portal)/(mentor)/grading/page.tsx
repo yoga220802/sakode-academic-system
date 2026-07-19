@@ -11,7 +11,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { Icons } from "@/UI/shared/Icons";
-import { getBgClass, getTextClass, getBorderRadiusClass } from "@/UI/shared/color-utils";
+import { getBgClass, getTextClass } from "@/UI/shared/color-utils";
+import { useToast, Toast } from "@/app/_components/Toast";
+import { Skeleton } from "@/app/_components/Skeleton";
 import {
   fetchGradingData,
   type GradingTask,
@@ -20,8 +22,7 @@ import {
   GRADE_STATUSES,
 } from "@/app/_data/gradingService";
 
-// ─── Inline SVG Icons ─────────────────────────────────────────────────────────
-
+// ponytail: icons used only in 1 file — keep inline
 const IcRefresh = (p: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -37,39 +38,14 @@ const IcExternal = (p: React.SVGProps<SVGSVGElement>) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
   </svg>
 );
-const IcPencil = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
-  </svg>
-);
 const IcWarning = (p: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
   </svg>
 );
-const IcClose = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" {...p}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-  </svg>
-);
-const IcArrowLeft = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" {...p}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-  </svg>
-);
 const IcMessage = (p: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-  </svg>
-);
-const IcUsers = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-  </svg>
-);
-const IcUser = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" {...p}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
   </svg>
 );
 
@@ -136,9 +112,7 @@ function statusChip(status: GradingStatus) {
   }
 }
 
-function SkeletonBlock({ className }: { className?: string }) {
-  return <div className={`animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded-xl ${className ?? ""}`} />;
-}
+// ponytail: SkeletonBlock → Skeleton from @/app/_components/Skeleton
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
@@ -164,7 +138,7 @@ export default function MentorGradingPage() {
   const [gradeError,     setGradeError]     = useState("");
 
   // toast
-  const [toast, setToast] = useState<string | null>(null);
+  const { toast, showToast, setToast } = useToast();
 
   // ── Load ─────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -174,11 +148,6 @@ export default function MentorGradingPage() {
       setLoading(false);
     });
   }, []);
-
-  const triggerToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3500);
-  };
 
   // ── Computed ─────────────────────────────────────────────────────────
   const pathTasks = useMemo(() =>
@@ -233,7 +202,7 @@ export default function MentorGradingPage() {
         ? { ...t, status: gradeStatus, result: { score: gradeScore, feedback: gradeFeedback, status: gradeStatus, gradedAt: now } }
         : t
     ));
-    triggerToast(`Penilaian untuk ${activeTask?.studentName} berhasil disimpan.`);
+    showToast(`Penilaian untuk ${activeTask?.studentName} berhasil disimpan.`);
     closeModal();
   };
 
@@ -256,9 +225,9 @@ export default function MentorGradingPage() {
   // ── Loading ───────────────────────────────────────────────────────────
   if (loading) return (
     <div className="flex flex-col gap-6 py-4">
-      <SkeletonBlock className="h-8 w-48" />
+      <Skeleton className="h-8 w-48" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 3 }).map((_, i) => <SkeletonBlock key={i} className="h-44" />)}
+        {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-44" />)}
       </div>
     </div>
   );
@@ -267,12 +236,7 @@ export default function MentorGradingPage() {
     <div className="flex flex-col gap-6 text-left py-4 pb-16 relative">
 
       {/* Toast */}
-      {toast && (
-        <div className="fixed top-4 right-4 z-[100] flex items-center gap-2.5 p-3.5 pr-5 rounded-xl shadow-lg border bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20 text-xs font-black max-w-sm">
-          <Icons.Check className="w-4 h-4 shrink-0 text-emerald-500" />
-          {toast}
-        </div>
-      )}
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* ════════════════════════════════════════════════════════════════
           LEVEL 1 — Learning Path List
@@ -324,7 +288,7 @@ export default function MentorGradingPage() {
                     {/* Avatar */}
                     <div className={`shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm text-white ${getBgClass(selectedColor)} bg-opacity-90`}>
                       {path.mode === "Kelompok"
-                        ? <IcUsers className="w-6 h-6" />
+                        ? <Icons.Users className="w-6 h-6" />
                         : <span>{initials(path.studentName)}</span>}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -401,13 +365,13 @@ export default function MentorGradingPage() {
               onClick={goBack}
               className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 cursor-pointer w-fit transition-colors"
             >
-              <IcArrowLeft className="w-4 h-4" />
+              <Icons.ArrowLeft className="w-4 h-4" />
               Kembali ke semua jalur
             </button>
 
             <div className={`${card()} p-4 flex items-center gap-4`}>
               <div className={`shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm text-white ${getBgClass(selectedColor)}`}>
-                {activePath.mode === "Kelompok" ? <IcUsers className="w-6 h-6" /> : <span>{initials(activePath.studentName)}</span>}
+                {activePath.mode === "Kelompok" ? <Icons.Users className="w-6 h-6" /> : <span>{initials(activePath.studentName)}</span>}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -514,7 +478,7 @@ export default function MentorGradingPage() {
                         <span className={`font-bold ml-0.5 ${task.isLate ? "text-red-500" : "text-zinc-600 dark:text-zinc-300"}`}>{task.deadline}</span>
                       </span>
                       <span className="flex items-center gap-1 font-medium">
-                        <IcUsers className="w-3 h-3 shrink-0" />
+                        <Icons.Users className="w-3 h-3 shrink-0" />
                         {task.submissionMethod}
                       </span>
                     </div>
@@ -537,7 +501,7 @@ export default function MentorGradingPage() {
                       >
                         {task.status === "Belum Dinilai"
                           ? <><Icons.ClipboardCheck className="w-3.5 h-3.5" /> Nilai Sekarang</>
-                          : <><IcPencil className="w-3.5 h-3.5" /> Edit Penilaian</>}
+                          :                           <><Icons.Pencil className="w-3.5 h-3.5" /> Edit Penilaian</>}
                       </button>
                       {task.submissionLink && (
                         <a
@@ -573,7 +537,7 @@ export default function MentorGradingPage() {
             <div className="sm:hidden w-10 h-1 rounded-full bg-zinc-200 dark:bg-zinc-700 mx-auto -mt-1 mb-1" />
 
             <button type="button" onClick={closeModal} className="absolute top-5 right-5 p-1 rounded-lg text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer">
-              <IcClose className="w-4 h-4" />
+              <Icons.X className="w-4 h-4" />
             </button>
 
             {/* Title */}

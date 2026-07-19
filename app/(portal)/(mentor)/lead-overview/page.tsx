@@ -25,6 +25,7 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBgClass, getTextClass, getBorderRadiusClass } from "@/UI/shared/color-utils";
+import { Skeleton } from "@/app/_components/Skeleton";
 import {
   fetchMentorLeadOverview,
   type MentorLeadOverviewData,
@@ -67,33 +68,28 @@ function alertIcon(level: WorkloadAlertLevel) {
   return <Icons.Info className="w-4 h-4 shrink-0 text-blue-500" />;
 }
 
-// ─── Skeleton ────────────────────────────────────────────────────────────────
-
-function SkeletonBlock({ className }: { className?: string }) {
-  return <div className={`animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded-lg ${className ?? ""}`} />;
-}
-
+// ponytail: MentorLeadOverviewSkeleton using shared Skeleton
 function MentorLeadOverviewSkeleton() {
   return (
     <div className="flex flex-col gap-6 w-full">
-      <SkeletonBlock className="h-16 w-full" />
+      <Skeleton className="h-16 w-full" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => <SkeletonBlock key={i} className="h-24" />)}
+        {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24" />)}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 3 }).map((_, i) => <SkeletonBlock key={i} className="h-20" />)}
+          {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-20" />)}
         </div>
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 4 }).map((_, i) => <SkeletonBlock key={i} className="h-20" />)}
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20" />)}
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 3 }).map((_, i) => <SkeletonBlock key={i} className="h-24" />)}
+          {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-24" />)}
         </div>
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 4 }).map((_, i) => <SkeletonBlock key={i} className="h-16" />)}
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16" />)}
         </div>
       </div>
     </div>
@@ -242,9 +238,7 @@ export default function MentorLeadOverviewPage() {
                   onClick={() => setDismissedAlerts((prev) => new Set(prev).add(alert.id))}
                   className="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors cursor-pointer"
                 >
-                  <svg viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" fill="none" className="w-3 h-3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                  </svg>
+                  <Icons.X className="w-3 h-3" />
                 </button>
               </div>
             </div>

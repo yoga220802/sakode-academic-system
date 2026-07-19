@@ -21,6 +21,7 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBgClass, getTextClass, getBorderRadiusClass } from "@/UI/shared/color-utils";
+import { useToast, Toast } from "@/app/_components/Toast";
 import {
   getScopedSessions,
   getCompactMentors,
@@ -50,7 +51,7 @@ export default function ScopedSchedulesLeadPage() {
   // 3. UI states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState<ScopedSession | null>(null);
-  const [toast, setToast] = useState<{ text: string; type: "success" | "error" | "warning" } | null>(null);
+  const { toast, showToast, setToast } = useToast();
 
   // 4. Form States
   const [formMentorId, setFormMentorId] = useState("");
@@ -73,18 +74,13 @@ export default function ScopedSchedulesLeadPage() {
     setStudents(getCompactStudents());
   }, []);
 
-  const triggerToast = (text: string, type: "success" | "error" | "warning" = "success") => {
-    setToast({ text, type });
-    setTimeout(() => setToast(null), 3500);
-  };
-
   const handleResetDemo = () => {
     resetSessionsData();
     setSessions(getScopedSessions());
     setSelectedMentorFilter("all");
     setSelectedStudentFilter("all");
     setSelectedDateFilter("");
-    triggerToast("Data jadwal di-reset ke kondisi default.");
+    showToast("Data jadwal di-reset ke kondisi default.");
   };
 
   // Open Modal for Create
@@ -146,7 +142,7 @@ export default function ScopedSchedulesLeadPage() {
     e.preventDefault();
 
     if (!formTopic.trim() || !formDate || !formStartTime || !formEndTime) {
-      triggerToast("Mohon isi seluruh parameter wajib.", "error");
+      showToast("Mohon isi seluruh parameter wajib.", "error");
       return;
     }
 
@@ -162,7 +158,7 @@ export default function ScopedSchedulesLeadPage() {
     );
 
     if (conflict) {
-      triggerToast(conflict.message, "error");
+      showToast(conflict.message, "error");
       return;
     }
 
@@ -194,7 +190,7 @@ export default function ScopedSchedulesLeadPage() {
         }
         return s;
       });
-      triggerToast("Sesi mentoring berhasil diperbarui.");
+      showToast("Sesi mentoring berhasil diperbarui.");
     } else {
       // Create mode
       const newSession: ScopedSession = {
@@ -212,7 +208,7 @@ export default function ScopedSchedulesLeadPage() {
         address: formAddress,
       };
       updatedSessions = [...sessions, newSession];
-      triggerToast("Sesi mentoring baru berhasil dijadwalkan.");
+      showToast("Sesi mentoring baru berhasil dijadwalkan.");
     }
 
     setSessions(updatedSessions);
@@ -226,7 +222,7 @@ export default function ScopedSchedulesLeadPage() {
       const updated = sessions.filter((s) => s.id !== id);
       setSessions(updated);
       saveScopedSessions(updated);
-      triggerToast("Jadwal bimbingan telah dihapus.", "warning");
+      showToast("Jadwal bimbingan telah dihapus.");
     }
   };
 
@@ -261,20 +257,7 @@ export default function ScopedSchedulesLeadPage() {
     <div className="flex flex-col gap-6 text-left py-4 pb-16 relative">
 
       {/* Toast Alert */}
-      {toast && (
-        <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg border flex items-center gap-2.5 text-xs font-black transition-all ${
-          toast.type === "success" 
-            ? "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20" 
-            : toast.type === "warning"
-              ? "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/20"
-              : "bg-red-500/10 text-red-800 dark:text-red-300 border-red-500/20"
-        }`}>
-          {toast.type === "success" && <Icons.Check className="w-4 h-4 text-emerald-500" />}
-          {toast.type === "warning" && <Icons.AlertCircle className="w-4 h-4 text-amber-500" />}
-          {toast.type === "error" && <Icons.AlertCircle className="w-4 h-4 text-red-500" />}
-          <span>{toast.text}</span>
-        </div>
-      )}
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
       {/* Header */}
       <div className="flex justify-between items-start gap-4 flex-wrap">
@@ -416,10 +399,7 @@ export default function ScopedSchedulesLeadPage() {
                     </div>
                     <div className="mt-1 bg-zinc-100/50 dark:bg-zinc-800/30 p-2.5 rounded-lg border border-zinc-200/25">
                       <span className="text-[9px] uppercase tracking-wider block text-zinc-450 flex items-center gap-1.5">
-                        <svg viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" fill="none" className="w-3.5 h-3.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
-                        </svg>
+                        <Icons.MapPin className="w-3.5 h-3.5" />
                         Tujuan Belajar ({session.branch})
                       </span>
                       <p className="font-extrabold text-zinc-700 dark:text-zinc-350 mt-1 leading-snug break-words">
@@ -436,9 +416,7 @@ export default function ScopedSchedulesLeadPage() {
                     className="p-1.5 text-zinc-400 hover:text-sakode-blue hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
                     aria-label="Ubah jadwal"
                   >
-                    <svg viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" fill="none" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                    </svg>
+                    <Icons.Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteSession(session.id)}
@@ -470,9 +448,7 @@ export default function ScopedSchedulesLeadPage() {
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 p-1 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
+              <Icons.X className="w-4 h-4" />
             </button>
 
             <div>
