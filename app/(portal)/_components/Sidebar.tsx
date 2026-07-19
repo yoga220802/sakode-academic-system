@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useUIStyle } from "@/app/_components/UIStyleContext";
@@ -34,21 +34,10 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
   const { selectedStyle, selectedColor } = useUIStyle();
   const { logout } = useAuth();
 
-  // Local hover state for temporary uncollapse
-  const [isHovered, setIsHovered] = useState(false);
-
   const UI = (UIStyles.UI[selectedStyle as keyof typeof UIStyles.UI] || UIStyles.UI["sakode-modern"]);
 
-  // Render as expanded if hovered (temporary uncollapse)
-  const currentCollapsed = isCollapsed && !isHovered && !isMobile;
-
-  // Uncollapse permanently on click inside the sidebar
-  const handleSidebarClick = () => {
-    if (isCollapsed) {
-      setIsCollapsed(false);
-      setIsHovered(false);
-    }
-  };
+  // ponytail: sidebar only expands via header toggle, not on hover
+  const currentCollapsed = isCollapsed && !isMobile;
 
   // Grouped menu items by role
   const getNavigationMatrix = (userRole: UserRole): MenuGroup[] => {
@@ -242,9 +231,6 @@ export function Sidebar({ role, isCollapsed, setIsCollapsed, isMobile = false, o
 
   return (
     <aside 
-      onMouseEnter={() => !isMobile && setIsHovered(true)}
-      onMouseLeave={() => !isMobile && setIsHovered(false)}
-      onClick={handleSidebarClick}
       className={getSidebarContainerClass()}
     >
       <div className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden flex-1 pr-1 scrollbar-thin">

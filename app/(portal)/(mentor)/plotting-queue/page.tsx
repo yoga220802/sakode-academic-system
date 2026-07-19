@@ -30,7 +30,7 @@ import {
   resetScopedData,
   type ScopedStudent,
   type ScopedMentor,
-} from "./_mocks/plottingQueueService";
+} from "@/app/_data/plottingQueueService";
 
 export default function PlottingQueuePage() {
   const { selectedStyle, selectedColor } = useUIStyle();

@@ -18,7 +18,7 @@ import {
   type GradingPath,
   type GradingStatus,
   GRADE_STATUSES,
-} from "./_mocks/gradingService";
+} from "@/app/_data/gradingService";
 
 // ─── Inline SVG Icons ─────────────────────────────────────────────────────────
 

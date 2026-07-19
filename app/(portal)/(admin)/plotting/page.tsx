@@ -8,9 +8,9 @@ import * as UIStyles from "@/UI";
 import { Icons } from "@/UI/shared/Icons";
 import { getBgClass, getTextClass, getBgOpacity10Class } from "@/UI/shared/color-utils";
 import { UnassignedStudent } from "./_types/plotting";
-import { getStoredStudents, saveStoredStudents, DEFAULT_UNASSIGNED_STUDENTS } from "./_services/plotting-mock";
+import { getStoredStudents, saveStoredStudents, DEFAULT_UNASSIGNED_STUDENTS } from "@/app/_data/plotting-mock";
 import { Mentor } from "../mentors/_types/mentor";
-import { getStoredMentors, saveStoredMentors } from "../mentors/_services/mentor-mock";
+import { getStoredMentors, saveStoredMentors } from "@/app/_data/mentor-mock";
 
 // Program-to-Skills matching catalog
 const PROGRAM_SKILL_MAPPING: Record<string, string[]> = {

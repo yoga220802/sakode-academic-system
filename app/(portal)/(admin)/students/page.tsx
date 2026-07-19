@@ -453,16 +453,11 @@ export default function StudentRepositoryPage() {
                       <span className="text-[9px] text-zinc-400 font-bold block uppercase tracking-wider mb-2">
                         Anggota Kelompok Belajar ({activeStudent.groupMembers.length} anak):
                       </span>
-                      <div className="flex flex-wrap gap-1.5">
+                      <ol className="list-decimal list-inside text-[10px] text-zinc-700 dark:text-zinc-300 font-medium space-y-0.5">
                         {activeStudent.groupMembers.map((m, mIdx) => (
-                          <span
-                            key={mIdx}
-                            className="bg-purple-500/10 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 px-2 py-0.5 rounded text-[10px] font-bold"
-                          >
-                            {m}
-                          </span>
+                          <li key={mIdx}>{m}</li>
                         ))}
-                      </div>
+                      </ol>
                     </div>
                   )}
 

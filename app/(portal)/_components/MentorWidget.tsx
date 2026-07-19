@@ -27,11 +27,11 @@ import {
   type MentorSession,
   type MentorAssignedStudent,
   type MentorGradingItem,
-} from "../_mocks/mentorOverviewService";
+} from "@/app/_data/mentorOverviewService";
 import {
   fetchPersonalSessions,
   type PersonalSession,
-} from "../(mentor)/schedules/_mocks/personalScheduleService";
+} from "@/app/_data/personalScheduleService";
 
 // ─── Loading Skeleton ────────────────────────────────────────────────────────
 

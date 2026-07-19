@@ -9,8 +9,8 @@ import { ExtracurricularOrganization } from "../../_types/extracurricular";
 import {
   getStoredOrganizations,
   saveStoredOrganizations
-} from "../../_services/extracurricular-mock";
-import { getStoredMentors } from "../../../mentors/_services/mentor-mock";
+} from "@/app/_data/extracurricular-mock";
+import { getStoredMentors } from "@/app/_data/mentor-mock";
 import { Mentor } from "../../../mentors/_types/mentor";
 import SearchableSelect from "../../_components/SearchableSelect";
 import PhoneInput from "../../_components/PhoneInput";

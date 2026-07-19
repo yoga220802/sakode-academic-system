@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { PackageViewModel } from "../_types/package";
-import { PackageMockService, ScenarioType } from "../_services/package-mock";
+import { PackageMockService, ScenarioType } from "@/app/_data/package-mock";
 import { PackageCard } from "./PackageCard";
 import { DataStateBoundary } from "./DataStateBoundary";
 import { useUIStyle } from "./UIStyleContext";

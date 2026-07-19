@@ -32,7 +32,7 @@ import {
   type WorkloadAlertLevel,
   type MentorAvailability,
   type StudentPriority,
-} from "./_mocks/mentorLeadOverviewService";
+} from "@/app/_data/mentorLeadOverviewService";
 
 // ─── Sub-component helpers ───────────────────────────────────────────────────
 

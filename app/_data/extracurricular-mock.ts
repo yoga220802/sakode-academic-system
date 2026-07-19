@@ -1,5 +1,5 @@
-import { ExtracurricularOrganization, ExtracurricularRegistration } from "../_types/extracurricular";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { ExtracurricularOrganization, ExtracurricularRegistration } from "@/app/(portal)/(admin)/extracurriculars-admin/_types/extracurricular";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY_ORGS = "sakode_extracurricular_organizations_v5";
 const STORAGE_KEY_REGS = "sakode_extracurricular_registrations_v5";

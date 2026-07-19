@@ -1,5 +1,5 @@
-import { Mentor } from "../_types/mentor";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { Mentor } from "@/app/(portal)/(admin)/mentors/_types/mentor";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY = "sakode_mentors_data";
 

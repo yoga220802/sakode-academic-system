@@ -10,7 +10,7 @@ import { useUIStyle } from "@/app/_components/UIStyleContext";
 import { Icons } from "@/UI/shared/Icons";
 import { getTextClass } from "@/UI/shared/color-utils";
 import { AestheticBackground } from "@/app/_components/AestheticBackground";
-import { PackageMockService } from "@/app/_services/package-mock";
+import { PackageMockService } from "@/app/_data/package-mock";
 import { PackageViewModel } from "@/app/_types/package";
 
 // Types for Mock Validation

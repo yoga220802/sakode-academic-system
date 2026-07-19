@@ -9,8 +9,8 @@ import { PrincipalMembership } from "../_types/membership";
 import {
   getStoredMemberships,
   saveStoredMemberships
-} from "../_services/principal-membership-mock";
-import { getStoredOrganizations } from "../../extracurriculars-admin/_services/extracurricular-mock";
+} from "@/app/_data/principal-membership-mock";
+import { getStoredOrganizations } from "@/app/_data/extracurricular-mock";
 import { ExtracurricularOrganization } from "../../extracurriculars-admin/_types/extracurricular";
 
 export default function NewPrincipalMembershipPage() {

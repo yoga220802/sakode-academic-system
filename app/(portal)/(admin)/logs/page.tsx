@@ -10,7 +10,7 @@ import {
   saveStoredLogs,
   simulateNewLog,
   DEFAULT_LOGS
-} from "./_services/logs-mock";
+} from "@/app/_data/logs-mock";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LogsPage() {

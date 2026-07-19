@@ -11,7 +11,7 @@ import { ExtracurricularOrganization, ExtracurricularMember } from "../_types/ex
 import {
   getStoredOrganizations,
   saveStoredOrganizations
-} from "../_services/extracurricular-mock";
+} from "@/app/_data/extracurricular-mock";
 
 interface DetailPageProps {
   params: Promise<{ id: string }>;

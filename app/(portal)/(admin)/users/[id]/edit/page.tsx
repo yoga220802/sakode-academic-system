@@ -10,7 +10,7 @@ import { UserRole } from "@/app/_types/auth";
 import {
   getStoredUsers,
   saveStoredUsers
-} from "../../_services/users-mock";
+} from "@/app/_data/users-mock";
 
 interface EditUserPageProps {
   params: Promise<{ id: string }>;

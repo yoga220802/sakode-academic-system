@@ -1,5 +1,5 @@
-import { AuditLog } from "../_types/log";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { AuditLog } from "@/app/(portal)/(admin)/logs/_types/log";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY_LOGS = "sakode_audit_logs_v1";
 

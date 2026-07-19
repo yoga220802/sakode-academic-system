@@ -1,5 +1,5 @@
-import { UserAccount } from "../_types/user";
-import { getStoredData, saveStoredData } from "../../_shared";
+import { UserAccount } from "@/app/(portal)/(admin)/users/_types/user";
+import { getStoredData, saveStoredData } from "@/app/_lib/storage";
 
 const STORAGE_KEY_USERS = "sakode_users_directory_v1";
 
